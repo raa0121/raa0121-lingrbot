@@ -5,7 +5,7 @@ get '/' do
 	'lingr:DiceBot'
 end
 post '/'do
-	json = JSON.parse(params[:json])
+	json = JSON.parse(request.env['rack.input'].read)
 	tmp = []
 	json["events"].each do |e|
 	if e["message"]
