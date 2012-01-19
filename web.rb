@@ -9,6 +9,7 @@ post '/'do
 	tmp = []
 	json["events"].each do |e|
 		request.env['rack.input'].read
+	end
 	#if e["message"]
 	#	m = e["message"]["text"]
 	#	if /^(\d*)d(\d*)/ =~ m
@@ -16,6 +17,5 @@ post '/'do
 	#			tmp[i] = rand($2.to_i -1)+1
 	#		end
 	#	end
-	#end
 	#tmp.join ","
 end
