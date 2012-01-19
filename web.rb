@@ -9,6 +9,6 @@ get '/' do
 	if /(^d*)d(^d*)/ =~ json["events"]["message"]["text"] 
 		print "Content-Type: text/plain\n\n"
 		$1.times do
-				print rand($2-1)+1
+			 rand($2-1)+1
 	end
 end
