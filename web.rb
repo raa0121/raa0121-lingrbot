@@ -1,8 +1,8 @@
 require 'sinatra'
-require "json"
-require "cgi"
+#require "json"
+#require "cgi"
 
-json = JSON.parse(CGI.new["json"])
+#json = JSON.parse(CGI.new["json"])
 
 get '/' do
 	'hello world'
