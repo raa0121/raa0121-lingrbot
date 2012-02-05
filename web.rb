@@ -15,11 +15,13 @@ post '/'do
     if e["message"]
       m = e["message"]["text"]
       if /^(\d+)d(\d+)/ =~ m
-        $1.to_i.times do |i| 
-          tmp[i] = rand(-1+$2.to_i)+1
-          sum += tmp[i]
+        if $1 < 256
+          $1.to_i.times do |i| 
+            tmp[i] = rand(-1+$2.to_i)+1
+            sum += tmp[i]
+          end
+          "(#{tmp.join(",")})=> #{sum}"
         end
-      "(#{tmp.join(",")})=> #{sum}"
       end
     end
   end
