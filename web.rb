@@ -21,6 +21,6 @@ post '/'do
         end
       end
     end
-    "("+ tmp.join "," + ")=> "+sum
+    "("+ tmp.join(",") + ")=> "+sum
   end
 end
