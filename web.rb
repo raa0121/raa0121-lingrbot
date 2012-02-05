@@ -19,7 +19,7 @@ post '/'do
         f = $2.to_i
         if n < 256
           n.times do |i| 
-            tmp[i] = rand(-1+f)+1
+            tmp[i] = rand(f)+1
             sum += tmp[i]
           end
           "(#{tmp.join(",")})=> #{sum}"
