@@ -14,7 +14,7 @@ post '/'do
   #end
     if e["message"]
       m = e["message"]["text"]
-      if /^(\d*)d(\d*)/ =~ m
+      if /^(\d+)d(\d+)/ =~ m
         $1.to_i.times do |i| 
           tmp[i] = rand(-1+$2.to_i)+1
           sum += tmp[i]
