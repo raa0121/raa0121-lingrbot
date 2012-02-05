@@ -6,9 +6,9 @@ get '/' do
 end
 post '/'do
   content_type :text
-  json = JSON.parse(params[:json])
+  json = JSON.parse(request.body.string)
   tmp = []
-  json["events"].each do |e|
+  json["events"].map do |e|
     #request.env['rack.input'].read
   #end
     if e["message"]
