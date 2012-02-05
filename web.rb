@@ -19,8 +19,8 @@ post '/'do
           tmp[i] = rand(-1+$2.to_i)+1
           sum += tmp[i]
         end
+      "(#{tmp.join(",")})=> #{sum}"
       end
     end
-    "(#{tmp.join(",")})=> #{sum}"
   end
 end
