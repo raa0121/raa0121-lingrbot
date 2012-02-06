@@ -1,7 +1,9 @@
+require 'json'
+
 get '/dice' do
 	'lingr:DiceBot'
 end
-post '/dice'do
+post '/dice' do
   content_type :text
   json = JSON.parse(request.body.string)
   tmp = []
