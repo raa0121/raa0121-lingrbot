@@ -11,7 +11,7 @@ post '/dice' do
   json["events"].map do |e|
     if e["message"]
       m = e["message"]["text"]
-      u = e["message"]["speaker_id"]
+      u = e["message"]["nickname"]
       if /^(\d+)d(\d+)/ =~ m
         n = $1.to_i
         f = $2.to_i
@@ -20,7 +20,7 @@ post '/dice' do
             tmp[i] = rand(f)+1
             sum += tmp[i]
           end
-          "(#{tmp.join(",")})=> #{sum}"
+          "#{u} : #{n}d#{f}(#{tmp.join(",")})=> #{sum}"
         end
       end
       
