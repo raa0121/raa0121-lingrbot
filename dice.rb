@@ -9,8 +9,6 @@ post '/dice' do
   tmp = []
   sum = 0
   json["events"].map do |e|
-    #request.env['rack.input'].read
-  #end
     if e["message"]
       m = e["message"]["text"]
       if /^(\d+)d(\d+)/ =~ m
@@ -24,6 +22,9 @@ post '/dice' do
           "(#{tmp.join(",")})=> #{sum}"
         end
       end
+      
+      if /^hi/ =~ m
+        "hi"
     end
   end
 end
