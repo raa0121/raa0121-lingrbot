@@ -12,7 +12,7 @@ post '/dice' do
     if e["message"]
       m = e["message"]["text"]
       u = e["message"]["nickname"]
-      if /^(\d+)d(\d+)/ =~ m
+      if /^(\d+)d(\d+)\b/ =~ m
         n = $1.to_i
         f = $2.to_i
         if n < 256
