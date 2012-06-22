@@ -25,6 +25,7 @@ post '/dice' do
       
       if /^hi/ =~ m
         "hi"
+      end
     end
   end
 end
