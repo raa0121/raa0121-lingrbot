@@ -23,10 +23,6 @@ post '/dice' do
           "#{u} : #{n}d#{f}(#{tmp.join(",")})=> #{sum}"
         end
       end
-      
-      if /^hi\b/ =~ m
-        "hi, #{u}"
-      end
     end
   end
 end
