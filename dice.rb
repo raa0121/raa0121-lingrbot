@@ -1,6 +1,6 @@
-$LOAD_PATH << File.dirname(__FILE__) + "BCDice"
+#$LOAD_PATH << File.dirname(__FILE__) + "BCDice"
 
-require 'bcdiceCore.rb'
+#require 'bcdiceCore.rb'
 require 'json'
 
 class lingrDice
