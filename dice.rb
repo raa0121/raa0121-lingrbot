@@ -3,18 +3,18 @@
 #require 'bcdiceCore.rb'
 require 'json'
 
-class lingrDice
+#class lingrDice
   
-  def initialize
-    @rollResult = ""
-    @isSecret = false
-    @rands = nil
-    @isTest = false
-  end
+#  def initialize
+#    @rollResult = ""
+#    @isSecret = false
+#    @rands = nil
+#    @isTest = false
+#  end
 
-  attr :isSecret
+#  attr :isSecret
 
-end
+#end
 
 get '/dice' do
 	'lingr:DiceBot'
