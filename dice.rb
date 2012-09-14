@@ -14,7 +14,8 @@ class lingrDice
 
   attr :isSecret
 
-  
+end
+
 get '/dice' do
 	'lingr:DiceBot'
 end
