@@ -1,20 +1,20 @@
-$LOAD_PATH << File.dirname(__FILE__) + "/BCDice/src"
+#$LOAD_PATH << File.dirname(__FILE__) + "/BCDice/src"
 
-require 'bcdiceCore.rb'
+#require 'bcdiceCore.rb'
 require 'json'
 
-class LingrDice
-  
-  def initialize
-    @rollResult = ""
-    @isSecret = false
-    @rands = nil
-    @isTest = false
-  end
-
-  attr :isSecret
-
-end
+#class LingrDice
+#  
+#  def initialize
+#    @rollResult = ""
+#    @isSecret = false
+#    @rands = nil
+#    @isTest = false
+#  end
+#
+#  attr :isSecret
+#
+#end
 
 get '/dice' do
 	'lingr:DiceBot'
