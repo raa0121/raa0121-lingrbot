@@ -8,3 +8,4 @@ get '/' do
 end
 
 load 'dice.rb'
+load 'bot.rb'
