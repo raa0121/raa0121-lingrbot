@@ -19,10 +19,10 @@ post '/dice' do
     m = e["message"]["text"]
     u = e["message"]["nickname"]
     command = m.strip.split(/[\s　]/)
-    diceCommand = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
+    dice_command = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
     gameList = JSON.parse(GAMELIST)
     game_type = gameList.fetch(command[1], '""')
-    result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{game_type}`
+    result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{dice_command} #{game_type}`
     "#{u} : #{result.gsub("\n","")}" unless result == "\n"
   }.join
 end
