@@ -11,8 +11,9 @@ post '/dice' do
   json = JSON.parse(request.body.string)
   gameType = "\"\""
 
-  json["events"].map {|e|
-    if e["message"]
+  json["events"].select {|e|
+    e["message"]
+  }.map {|e|
       m = e["message"]["text"]
       u = e["message"]["nickname"]
       command = m.strip.split(/[\s　]/)
@@ -23,6 +24,5 @@ post '/dice' do
         result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
         "#{u} : #{result.gsub("\n","")}" unless result == "\n"
       }
-    end
-  }.compact.join
+  }.join
 end
