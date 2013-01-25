@@ -19,9 +19,9 @@ post '/dice' do
     command = m.strip.split(/[\s　]/)
     diceCommand = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
     gl = File.read("gameList.json","r")
-      gameList = JSON.parse(gl)
-      gameType = gameList.fetch(command[1],"\"\"")
-      result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
-      "#{u} : #{result.gsub("\n","")}" unless result == "\n"
+    gameList = JSON.parse(gl)
+    gameType = gameList.fetch(command[1],"\"\"")
+    result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
+    "#{u} : #{result.gsub("\n","")}" unless result == "\n"
   }.join
 end
