@@ -1,11 +1,11 @@
 #!/bin/ruby -Ku 
 #--*-coding:utf-8-*--
-
+$LOAD_PATH << File.dirname(__FILE__) + "diceBot"
 #require 'Kconv'
 
-require 'log'
-require 'configBcDice.rb'
-require 'CountHolder.rb'
+require './log'
+require './configBcDice.rb'
+require './CountHolder.rb'
 require 'kconv'
 
 #============================== 起動法 ==============================
@@ -48,12 +48,12 @@ $plotPrintChannels = {};
 $point_counter = {};
 
 
-require 'CardTrader'
-require 'TableFileData'
-require 'diceBot/DiceBot'
-require 'dice/AddDice'
-require 'dice/UpperDice'
-require 'dice/RerollDice'
+require './CardTrader'
+require './TableFileData'
+require './diceBot/DiceBot'
+require './dice/AddDice'
+require './dice/UpperDice'
+require './dice/RerollDice'
 
 
 class BCDiceMaker
@@ -1633,97 +1633,97 @@ class BCDice
     
     case tnick
     when /(^|\s)((Cthulhu)|(COC))$/i
-      require 'diceBot/Cthulhu'
+      require './diceBot/Cthulhu'
       diceBot = Cthulhu.new
       message = 'Game設定をCall of Cthulhu(BRP)に設定しました'
     when /(^|\s)((Hieizan)|(COCH))$/i
-      require 'diceBot/Hieizan'
+      require './diceBot/Hieizan'
       diceBot = Hieizan.new
       message = 'Game設定を比叡山炎上(CoC)に設定しました'
     when /(^|\s)((Elric!)|(EL))$/i
-      require 'diceBot/Elric'
+      require './diceBot/Elric'
       diceBot = Elric.new
       message = 'Game設定をElric!に設定しました'
     when /(^|\s)((RuneQuest)|(RQ))$/i
-      require 'diceBot/RuneQuest'
+      require './diceBot/RuneQuest'
       diceBot = RuneQuest.new
       message = 'Game設定をRuneQuestに設定しました'
     when /(^|\s)((Chill)|(CH))$/i
-      require 'diceBot/Chill'
+      require './diceBot/Chill'
       diceBot = Chill.new
       message = 'Game設定をChillに設定しました'
     when /(^|\s)((RoleMaster)|(RM))$/i
-      require 'diceBot/RoleMaster'
+      require './diceBot/RoleMaster'
       diceBot = RoleMaster.new
       message = 'Game設定をRoleMasterに設定しました'
     when /(^|\s)((ShadowRun)|(SR))$/i
-      require 'diceBot/ShadowRun'
+      require './diceBot/ShadowRun'
       diceBot = ShadowRun.new
       message = 'Game設定をShadowRunに設定しました'
     when /(^|\s)((ShadowRun4)|(SR4))$/i
-      require 'diceBot/ShadowRun4'
+      require './diceBot/ShadowRun4'
       diceBot = ShadowRun4.new
       message = 'Game設定をShadowRun4版に設定しました'
     when /(^|\s)((Pendragon)|(PD))$/i
-      require 'diceBot/Pendragon'
+      require './diceBot/Pendragon'
       diceBot = Pendragon.new
       message = 'Game設定をPendragonに設定しました'
     when /(^|\s)((SwordWorld)|(SW))$/i
-      require 'diceBot/SwordWorld'
+      require './diceBot/SwordWorld'
       diceBot = SwordWorld.new( 0 )  # レーティング表を文庫版モードに
       message = 'Game設定をソードワールドに設定しました'
     when /(^|\s)((SwordWorld)\s*2\.0|(SW)\s*2\.0)$/i
-      require 'diceBot/SwordWorld'
+      require './diceBot/SwordWorld'
       diceBot = SwordWorld.new( 2 )  # レーティング表を2.0モードに
       message = 'Game設定をソードワールド2.0に設定しました'
     when /(^|\s)((Arianrhod)|(AR))$/i
-      require 'diceBot/Arianrhod'
+      require './diceBot/Arianrhod'
       diceBot = Arianrhod.new
       message = 'Game設定をアリアンロッドに設定しました'
     when /(^|\s)((Infinite[\s]*Fantasia)|(IF))$/i
-      require 'diceBot/InfiniteFantasia'
+      require './diceBot/InfiniteFantasia'
       diceBot = InfiniteFantasia.new
       message = 'Game設定を無限のファンタジアに設定しました'
     when /(^|\s)(WARPS)$/i
-      require 'diceBot/WARPS'
+      require './diceBot/WARPS'
       diceBot = WARPS.new
       message = 'Game設定をWARPSに設定しました'
     when /(^|\s)((Demon[\s]*Parasite)|(DP))$/i
-      require 'diceBot/DemonParasite'
+      require './diceBot/DemonParasite'
       diceBot = DemonParasite.new
       message = 'Game設定をデモンパラサイト/鬼御魂に設定しました'
     when /(^|\s)((Parasite\s*Blood)|(PB))$/i
-      require 'diceBot/DemonParasite'
-      require 'diceBot/ParasiteBlood'
+      require './diceBot/DemonParasite'
+      require './diceBot/ParasiteBlood'
       diceBot = ParasiteBlood.new
       message = 'Game設定をパラサイトブラッドに設定しました'
     when /(^|\s)((Gun[\s]*Dog)|(GD))$/i
-      require 'diceBot/Gundog'
+      require './diceBot/Gundog'
       diceBot = Gundog.new
       message = 'Game設定をガンドッグに設定しました'
     when /(^|\s)((Gun[\s]*Dog[\s]*Zero)|(GDZ))$/i
-      require 'diceBot/Gundog'
-      require 'diceBot/GundogZero'
+      require './diceBot/Gundog'
+      require './diceBot/GundogZero'
       diceBot = GundogZero.new
       message = 'Game設定をガンドッグゼロに設定しました'
     when /(^|\s)((Tunnels[\s]*&[\s]*Trolls)|(TuT))$/i
-      require 'diceBot/TunnelsAndTrolls'
+      require './diceBot/TunnelsAndTrolls'
       diceBot = TunnelsAndTrolls.new
       message = 'Game設定をトンネルズ＆トロールズに設定しました'
     when /(^|\s)((Nightmare[\s]*Hunter[=\s]*Deep)|(NHD))$/i
-      require 'diceBot/NightmareHunterDeep'
+      require './diceBot/NightmareHunterDeep'
       diceBot = NightmareHunterDeep.new
       message = 'Game設定をナイトメアハンター・ディープに設定しました'
     when /(^|\s)((War[\s]*Hammer(FRP)?)|(WH))$/i
-      require 'diceBot/Warhammer'
+      require './diceBot/Warhammer'
       diceBot = Warhammer.new
       message = 'Game設定をウォーハンマーFRPに設定しました'
     when /(^|\s)((Phantasm[\s]*Adventure)|(PA))$/i
-      require 'diceBot/PhantasmAdventure'
+      require './diceBot/PhantasmAdventure'
       diceBot = PhantasmAdventure.new
       message = 'Game設定をファンタズムアドベンチャーに設定しました'
     when /(^|\s)((Chaos[\s]*Flare)|(CF))$/i
-      require 'diceBot/ChaosFlare'
+      require './diceBot/ChaosFlare'
       diceBot = ChaosFlare.new
       
       @cardTrader.set2Deck2Jorker
@@ -1732,83 +1732,83 @@ class BCDice
       
       message = 'Game設定をカオスフレアに設定しました'
     when /(^|\s)((Cthulhu[\s]*Tech)|(CT))$/i
-      require 'diceBot/CthulhuTech'
+      require './diceBot/CthulhuTech'
       diceBot = CthulhuTech.new
       message = 'Game設定をクトゥルフ・テックに設定しました'
     when /(^|\s)((Tokumei[\s]*Tenkousei)|(ToT))$/i
-      require 'diceBot/TokumeiTenkousei'
+      require './diceBot/TokumeiTenkousei'
       diceBot = TokumeiTenkousei.new
       message = 'Game設定を特命転攻生に設定しました'
     when /(^|\s)((Shinobi[\s]*Gami)|(SG))$/i
-      require 'diceBot/ShinobiGami'
+      require './diceBot/ShinobiGami'
       diceBot = ShinobiGami.new
       message = 'Game設定を忍神に設定しました'
     when /(^|\s)((Double[\s]*Cross)|(DX))$/i
-      require 'diceBot/DoubleCross'
+      require './diceBot/DoubleCross'
       diceBot = DoubleCross.new
       message = 'Game設定をダブルクロス3に設定しました'
     when /(^|\s)((Sata[\s]*Supe)|(SS))$/i
-      require 'diceBot/Satasupe'
+      require './diceBot/Satasupe'
       diceBot = Satasupe.new
       message = 'Game設定をサタスペに設定しました'
     when /(^|\s)((Ars[\s]*Magica)|(AM))$/i
-      require 'diceBot/ArsMagica'
+      require './diceBot/ArsMagica'
       diceBot = ArsMagica.new
       message = 'Game設定をArsMagicaに設定しました'
     when /(^|\s)((Dark[\s]*Blaze)|(DB))$/i
-      require 'diceBot/DarkBlaze'
+      require './diceBot/DarkBlaze'
       diceBot = DarkBlaze.new
       message = 'Game設定をダークブレイズに設定しました'
     when /(^|\s)((Night[\s]*Wizard)|(NW))$/i
-      require 'diceBot/NightWizard'
+      require './diceBot/NightWizard'
       diceBot = NightWizard.new
       message = 'Game設定をナイトウィザードに設定しました'
     when /(^|\s)TORG$/i
-      require 'diceBot/Torg'
+      require './diceBot/Torg'
       diceBot = Torg.new
       message = 'Game設定をTORGに設定しました'
     when /(^|\s)(hunters\s*moon|HM)$/i
-      require 'diceBot/HuntersMoon'
+      require './diceBot/HuntersMoon'
       diceBot = HuntersMoon.new
       message = 'Game設定をハンターズ・ムーンに設定しました'
     when /(^|\s)(Blood\s*Crusade|BC)$/i
-      require 'diceBot/BloodCrusade'
+      require './diceBot/BloodCrusade'
       diceBot = BloodCrusade.new
       message = 'Game設定をブラッド・クルセイドに設定しました'
     when /(^|\s)(Meikyu\s*Kingdom|MK)$/i
-      require 'diceBot/MeikyuKingdom'
+      require './diceBot/MeikyuKingdom'
       diceBot = MeikyuKingdom.new
       message = 'Game設定を迷宮キングダムに設定しました'
     when /(^|\s)(Earth\s*Dawn|ED)$/i
-      require 'diceBot/EarthDawn'
+      require './diceBot/EarthDawn'
       diceBot = EarthDawn.new
       message = 'Game設定をEarthDawnに設定しました'
     when /(^|\s)(Embryo\s*Machine|EM)$/i
-      require 'diceBot/EmbryoMachine'
+      require './diceBot/EmbryoMachine'
       diceBot = EmbryoMachine.new
       message = 'Game設定をエムブリオマシンに設定しました'
     when /(^|\s)(Gehenna\s*An|GA)$/i
-      require 'diceBot/GehennaAn'
+      require './diceBot/GehennaAn'
       diceBot = GehennaAn.new
       message = 'Game設定をゲヘナ・アナスタシスに設定しました'
     when /(^|\s)((Magica[\s]*Logia)|(ML))$/i
-      require 'diceBot/MagicaLogia'
+      require './diceBot/MagicaLogia'
       diceBot = MagicaLogia.new
       message = 'Game設定をマギカロギアに設定しました'
     when /(^|\s)((Nechronica)|(NC))$/i
-      require 'diceBot/Nechronica'
+      require './diceBot/Nechronica'
       diceBot = Nechronica.new
       message = 'Game設定をネクロニカに設定しました'
     when /(^|\s)(Meikyu\s*Days|MD)$/i
-      require 'diceBot/MeikyuDays'
+      require './diceBot/MeikyuDays'
       diceBot = MeikyuDays.new
       message = 'Game設定を迷宮デイズに設定しました'
     when /(^|\s)(Peekaboo|PK)$/i
-      require 'diceBot/Peekaboo'
+      require './diceBot/Peekaboo'
       diceBot = Peekaboo.new
       message = 'Game設定をピーカブーに設定しました'
     when /(^|\s)(Barna\s*Kronika|BK)$/i
-      require 'diceBot/BarnaKronika'
+      require './diceBot/BarnaKronika'
       diceBot = BarnaKronika.new
       
       @cardTrader.set1Deck2Jorker
@@ -1817,35 +1817,35 @@ class BCDice
       
       message = 'Game設定をバルナ・クロニカに設定しました'
     when /(^|\s)(RokumonSekai2|RS2)$/i
-      require 'diceBot/RokumonSekai2'
+      require './diceBot/RokumonSekai2'
       diceBot = RokumonSekai2.new
       message = 'Game設定を六門世界2nd.に設定しました'
     when /(^|\s)(Monotone(\s*)Musium|MM)$/i
-      require 'diceBot/MonotoneMusium'
+      require './diceBot/MonotoneMusium'
       diceBot = MonotoneMusium.new
       message = 'Game設定をモノトーン・ミュージアムに設定しました'
     when /(^|\s)Zettai\s*Reido$/i
-      require 'diceBot/ZettaiReido'
+      require './diceBot/ZettaiReido'
       diceBot = ZettaiReido.new
       message = 'Game設定を絶対隷奴に設定しました'
     when /(^|\s)Eclipse\s*Phase$/i
-      require 'diceBot/EclipsePhase'
+      require './diceBot/EclipsePhase'
       diceBot = EclipsePhase.new
       message = 'Game設定をEclipse Phaseに設定しました'
     when /(^|\s)NJSLYRBATTLE$/i
-      require 'diceBot/NjslyrBattle'
+      require './diceBot/NjslyrBattle'
       diceBot = NjslyrBattle.new
       message = 'Game設定をNJSLYRBATTLEに設定しました'
     when /(^|\s)ShinMegamiTenseiKakuseihen$/i, /(^|\s)SMTKakuseihen$/i
-      require 'diceBot/ShinMegamiTenseiKakuseihen'
+      require './diceBot/ShinMegamiTenseiKakuseihen'
       diceBot = ShinMegamiTenseiKakuseihen.new
       message = 'Game設定を真・女神転生TRPG　覚醒編に設定しました'
     when /(^|\s)Ryutama$/i
-      require 'diceBot/Ryutama'
+      require './diceBot/Ryutama'
       diceBot = Ryutama.new
       message = 'Game設定をりゅうたまに設定しました'
     when /(^|\s)CardRanker$/i
-      require 'diceBot/CardRanker'
+      require './diceBot/CardRanker'
       diceBot = CardRanker.new
       message = 'Game設定をカードランカーに設定しました'
     when /(^|\s)(None)$/i, ""
