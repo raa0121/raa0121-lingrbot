@@ -1,4 +1,5 @@
 require 'json'
+require 'prime'
 
 get '/ruby' do
   "lingr:RubyBot"

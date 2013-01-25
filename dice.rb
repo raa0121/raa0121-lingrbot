@@ -1,20 +1,5 @@
-#$LOAD_PATH << File.dirname(__FILE__) + "/BCDice/src"
-
-#require 'bcdiceCore.rb'
 require 'json'
-
-#class LingrDice
-#  
-#  def initialize
-#    @rollResult = ""
-#    @isSecret = false
-#    @rands = nil
-#    @isTest = false
-#  end
-#
-#  attr :isSecret
-#
-#end
+BCDicePATH = "/home/raa0121/BCDice"
 
 get '/dice' do
 	'lingr:DiceBot'
@@ -22,23 +7,19 @@ end
 post '/dice' do
   content_type :text
   json = JSON.parse(request.body.string)
-  tmp = []
-  sum = 0
+  gameType = "\"\""
+
   json["events"].map do |e|
     if e["message"]
       m = e["message"]["text"]
       u = e["message"]["nickname"]
-      if /^(\d+)d(\d+)\b/ =~ m
-        n = $1.to_i
-        f = $2.to_i
-        if n < 256
-          n.times do |i| 
-            tmp[i] = rand(f)+1
-            sum += tmp[i]
-          end
-          "#{u} : #{n}d#{f}(#{tmp.join(",")})=> #{sum}"
-        end
-      end
+      command = m.strip.split(/[\s　]/)
+      diceCommand = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
+      File.open("gameList.json","r"){|gl|
+        gameList = JSON.parse(gl.read)
+        gameType = gameList.fetch(command[1],"\"\"")
+        "#{u} : #{`cd #{BCDicePATH}/src; ruby-1.8 cgiDiceBot.rb #{diceCommand} #{gameType}`}"
+      }
     end
   end
 end
