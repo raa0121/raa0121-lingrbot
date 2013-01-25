@@ -21,7 +21,10 @@ post '/dice' do
     command = m.strip.split(/[\s　]/)
     dice_command = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
     game_type = GAMELIST.fetch(command[1], '""')
-    result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{dice_command} #{game_type}`
-    "#{u} : #{result.gsub("\n","")}" unless result == "\n"
+    `cd #{BCDicePATH}; ruby customDiceBot.rb #{dice_command} #{game_type}`
+  }.reject {|result|
+    result == "\n"
+  }.map {|result|
+    "#{u} : #{result.gsub("\n","")}"
   }.join
 end
