@@ -3,8 +3,9 @@ require 'json'
 BCDicePATH = "BCDice"
 
 get '/dice' do
-	'lingr:DiceBot'
+  'lingr:DiceBot'
 end
+
 post '/dice' do
   content_type :text
   json = JSON.parse(request.body.string)
