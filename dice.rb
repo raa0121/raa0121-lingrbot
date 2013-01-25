@@ -18,7 +18,7 @@ post '/dice' do
     u = e["message"]["nickname"]
     command = m.strip.split(/[\s　]/)
     diceCommand = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
-    gl = File.read("gameList.json","r")
+    gl = File.read("gameList.json")
     gameList = JSON.parse(gl)
     gameType = gameList.fetch(command[1],"\"\"")
     result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
