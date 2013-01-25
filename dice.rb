@@ -6,6 +6,8 @@ get '/dice' do
   'lingr:DiceBot'
 end
 
+GAMELIST = File.read("gameList.json")
+
 post '/dice' do
   content_type :text
   json = JSON.parse(request.body.string)
@@ -18,8 +20,7 @@ post '/dice' do
     u = e["message"]["nickname"]
     command = m.strip.split(/[\s　]/)
     diceCommand = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
-    gl = File.read("gameList.json")
-    gameList = JSON.parse(gl)
+    gameList = JSON.parse(GAMELIST)
     gameType = gameList.fetch(command[1],"\"\"")
     result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
     "#{u} : #{result.gsub("\n","")}" unless result == "\n"
