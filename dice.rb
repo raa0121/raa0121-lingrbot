@@ -11,7 +11,7 @@ GAMELIST = File.read("gameList.json")
 post '/dice' do
   content_type :text
   json = JSON.parse(request.body.string)
-  gameType = "\"\""
+  gameType = '""'
 
   json["events"].select {|e|
     e["message"]
@@ -21,7 +21,7 @@ post '/dice' do
     command = m.strip.split(/\s/)
     diceCommand = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
     gameList = JSON.parse(GAMELIST)
-    gameType = gameList.fetch(command[1],"\"\"")
+    gameType = gameList.fetch(command[1], '""')
     result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
     "#{u} : #{result.gsub("\n","")}" unless result == "\n"
   }.join
