@@ -24,5 +24,5 @@ post '/dice' do
         "#{u} : #{result.gsub("\n","")}" unless result == "\n"
       }
     end
-  }
+  }.compact.join
 end
