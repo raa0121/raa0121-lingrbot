@@ -18,7 +18,7 @@ post '/dice' do
   }.map {|e|
     m = e["message"]["text"]
     u = e["message"]["nickname"]
-    command = m.strip.split(/[\s　]/)
+    command = m.strip.split(/\s/)
     diceCommand = command[0].gsub(">","\\>").gsub("<","\\<").gsub("(","\\(").gsub(")","\\)").gsub("=","\\=")
     gameList = JSON.parse(GAMELIST)
     gameType = gameList.fetch(command[1],"\"\"")
