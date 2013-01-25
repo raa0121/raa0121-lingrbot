@@ -19,7 +19,10 @@ post '/dice' do
       File.open("gameList.json","r"){|gl|
         gameList = JSON.parse(gl.read)
         gameType = gameList.fetch(command[1],"\"\"")
-        "#{u} : #{`cd #{BCDicePATH}/src; ruby-1.8 cgiDiceBot.rb #{diceCommand} #{gameType}`}"
+        result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
+        unless result == "\n"
+          "#{u} : #{result.gsub("\n","")}"
+        end
       }
     end
   end

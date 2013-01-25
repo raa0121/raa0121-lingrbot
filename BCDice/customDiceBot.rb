@@ -1,6 +1,6 @@
 #--*-coding:utf-8-*--
 
-require 'bcdiceCore.rb'
+require './bcdiceCore.rb'
 
 class CgiDiceBot
   
