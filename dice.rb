@@ -1,5 +1,6 @@
+# -*- coding : utf-8 -*-
 require 'json'
-BCDicePATH = "/home/raa0121/BCDice"
+BCDicePATH = "BCDice"
 
 get '/dice' do
 	'lingr:DiceBot'

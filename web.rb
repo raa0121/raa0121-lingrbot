@@ -1,4 +1,4 @@
-#$LOAD_PATH << File.dirname(__FILE__) + "/BCDice/src"
+# -*- coding : utf-8 -*-
 
 require 'rubygems'
 require 'sinatra'
