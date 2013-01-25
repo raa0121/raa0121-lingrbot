@@ -20,9 +20,7 @@ post '/dice' do
         gameList = JSON.parse(gl.read)
         gameType = gameList.fetch(command[1],"\"\"")
         result = `cd #{BCDicePATH}; ruby customDiceBot.rb #{diceCommand} #{gameType}`
-        unless result == "\n"
-          "#{u} : #{result.gsub("\n","")}"
-        end
+        "#{u} : #{result.gsub("\n","")}" unless result == "\n"
       }
     end
   end
