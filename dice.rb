@@ -10,7 +10,7 @@ post '/dice' do
   json = JSON.parse(request.body.string)
   gameType = "\"\""
 
-  json["events"].map do |e|
+  json["events"].map {|e|
     if e["message"]
       m = e["message"]["text"]
       u = e["message"]["nickname"]
@@ -23,5 +23,5 @@ post '/dice' do
         "#{u} : #{result.gsub("\n","")}" unless result == "\n"
       }
     end
-  end
+  }
 end
