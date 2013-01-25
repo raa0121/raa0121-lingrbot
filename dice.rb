@@ -1,12 +1,11 @@
 # -*- coding : utf-8 -*-
 require 'json'
 BCDicePATH = "BCDice"
+GAMELIST = JSON.parse File.read("gameList.json")
 
 get '/dice' do
   'lingr:DiceBot'
 end
-
-GAMELIST = JSON.parse File.read("gameList.json")
 
 post '/dice' do
   content_type :text
