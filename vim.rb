@@ -8,7 +8,9 @@ get '/vim' do
 end
 
 docroot = "./doc"
-tags = open("doc/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
+jadocroot = "./ja-doc"
+tags = open("#{tags}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
+jatags = open("#{jatags}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
 
 post '/vim' do
   content_type :text
@@ -46,6 +48,10 @@ post '/vim' do
         end
       elsif /^:h(elp)?/ =~ m
         help = m.strip.split(/[\s　]/)
+        if help[1] =~ /@ja/
+          tags = jatags
+          docroot = jadocroot
+        end
         t = tags.select {|t| t[0] == help[1]}.first
         if t
           text = open("#{docroot}/#{t[1]}").read
