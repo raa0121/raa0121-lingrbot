@@ -8,6 +8,11 @@ get '/vim' do
 end
 
 docroot = "./doc"
+t = open("doc/tags").read.lines.map {|l|
+  l.chomp.split("\t", 3)
+}.select {|t|
+  t[0] == help[1]
+}.first
 
 post '/vim' do
   content_type :text
@@ -45,7 +50,6 @@ post '/vim' do
         end
       elsif /^:h(elp)?/ =~ m
         help = m.strip.split(/[\s　]/)
-        t = open("doc/tags").read.lines.map {|l| l.chomp.split("\t", 3)}.select {|t| t[0] == help[1]}.first
         if t
           text = open("#{docroot}/#{t[1]}").read
           text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
