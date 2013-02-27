@@ -9,3 +9,4 @@ end
 
 load 'dice.rb'
 load 'bot.rb'
+load 'vim.rb'
