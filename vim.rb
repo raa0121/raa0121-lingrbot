@@ -51,8 +51,9 @@ post '/vim' do
         if help[1] =~ /@ja/
           tags = jatags
           docroot = jadocroot
+          t = tags.select {|t| t[0] == help[1]}.first
+          t[2].sub! /.txt$/, 'jax'
         end
-        t = tags.select {|t| t[0] == help[1]}.first
         if t
           text = open("#{docroot}/#{t[1]}").read
           text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
