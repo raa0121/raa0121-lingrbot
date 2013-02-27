@@ -10,7 +10,6 @@ end
 docroot = "./doc"
 jadocroot = "./ja-doc"
 tags = open("#{docroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
-jatags = open("#{jadocroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
 
 post '/vim' do
   content_type :text
@@ -50,7 +49,7 @@ post '/vim' do
         help = m.strip.split(/[\s　]/)
         if help[1] =~ /@ja/
           docroot = jadocroot
-          t = jatags.select {|t| t[0] == help[1]}.first
+          t = tags.select {|t| t[0] == help[1]}.first
           t[2].sub! /.txt$/, 'jax'
         end
         t = tags.select {|t| t[0] == help[1]}.first
