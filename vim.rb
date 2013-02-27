@@ -6,7 +6,9 @@ require "open-uri"
 get '/vim' do
   "VimAdv & :help"
 end
- 
+
+docroot = "./doc"
+
 post '/vim' do
   content_type :text
   json = JSON.parse(request.body.string)
