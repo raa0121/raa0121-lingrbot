@@ -9,8 +9,8 @@ end
 
 docroot = "./doc"
 jadocroot = "./ja-doc"
-tags = open("#{tags}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
-jatags = open("#{jatags}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
+tags = open("#{docroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
+jatags = open("#{jadocroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
 
 post '/vim' do
   content_type :text
