@@ -1,5 +1,5 @@
 # -*- coding : utf-8 -*-
-require "sinatra"
+#require "sinatra"
 require "json"
 require "open-uri"
 
@@ -50,14 +50,16 @@ post '/vim' do
         t = tags.select {|t| t[0] == help[1].sub(/@ja/,"")}.first
         if help[1] =~ /@ja/
           docroot = jadocroot
-          t[2].sub! /.txt$/, 'jax'
+          t[1].sub! /.txt$/, '.jax'
         end
         if t
           text = open("#{docroot}/#{t[1]}").read
           text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
           l = /\n(.*\s+\*[^\n\s]+\*|\n=+)$/.match(text)
           text = text[0.. (l ? l.begin(0) : -1)]
-          return text
+          docroot = './doc'
+          t[1].sub! /.jax$/, '.txt'
+         return text
         else
           return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png'
         end
