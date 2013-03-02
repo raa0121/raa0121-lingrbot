@@ -1719,7 +1719,7 @@ More patches:
     Schmidt, 2008 Jul 22.
 -   testdir/Make_dos_sh.mak for running tests with MingW. (Bill Mccarthy, 2008
     Sep 13)
--   Patch for adding "space" item in 'listchars'. (Jérémie Roquet, 2009 Oct 29,
+-   Patch for adding "space" item in 'listchars'. (J辿r辿mie Roquet, 2009 Oct 29,
     Docs patch Oct 30)
 -   Replace ccomplete.vim by cppcomplete.vim from www.vim.org?  script 1520 by
     Vissale Neang.  (Martin Stubenschrott) Asked Vissale to make the scripts

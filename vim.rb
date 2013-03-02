@@ -8,7 +8,7 @@ get '/vim' do
 end
 
 docroot = "./doc"
-#jadocroot = "./ja-doc"
+jadocroot = "./ja-doc"
 tags = open("#{docroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
 
 post '/vim' do
@@ -47,11 +47,11 @@ post '/vim' do
         end
       elsif /^:h(elp)?/ =~ m
         help = m.strip.split(/[\s　]/)
-        t = tags.select {|t| t[0] == help[1]#.sub(/@ja/,"")}.first
-        #if help[1] =~ /@ja/
-        #  docroot = jadocroot
-        #  t[2].sub! /.txt$/, 'jax'
-        #end
+        t = tags.select {|t| t[0] == help[1].sub(/@ja/,"")}.first
+        if help[1] =~ /@ja/
+          docroot = jadocroot
+          t[2].sub! /.txt$/, 'jax'
+        end
         if t
           text = open("#{docroot}/#{t[1]}").read
           text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]

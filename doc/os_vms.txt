@@ -702,13 +702,13 @@ In a cluster that contains nodes with different architectures like below:
 $show cluster
 View of Cluster from system ID 11655  node: TOR                                                                     18-AUG-2008 11:58:31
 +---------------------------------+
-¦        SYSTEMS        ¦ MEMBERS ¦
-+-----------------------+---------¦
-¦  NODE  ¦   SOFTWARE   ¦  STATUS ¦
-+--------+--------------+---------¦
-¦ TOR    ¦ VMS V7.3-2   ¦ MEMBER  ¦
-¦ TITAN2 ¦ VMS V8.3     ¦ MEMBER  ¦
-¦ ODIN   ¦ VMS V7.3-2   ¦ MEMBER  ¦
+       SYSTEMS        ãƒ² MEMBERS ãƒ²
++-----------------------+---------ãƒ²
+ãƒ²  NODE  ãƒ²   SOFTWARE   ãƒ²  STATUS ãƒ²
++--------+--------------+---------ãƒ²
+ãƒ² TOR    ãƒ² VMS V7.3-2   ãƒ² MEMBER  ãƒ²
+ãƒ² TITAN2 ãƒ² VMS V8.3     ãƒ² MEMBER  ãƒ²
+ãƒ² ODIN   ãƒ² VMS V7.3-2   ãƒ² MEMBER  ãƒ²
 +---------------------------------+
 
 It is convenient to have a common VIM directory but execute different

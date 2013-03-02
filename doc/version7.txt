@@ -7377,7 +7377,7 @@ Python 3 completion (Aaron Griffin)
 Serbian menu translations (Aleksandar Jelenak)
 Tetum spell files
 Tutor Bairish (Sepp Hell)
-Tutor in Esperanto. (Dominique Pellé)
+Tutor in Esperanto. (Dominique Pell辿)
 Tutor in Portuguese.
 Norwegian Tutor now also available as tutor.nb
 
