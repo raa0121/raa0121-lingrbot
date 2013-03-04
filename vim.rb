@@ -2,6 +2,8 @@
 #require "sinatra"
 require "json"
 require "open-uri"
+require "mechanize"
+require 'cgi'
 
 get '/vim' do
   "VimAdv & :help"
@@ -63,6 +65,16 @@ post '/vim' do
         else
           return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png'
         end
+      elsif /^:vimhacks\s+?(\d+)/ =~ m
+        "http://vim-users.jp/hack#{$1}"
+      elsif /^:vimhacks\s+?(.*)/ =~ m
+        agent = Mechanize.new
+        agent.get("http://vim-users.jp/?s=#{CGI.escape($1)}")
+        return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}.select{|s| /hack/ =~ s}.join("\n")
+      elsif /^またMacVimか$/ =~ m
+        return 'http://bit.ly/f2fjvZ#.png'
+      elsif /SEGV/ =~ m
+        "キャッシュ(笑)"
       end
     end
   }
