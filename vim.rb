@@ -70,7 +70,8 @@ post '/vim' do
         agent.get("http://vim-users.jp/category/vim-hacks/")
         return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
       elsif /^:vimhacks\s+?(\d+)\b/ =~ m
-        "http://vim-users.jp/hack#{$1}"
+        agent.get("http://vim-users.jp/hack#{$1}")
+        return "#{agent.page.search('h1').inner_text} - #{agent.page.uri}"
       elsif /^:vimhacks\s+?(.*)\b/ =~ m
         agent.get("http://vim-users.jp/?s=#{CGI.escape($1)}&cat=19")
         return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}.select{|s| /hack/ =~ s}.join("\n")
