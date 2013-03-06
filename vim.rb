@@ -69,7 +69,7 @@ post '/vim' do
         "http://vim-users.jp/hack#{$1}"
       elsif /^:vimhacks\s+?(.*)/ =~ m
         agent = Mechanize.new
-        agent.get("http://vim-users.jp/?s=#{CGI.escape($1)}")
+        agent.get("http://vim-users.jp/?s=#{CGI.escape($1)}&cat=19")
         return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}.select{|s| /hack/ =~ s}.join("\n")
       elsif /^またMacVimか$/ =~ m
         return 'http://bit.ly/f2fjvZ#.png'
