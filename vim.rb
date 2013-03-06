@@ -12,6 +12,7 @@ end
 docroot = "./doc"
 jadocroot = "./ja-doc"
 tags = open("#{docroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
+agent = Mechanize.new
 
 post '/vim' do
   content_type :text
@@ -65,10 +66,12 @@ post '/vim' do
         else
           return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png'
         end
-      elsif /^:vimhacks\s+?(\d+)/ =~ m
+      elsif /^:vimhacks$/ =~ m
+        agent.get("http://vim-users.jp/category/vim-hacks/")
+        return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
+      elsif /^:vimhacks\s+?(\d+)\b/ =~ m
         "http://vim-users.jp/hack#{$1}"
-      elsif /^:vimhacks\s+?(.*)/ =~ m
-        agent = Mechanize.new
+      elsif /^:vimhacks\s+?(.*)\b/ =~ m
         agent.get("http://vim-users.jp/?s=#{CGI.escape($1)}&cat=19")
         return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}.select{|s| /hack/ =~ s}.join("\n")
       elsif /^またMacVimか$/ =~ m
