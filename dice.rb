@@ -1,7 +1,7 @@
 # -*- coding : utf-8 -*-
 require 'json'
 BCDicePATH = "BCDice"
-GAMELIST = JSON.parse File.read("gameList.json","r:UTF-8")
+GAMELIST = JSON.parse File.open("gameList.json","r:UTF-8").read
 
 get '/dice' do
   'lingr:DiceBot'
