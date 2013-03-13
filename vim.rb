@@ -20,7 +20,6 @@ def VimAdv(message)
   date = []
   author = []
   count = []
-  counter = 0
   command = message.strip.split(/[\s　]/)
   event = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
   event["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
@@ -35,12 +34,7 @@ def VimAdv(message)
   elsif command[1] =~ /^\d+/
     "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{url[command[1].to_i-1]}"
   elsif command[1] =~ /^(.*)/
-    author.each do |a|
-      if a == command[1]
-        counter+=1
-      end
-    end
-    "#{command[1]} was written #{counter} times."
+    "#{command[1]} was written #{author.count {|a| a == command[1] }} times."
   end
 end
 
