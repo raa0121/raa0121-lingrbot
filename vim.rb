@@ -11,7 +11,7 @@ end
 
 docroot = "./doc"
 jadocroot = "./ja-doc"
-tags = open("#{docroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
+tags = File.read("#{docroot}/tags").lines.map {|l| l.chomp.split("\t", 3) }
 agent = Mechanize.new
 
 def VimAdv(message)
@@ -31,16 +31,16 @@ def VimAdv(message)
     url << $5
   }
   if command[1] == nil 
-    return "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{url.reverse[0]}"
+    "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{url.reverse[0]}"
   elsif command[1] =~ /^\d+/
-    return "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{url[command[1].to_i-1]}"
+    "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{url[command[1].to_i-1]}"
   elsif command[1] =~ /^(.*)/
     author.each do |a|
       if a == command[1]
         counter+=1
       end
     end
-    return "#{command[1]} was written #{counter} times."
+    "#{command[1]} was written #{counter} times."
   end
 end
 
@@ -66,7 +66,7 @@ post '/vim' do
           text = text[0.. (l ? l.begin(0) : -1)]
           docroot = './doc'
           t[1].sub! /.jax$/, '.txt'
-         return text
+          return text
         else
           return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png'
         end
