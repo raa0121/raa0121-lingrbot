@@ -47,8 +47,7 @@ end
 post '/vim' do
   content_type :text
   json = JSON.parse(request.body.string)
-  json["events"].map{|e|
-    if e["message"]
+  json["events"].filter {|e| e['message'] }.map {|e|
       m = e["message"]["text"]
       if /^!VimAdv/ =~ m
         VimAdv(m)
@@ -84,6 +83,5 @@ post '/vim' do
       elsif /SEGV/ =~ m
         "キャッシュ(笑)"
       end
-    end
   }
 end
