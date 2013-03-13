@@ -54,7 +54,7 @@ post '/vim' do
         t[1].sub! /.txt$/, '.jax'
       end
       if t
-        text = File.open("#{docroot}/#{t[1]}")
+        text = File.read("#{docroot}/#{t[1]}")
         text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
         l = /\n(.*\s+\*[^\n\s]+\*|\n=+)$/.match(text)
         text = text[0.. (l ? l.begin(0) : -1)]
