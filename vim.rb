@@ -14,40 +14,44 @@ jadocroot = "./ja-doc"
 tags = open("#{docroot}/tags").read.lines.map {|l| l.chomp.split("\t", 3) }
 agent = Mechanize.new
 
-post '/vim' do
-  content_type :text
-  json = JSON.parse(request.body.string)
+def VimAdv(message)
   url = [] 
   title = []
   date = []
   author = []
   count = []
   counter = 0
+  command = message.strip.split(/[\s　]/)
+  event = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
+  event["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
+    count << $1
+    date << $2
+    author << $3
+    title << $4
+    url << $5
+  }
+  if command[1] == nil 
+    return "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{url.reverse[0]}"
+  elsif command[1] =~ /^\d+/
+    return "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{url[command[1].to_i-1]}"
+  elsif command[1] =~ /^(.*)/
+    author.each do |a|
+      if a == command[1]
+        counter+=1
+      end
+    end
+    return "#{command[1]} was written #{counter} times."
+  end
+end
+
+post '/vim' do
+  content_type :text
+  json = JSON.parse(request.body.string)
   json["events"].map{|e|
     if e["message"]
       m = e["message"]["text"]
       if /^!VimAdv/ =~ m
-        command = m.strip.split(/[\s　]/)
-        event = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-        event["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
-          count << $1
-          date << $2
-          author << $3
-          title << $4
-          url << $5
-        }
-        if command[1] == nil 
-          return "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{url.reverse[0]}"
-        elsif command[1] =~ /^\d+/
-          return "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{url[command[1].to_i-1]}"
-        elsif command[1] =~ /^(.*)/
-          author.each do |a|
-            if a == command[1]
-              counter+=1
-            end
-          end
-          return "#{command[1]} was written #{counter} times."
-        end
+        VimAdv(m)
       elsif /^:h(elp)?/ =~ m
         help = m.strip.split(/[\s　]/)
         t = tags.select {|t| t[0] == help[1].sub(/@ja/,"")}.first
