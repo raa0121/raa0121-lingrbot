@@ -47,7 +47,7 @@ end
 post '/vim' do
   content_type :text
   json = JSON.parse(request.body.string)
-  json["events"].filter {|e| e['message'] }.map {|e|
+  json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     case m
     when /^!VimAdv/
