@@ -49,9 +49,10 @@ post '/vim' do
   json = JSON.parse(request.body.string)
   json["events"].filter {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
-    if /^!VimAdv/ =~ m
+    case m
+    when /^!VimAdv/
       VimAdv(m)
-    elsif /^:h(elp)?/ =~ m
+    when /^:h(elp)?/
       help = m.strip.split(/[\s　]/)
       t = tags.select {|t| t[0] == help[1].sub(/@ja/,"")}.first
       if help[1] =~ /@ja/
@@ -69,19 +70,21 @@ post '/vim' do
       else
         return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png'
       end
-    elsif /^:vimhacks$/ =~ m
+    when /^:vimhacks$/
       agent.get("http://vim-users.jp/category/vim-hacks/")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
-    elsif /^:vimhacks\s+?(\d+)\b/ =~ m
+    when /^:vimhacks\s+?(\d+)\b/
       agent.get("http://vim-users.jp/hack#{$1}")
       return "#{agent.page.search('h1').inner_text} - #{agent.page.uri}"
-    elsif /^:vimhacks\s+?(.*)\b/ =~ m
+    when /^:vimhacks\s+?(.*)\b/
       agent.get("http://vim-users.jp/?s=#{CGI.escape($1)}&cat=19")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}.select{|s| /hack/ =~ s}.join("\n")
-    elsif /^またMacVimか$/ =~ m
+    when /^またMacVimか$/
       return 'http://bit.ly/f2fjvZ#.png'
-    elsif /SEGV/ =~ m
+    when /SEGV/ =~ m
       "キャッシュ(笑)"
+    else
+      nil
     end
   }
 end
