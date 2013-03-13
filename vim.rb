@@ -54,13 +54,13 @@ post '/vim' do
       VimAdv(m)
     when /^:h(elp)?/
       help = m.strip.split(/[\s　]/)
-      t = tags.select {|t| t[0] == help[1].sub(/@ja/,"")}.first
+      t = tags.detect {|t| t[0] == help[1].sub(/@ja/,"") }
       if help[1] =~ /@ja/
         docroot = jadocroot
         t[1].sub! /.txt$/, '.jax'
       end
       if t
-        text = open("#{docroot}/#{t[1]}").read
+        text = File.open("#{docroot}/#{t[1]}")
         text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
         l = /\n(.*\s+\*[^\n\s]+\*|\n=+)$/.match(text)
         text = text[0.. (l ? l.begin(0) : -1)]
