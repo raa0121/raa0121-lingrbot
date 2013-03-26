@@ -12,7 +12,7 @@ post '/nicothumb' do
   json["events"].map{|e|
     if e["message"]
       m = e["message"]["text"]
-      if /^http:\/\/(www.)?nico(.ms\/|video.jp\/watch\/)((sm|nm|so)\d+)$/ =~ m
+      if /^http:\/\/(www.)?nico(.ms\/|video.jp\/watch\/)(.*)?.*$/ =~ m
         html = agent.get("http://ext.nicovideo.jp/api/getthumbinfo/#{$3}")
         next unless html
         info = REXML::Document.new html.body
