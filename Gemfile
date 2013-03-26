@@ -8,4 +8,4 @@ gem 'tilt','1.3.3'
 gem 'sinatra','1.3.2'
 gem 'thin','1.3.1'
 gem 'bundler','1.2.4'
-
+gem 'mechanize','2.5.1'
