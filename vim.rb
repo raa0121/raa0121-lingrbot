@@ -14,27 +14,24 @@ jadocroot = "./ja-doc"
 tags = File.read("#{docroot}/tags").lines.map {|l| l.chomp.split("\t", 3) }
 agent = Mechanize.new
 
-def VimAdv(message)
+def VimAdv(event)
   url = [] 
   title = []
   date = []
   author = []
   count = []
   user = []
-  command = message.strip.split(/[\s　]/)
-  event = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-  event["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
-    count << $1
-    date << $2
-    author << $3
-    title << $4
-    url << $5
+  command = event['message']["text"].strip.split(/[\s　]/)
+  atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
+  atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
+    count << $1; date << $2; author << $3; title << $4; url << $5
   }
   if command[1] == nil 
     "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{url.reverse[0]}"
   elsif command[1] =~ /^\d+/
     "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{url[command[1].to_i-1]}"
   elsif command[1] =~ /^(.*)/
+    command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     author.zip(count,date,title,url).each{|a,c,d,t,u|
       if a == "@#{command[1]}"
         user << "#{c} #{d} #{a} #{t} - #{u}"
@@ -51,7 +48,7 @@ post '/vim' do
     m = e["message"]["text"]
     case m
     when /^!VimAdv/
-      VimAdv(m)
+      VimAdv(e)
     when /^:h(elp)?/
       help = m.strip.split(/[\s　]/)
       t = tags.detect {|t| t[0] == help[1].sub(/@ja/,"") }
