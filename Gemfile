@@ -1,4 +1,4 @@
-source :rubygems
+source 'http://rubygems.org'
 gem 'daemons','1.1.6'
 gem 'eventmachine','0.12.10'
 gem 'json','1.7.7'
@@ -9,3 +9,4 @@ gem 'sinatra','1.3.2'
 gem 'thin','1.3.1'
 gem 'bundler','1.2.4'
 gem 'mechanize','2.5.1'
+ruby '2.0.0'
