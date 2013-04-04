@@ -16,7 +16,7 @@ agent = Mechanize.new
 
 def Help(m,docroot,jadocroot,tags)
   help = m.strip.split(/[\s　]/)
-  t = tags.detect {|t| t[0] =~ /#{help[1].sub(/@ja/,"").sub("+","\\+")}/ }
+  t = tags.detect {|t| t[0] == help[1].sub(/@ja/,"").sub("+","\\+")}
   if help[1] =~ /@ja/
     docroot = jadocroot
     t[1].sub! /.txt$/, '.jax'
