@@ -47,8 +47,6 @@ def VimAdv(event)
     count << $1; date << $2; author << $3; title << $4; url << $5
   }
   query = ['version=2.0.1&' , '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
-  url.each{|u|
-    result['results'][u]
   if command[1] == nil
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url.reverse[0]}#{query[1]}").read)
     "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{result["results"][url.reverse[0]]["shortUrl"]}"
