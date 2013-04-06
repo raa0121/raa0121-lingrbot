@@ -46,15 +46,21 @@ def VimAdv(event)
   atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
     count << $1; date << $2; author << $3; title << $4; url << $5
   }
-  if command[1] == nil 
-    "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{url.reverse[0]}"
+  query = ['version=2.0.1&' , '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
+  url.each{|u|
+    result['results'][u]
+  if command[1] == nil
+    result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url.reverse[0]}#{query[1]}").read)
+    "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{result["results"][url.reverse[0]]["shortUrl"]}"
   elsif command[1] =~ /^\d+/
-    "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{url[command[1].to_i-1]}"
+    result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url[command[1].to_i-1]}#{query[1]}").read)
+    "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{result["results"][url[command[1].to_i-1]]["shortUrl"]}"
   elsif command[1] =~ /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     author.zip(count,date,title,url).each{|a,c,d,t,u|
       if a == "@#{command[1]}"
-        user << "#{c} #{d} #{a} #{t} - #{u}"
+        result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{u}#{query[1]}").read)
+        user << "#{c} #{d} #{a} #{t} - #{result["results"][u]["shortUrl"]}"
       end
     } 
     return user.join("\n")
