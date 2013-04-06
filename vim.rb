@@ -35,24 +35,20 @@ def Help(m,docroot,jadocroot,tags)
 end
 
 def VimAdv(event)
-  url = [] 
-  title = []
-  date = []
-  author = []
-  count = []
-  user = []
+  url = []; title = []; date = []; author = []; count = []; user = []
   command = event['message']["text"].strip.split(/[\s　]/)
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
   atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
     count << $1; date << $2; author << $3; title << $4; url << $5
   }
-  query = ['version=2.0.1&' , '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
+  query = ['version=2.0.1&longUrl=' , '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
   if command[1] == nil
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url.reverse[0]}#{query[1]}").read)
     "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{result["results"][url.reverse[0]]["shortUrl"]}"
   elsif command[1] =~ /^\d+/
-    result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url[command[1].to_i-1]}#{query[1]}").read)
-    "#{count[command[1].to_i-1]} #{date[command[1].to_i-1]} #{author[command[1].to_i-1]} #{title[command[1].to_i-1]} - #{result["results"][url[command[1].to_i-1]]["shortUrl"]}"
+    day = command[1].to_i - 1
+    result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url[day]}#{query[1]}").read)
+    "#{count[day]} #{date[day]} #{author[day]} #{title[day]} - #{result["results"][url[day]]["shortUrl"]}"
   elsif command[1] =~ /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     author.zip(count,date,title,url).each{|a,c,d,t,u|
@@ -71,7 +67,7 @@ post '/vim' do
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     case m
-    when /^!VimAdv/
+    when /^(!VimAdv|:vimadv)/
       VimAdv(e)
     when /^:h(elp)?/
       Help(m,docroot,jadocroot,tags)
