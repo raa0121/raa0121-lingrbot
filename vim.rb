@@ -88,7 +88,7 @@ post '/vim' do
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}.select{|s| /hack/ =~ s}.join("\n")
     when /^またMacVimか$/
       return 'http://bit.ly/f2fjvZ#.png'
-    when /SEGV/ =~ m
+    when /SEGV/
       return "キャッシュ(笑)"
     else
       nil
