@@ -42,10 +42,10 @@ def VimAdv(event)
   atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
     count << $1; date << $2; author << $3; title << $4; url << $5
   }
-  query = ['version=2.0.1&longUrl=' , '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
+  query = ['version=2.0.1&longUrl=', '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
   if command[1] == nil
-    result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url.reverse[0]}#{query[1]}").read)
-    "#{count.reverse[0]} #{date.reverse[0]} #{author.reverse[0]} #{title.reverse[0]} - #{result["results"][url.reverse[0]]["shortUrl"]}"
+    result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url[-1]}#{query[1]}").read)
+    "#{count[-1]} #{date[-1]} #{author[-1]} #{title[-1]} - #{result["results"][url[-1]]["shortUrl"]}"
   elsif command[1] =~ /^\d+/
     day = command[1].to_i - 1
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{url[day]}#{query[1]}").read)
@@ -89,7 +89,7 @@ post '/vim' do
     when /^またMacVimか$/
       return 'http://bit.ly/f2fjvZ#.png'
     when /SEGV/ =~ m
-      "キャッシュ(笑)"
+      return "キャッシュ(笑)"
     else
       nil
     end
