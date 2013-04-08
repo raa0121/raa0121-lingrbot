@@ -37,6 +37,7 @@ end
 def VimAdv(event)
   url = []; title = []; date = []; author = []; count = []; user = []
   command = event['message']["text"].strip.split(/[\s　]/)
+  room = event['message']['room']
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
   atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
     count << $1; date << $2; author << $3; title << $4; url << $5
@@ -56,8 +57,13 @@ def VimAdv(event)
         result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{u}#{query[1]}").read)
         user << "#{c} #{d} #{a} #{t} - #{result["results"][u]["shortUrl"]}"
       end
-    } 
-    return user.join("\n")
+    }
+    if user.length >= 10 
+      split = JSON.parse(open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape(user[0..9].join("\n"))}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read)
+      return "#{user[10..-1].join("\n")}"
+    else
+      return "#{user.join("\n")}"
+    end
   end
 end
 
