@@ -60,9 +60,9 @@ def VimAdv(event)
     }
     if user.length >= 10 
       split = JSON.parse(open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape(user[0..9].join("\n"))}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read)
-      return "#{user[10..-1].join("\n")}"
+      return "合計 #{user.length}件\n#{user[10..-1].join("\n")}"
     else
-      return "#{user.join("\n")}"
+      return "合計 #{user.length}件\n#{user.join("\n")}"
     end
   end
 end
