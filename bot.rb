@@ -11,7 +11,7 @@ post '/ruby' do
   json["events"].map do |e|
     if e["message"]
       m = e["message"]["text"]
-      if /^!ruby\s+(.*)/m =~ m
+      if /^![c]?ruby\s+(.*)/m =~ m
         #x = Thread.start do
         $SAFE = 2
         after = eval "#{$1}"
