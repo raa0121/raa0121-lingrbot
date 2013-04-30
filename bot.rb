@@ -14,7 +14,7 @@ post '/ruby' do
       if /^!(c)?ruby\s+(.*)/m =~ m
         #x = Thread.start do
         $SAFE = 2
-        after = eval "#{$1}"
+        after = eval "#{$2}"
         return "#{after}"
         #end
         #  "#{x.value}"
