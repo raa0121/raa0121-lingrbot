@@ -59,7 +59,7 @@ def VimAdv(event)
     data.map{|v|
       if v[-1]["author"] == "@#{command[1]}"
         result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{v[-1]["url"]}#{query[1]}").read)
-        user << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"} #{v[-1]["title"} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
+        user << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
       end
     }
     if user.length >= 10 
