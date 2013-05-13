@@ -32,7 +32,7 @@ def VimAdv(event)
   command = event['message']["text"].strip.split(/[\s　]/)
   room = event['message']['room']
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-  atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/){
+  atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/) {
     data[$1] = {"count" => $1, "date" => $2, "author" => $3, "title" => $4, "url" => $5}
   }
   data = data.sort
@@ -50,7 +50,7 @@ def VimAdv(event)
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "mattn_jp" if command[1] == "mattn"
     command[1] = "ujihisa" if command[1] == "u"
-    data.map{|v|
+    data.map {|v|
       if v[-1]["author"] == "@#{command[1]}"
         result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{v[-1]["url"]}#{query[1]}").read)
         user << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
