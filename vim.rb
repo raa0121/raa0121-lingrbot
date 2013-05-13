@@ -36,6 +36,7 @@ end
 
 def VimAdv(event)
   data = Hash.new
+  user = []
   command = event['message']["text"].strip.split(/[\s　]/)
   room = event['message']['room']
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
