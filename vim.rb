@@ -14,24 +14,21 @@ jadocroot = "./ja-doc"
 tags = File.read("#{docroot}/tags").lines.map {|l| l.chomp.split("\t", 3) }
 agent = Mechanize.new
 
-def Help(m,docroot,jadocroot,tags)
+def Help(m, docroot, jadocroot, tags)
   help = m.strip.split(/[\s　]/)
   t = tags.detect {|t| t[0] == help[1].sub(/@ja/,"").sub("+","\\+")}
   if help[1] =~ /@ja/
     docroot = jadocroot
     t[1].sub! /.txt$/, '.jax'
   end
-  if t
-    text = File.read("#{docroot}/#{t[1]}")
-    text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
-    l = /\n(.*\s+\*[^\n\s]+\*|\n=+)$/.match(text)
-    text = text[0.. (l ? l.begin(0) : -1)]
-    docroot = './doc'
-    t[1].sub! /.jax$/, '.txt'
-    return text
-  else
-    return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png'
-  end
+  return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png' unless t
+  text = File.read("#{docroot}/#{t[1]}")
+  text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
+  l = /\n(.*\s+\*[^\n\s]+\*|\n=+)$/.match(text)
+  text = text[0.. (l ? l.begin(0) : -1)]
+  docroot = './doc'
+  t[1].sub! /.jax$/, '.txt'
+  text
 end
 
 def VimAdv(event)
