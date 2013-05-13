@@ -42,15 +42,16 @@ def VimAdv(event)
   }
   data = data.sort
   query = ['version=2.0.1&longUrl=', '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
-  if command[1] == nil
+  case command[1]
+  when nil
     last = data[-1][-1]
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{last["url"]}#{query[1]}").read)
     "#{last["count"]} #{last["date"]} #{last["author"]} #{last["title"]} - #{result["results"][last["url"]]["shortUrl"]}"
-  elsif command[1] =~ /^\d+/
+  when /^\d+/
     day = data["%03d"%command[1]][-1]
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{day["url"]}#{query[1]}").read)
     "#{day["count"]} #{day["date"]} #{day["author"]} #{day["title"]} - #{result["results"][day["url"]]["shortUrl"]}"
-  elsif command[1] =~ /^(.*)/
+  when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "mattn_jp" if command[1] == "mattn"
     command[1] = "ujihisa" if command[1] == "u"
