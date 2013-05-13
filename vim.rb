@@ -9,11 +9,6 @@ get '/vim' do
   "VimAdv & :help"
 end
 
-docroot = "./doc"
-jadocroot = "./ja-doc"
-tags = File.read("#{docroot}/tags").lines.map {|l| l.chomp.split("\t", 3) }
-agent = Mechanize.new
-
 def Help(m, docroot, jadocroot, tags)
   help = m.strip.split(/[\s　]/)
   t = tags.detect {|t| t[0] == help[1].sub(/@ja/,"").sub("+","\\+")}
@@ -70,6 +65,11 @@ def VimAdv(event)
   end
 end
 
+docroot = "./doc"
+jadocroot = "./ja-doc"
+tags = File.read("#{docroot}/tags").lines.map {|l| l.chomp.split("\t", 3) }
+agent = Mechanize.new
+
 post '/vim' do
   content_type :text
   json = JSON.parse(request.body.string)
@@ -96,5 +96,5 @@ post '/vim' do
     else
       nil
     end
-  }
+  }.compact.join
 end
