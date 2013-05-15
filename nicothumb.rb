@@ -18,6 +18,13 @@ post '/nicothumb' do
         info = REXML::Document.new html.body
         next unless info.elements['nicovideo_thumb_response']
         "#{info.elements['nicovideo_thumb_response/thumb/thumbnail_url'].text}\#.jpg"
+      elsif /^http:\/\/www.pixiv.net\/member_illust.php?mode=medium&illust_id=(\d+)/ =~ m
+        agent.get(m)
+        pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
+        file = Time.now.to_i
+        agent.get(pixiv).save_as("./pixiv_#{file}.png") 
+        url = `./gyazo pixiv_#{file}.png`.gsub("\n","")
+        "#{url}"
      end
     end
   }
