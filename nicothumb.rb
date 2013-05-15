@@ -26,7 +26,8 @@ post '/nicothumb' do
                   "http://www.pixiv.net",
                   nil).save("./pixiv_#{file}.png") 
         url = `./gyazo pixiv_#{file}.png`.gsub("\n","")
-        "#{url}"
+        `rm pixiv#{file}.png`
+        "#{url}.png"
      end
     end
   }
