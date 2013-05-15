@@ -22,8 +22,10 @@ post '/nicothumb' do
         agent.get(m)
         pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
         file = Time.now.to_i
-        agent.get(pixiv).save_as("./pixiv_#{file}.png") 
-        url = `/app/gyazo pixiv_#{file}.png`.gsub("\n","")
+        agent.get(pixiv, nil,
+                  "http://www.pixiv.net",
+                  nil).save("./pixiv_#{file}.png") 
+        url = `./gyazo pixiv_#{file}.png`.gsub("\n","")
         "#{url}"
      end
     end
