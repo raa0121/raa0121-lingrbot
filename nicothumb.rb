@@ -6,6 +6,11 @@ require 'rexml/document'
 
 agent = Mechanize.new
 
+get '/nicothumb' do
+  content_type :text
+  "thumb"
+end
+
 post '/nicothumb' do
   content_type :text
   json = JSON.parse(request.body.string)
@@ -26,7 +31,7 @@ post '/nicothumb' do
                   "http://www.pixiv.net",
                   nil).save("./pixiv_#{file}.png") 
         url = `./gyazo pixiv_#{file}.png`.gsub("\n","")
-        `rm pixiv#{file}.png`
+        File.delete("pixiv_#{file}.png")
         "#{url}.png"
      end
     end

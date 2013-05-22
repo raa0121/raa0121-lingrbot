@@ -28,7 +28,7 @@ end
 
 def VimAdv(event)
   data = Hash.new
-  user = []
+  user = [];search=[]
   command = event['message']["text"].strip.split(/[\s　]/)
   room = event['message']['room']
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
@@ -59,8 +59,21 @@ def VimAdv(event)
     if user.length >= 10 
       split = JSON.parse(open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape("合計 #{user.length}件\n#{user[0..9].join("\n")}")}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read)
       return user[10..-1].join("\n")
-    else
+    elsif user.length > 0
       return "合計 #{user.length}件\n#{user.join("\n")}"
+    else
+      data.map {|v|
+        if /#{command[1]}/ =~ v[-1]["title"]
+          result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{v[-1]["url"]}#{query[1]}").read)
+          search << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
+        end
+      }
+      if search.length >= 10
+        split = JSON.parse(open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape("合計 #{search.length}件\n#{search[0..9].join("\n")}")}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read)
+        return search[10..-1].join("\n")
+      elsif search.length > 0
+        return "合計 #{search.length}件\n#{search.join("\n")}"
+      end
     end
   end
 end
