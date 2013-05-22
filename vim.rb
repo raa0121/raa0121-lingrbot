@@ -48,10 +48,9 @@ def VimAdv(event)
     "#{day["count"]} #{day["date"]} #{day["author"]} #{day["title"]} - #{result["results"][day["url"]]["shortUrl"]}"
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
-    command[1] = "mattn_jp" if command[1] == "mattn"
     command[1] = "ujihisa" if command[1] == "u"
     data.map {|v|
-      if v[-1]["author"] == "@#{command[1]}"
+      if /#{command[1]}/ =~ v[-1]["author"]
         result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{v[-1]["url"]}#{query[1]}").read)
         user << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
       end
