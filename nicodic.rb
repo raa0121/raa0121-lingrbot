@@ -1,5 +1,6 @@
 require 'json'
 require 'open-uri'
+require 'cgi'
 
 get "/nicodic" do
   "lingr bot id:nicodic"
@@ -12,7 +13,7 @@ post "/nicodic" do
     m = e["message"]["text"]
     case m 
     when /nicodic:(.*)/
-      "#{JSON.parse(open("http://api.nicodic.jp/page.summary/_/a/#{$1}").read.sub(/^_\(/,"").sub(/\);$/,""))["summary"]}"
+      "#{JSON.parse(open("http://api.nicodic.jp/page.summary/_/a/#{CGI.escape($1)}").read.sub(/^_\(/,"").sub(/\);$/,""))["summary"]}"
     end
   }
 end
