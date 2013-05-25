@@ -46,6 +46,10 @@ def VimAdv(event)
     day = data["%03d"%command[1]][-1]
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{day["url"]}#{query[1]}").read)
     "#{day["count"]} #{day["date"]} #{day["author"]} #{day["title"]} - #{result["results"][day["url"]]["shortUrl"]}"
+  when /\#ranking(\d+)?/
+    rank = 3 if $1 == nil 
+    rank = $1.to_i if $1.to_i > 0
+    "#{data.map{|v| v[1]["author"]}.each_with_object(Hash.new(0)){|o,h|h[o]+=1}.sort_by{|o,h|h}[-"#{rank}".to_i..-1].map{|a| a.join(":")}.reverse.join("回\n")}回"
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
