@@ -13,7 +13,7 @@ post "/nicodic" do
     m = e["message"]["text"]
     case m 
     when /nicodic:(.*)/
-      "#{JSON.parse(open("http://api.nicodic.jp/page.summary/_/a/#{CGI.escape($1)}").read.sub(/^_\(/,"").sub(/\);$/,""))["summary"]}"
+      "http://dic.nicovideo.jp/a/#{CGI.escape($1)}\n#{JSON.parse(open("http://api.nicodic.jp/page.summary/_/a/#{CGI.escape($1)}").read.sub(/^_\(/,"").sub(/\);$/,""))["summary"]}"
     end
   }
 end
