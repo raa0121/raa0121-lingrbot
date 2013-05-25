@@ -49,7 +49,7 @@ def VimAdv(event)
   when /\#ranking(\d+)?/
     rank = 3 if $1 == nil 
     rank = $1.to_i if $1.to_i > 0
-    "#{data.map{|v| v[1]["author"]}.each_with_object(Hash.new(0)){|o,h|h[o]+=1}.sort_by{|o,h|h}[-"#{rank}".to_i..-1].map{|a| a.join(":")}.reverse.join("回\n")}回"
+    "#{data.map{|v| v[1]["author"]}.each_with_object(Hash.new(0)){|o,h|h[o]+=1}.sort_by{|o,h|h}[-"#{rank}".to_i..-1].map{|a| a[1] = "%02d"%a[1]; a.reverse.join("回:")}.reverse.join("\n")}"
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
