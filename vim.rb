@@ -47,10 +47,16 @@ def VimAdv(event)
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{day["url"]}#{query[1]}").read)
     "#{day["count"]} #{day["date"]} #{day["author"]} #{day["title"]} - #{result["results"][day["url"]]["shortUrl"]}"
   when /\#ranking(\d+)?/
-    rank = 3 if $1 == nil 
+    rank = 3 if $1 == nil || command[2] == nil 
     rank = $1.to_i if $1.to_i > 0
-    "#{data.map{|v| v[1]["author"]}.each_with_object(Hash.new(0)){|o,h|h[o]+=1}.sort_by{|o,h|h}[-"#{rank}".to_i..-1].map{|a| a[1] = "%02d"%a[1]; a.reverse.join("回:")}.reverse.join("\n")}"
-  when /^(.*)/
+    rank = command[3].to_i if command[2].to_i > 0
+    ranking = data.map {|v| v[1]["author"]}.each_with_object(Hash.new(0)) {|o,h|h[o]+=1}.sort_by {|o,h|h}.reverse
+    if rank > 50
+      split = open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{ranking[0..50].map {|a|a[1] = "%02d"%a[1]; a.reverse.join("回:")}.join("\n")}")
+      return "#{ranking[51.."#{rank}".to_i].map {|a|a[1] = "%02d"%a[1]; a.reverse.join("回:")}.join("\n")}"
+    else
+      "#{ranking[0.."#{rank}".to_i].map {|a|a[1] = "%02d"%a[1]; a.reverse.join("回:")}.join("\n")}"
+  when /^(.*)/1
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
     data.map {|v|
