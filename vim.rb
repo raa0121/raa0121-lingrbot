@@ -46,17 +46,17 @@ def VimAdv(event)
     day = data["%03d"%command[1]][-1]
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{day["url"]}#{query[1]}").read)
     "#{day["count"]} #{day["date"]} #{day["author"]} #{day["title"]} - #{result["results"][day["url"]]["shortUrl"]}"
-  when /#ranking(\d+)?/ 
-    rank = 10 if $1 == nil && command[2] == nil 
-    rank = $1.to_i if $1.to_i > 0
-    rank = command[2].to_i if command[2].to_i > 0
-    ranking = data.map {|v| v[1]["author"]}.each_with_object(Hash.new(0)){|o,h|h[o]+=1}.sort_by{|o,h|h}.reverse
-    if rank > 50
-      split = open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape("#{ranking[0..50].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d@/){", @"}}.join("\n")}")}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read
-      "#{ranking[51..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){"#{$1.to_i}回:"}.gsub(/\d\@/){", @"}}.join("\n")}"
-    else
-      "#{ranking[0..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){"#{$1.to_i}回:"}.gsub(/\d\@/){", @"}}.join("\n")}"
-    end
+#  when /#ranking(\d+)?/ 
+#    rank = 10 if $1 == nil && command[2] == nil 
+#    rank = $1.to_i if $1.to_i > 0
+#    rank = command[2].to_i if command[2].to_i > 0
+#    ranking = data.map {|v| v[1]["author"]}.each_with_object(Hash.new(0)){|o,h|h[o]+=1}.sort_by{|o,h|h}.reverse
+#    if rank > 50
+#      split = open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape("#{ranking[0..50].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d@/){", @"}}.join("\n")}")}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read
+#      "#{ranking[51..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){"#{$1.to_i}回:"}.gsub(/\d\@/){", @"}}.join("\n")}"
+#    else
+#      "#{ranking[0..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){"#{$1.to_i}回:"}.gsub(/\d\@/){", @"}}.join("\n")}"
+#    end
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
