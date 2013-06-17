@@ -52,10 +52,10 @@ def VimAdv(event)
     rank = command[2].to_i if command[2].to_i > 0
     ranking = data.map {|v| v[1]["author"]}.each_with_object(Hash.new(0)){|o,h|h[o]+=1}.sort_by{|o,h|h}.reverse
     if rank > 50
-      split = open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape("#{ranking[0..50].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d@/){", @"}}.join("\n")}")}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read
-      "#{ranking[51..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d\@/){", @"}}.join("\n")}"
+      split = open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape("#{ranking[0..50].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d@/,", @")}.join("\n")}")}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read
+      "#{ranking[51..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d\@/,", @")}.join("\n")}"
     else
-      "#{ranking[0..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d\@/){", @"}}.join("\n")}"
+      "#{ranking[0..rank-1].group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d\@/,", @")}.join("\n")}"
     end
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"

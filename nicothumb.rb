@@ -32,7 +32,7 @@ post '/nicothumb' do
                   nil).save("./pixiv_#{file}.png") 
         url = `./gyazo pixiv_#{file}.png`.gsub("\n","")
         File.delete("pixiv_#{file}.png")
-        "#{url}.png"
+        "#{url.sub("//","//cache.")}.png"
      end
     end
   }
