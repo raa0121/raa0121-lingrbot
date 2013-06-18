@@ -33,9 +33,9 @@ def VimAdv(event)
   room = event['message']['room']
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
   descript = atnd["events"][0]["description"].split("\r\n")
-  descript.match(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/) {|m|
+  descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/) {|m|
     data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
-  }
+  }}
   data = data.sort
   query = ['version=2.0.1&longUrl=', '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
   case command[1]
