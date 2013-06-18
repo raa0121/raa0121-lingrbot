@@ -32,8 +32,9 @@ def VimAdv(event)
   command = event['message']["text"].strip.split(/[\s　]/)
   room = event['message']['room']
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-  atnd["events"][0]["description"].gsub(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/) {
-    data[$1] = {"count" => $1, "date" => $2, "author" => $3, "title" => $4, "url" => $5}
+  descript = atnd["events"][0]["description"].split("\r\n")
+  descript.match(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/) {|m|
+    data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
   }
   data = data.sort
   query = ['version=2.0.1&longUrl=', '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
