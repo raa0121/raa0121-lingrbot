@@ -44,7 +44,7 @@ def VimAdv(event)
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{last["url"]}#{query[1]}").read)
     "#{last["count"]} #{last["date"]} #{last["author"]} #{last["title"]} - #{result["results"][last["url"]]["shortUrl"]}"
   when /^\d+/
-    day = data[command[1]-1][-1]
+    day = data[command[1].to_i-1][-1]
     result = JSON.parse(open("http://api.bit.ly/shorten?#{query[0]}#{day["url"]}#{query[1]}").read)
     "#{day["count"]} #{day["date"]} #{day["author"]} #{day["title"]} - #{result["results"][day["url"]]["shortUrl"]}"
   when /#ranking(\d+)?/ 
