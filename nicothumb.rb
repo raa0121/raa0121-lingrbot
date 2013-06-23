@@ -38,6 +38,7 @@ post '/nicothumb' do
         url = `./gyazo ameba_#{file}.png`.gsub("\n","")
         File.delete("ameba_#{file}.png")
         "#{url.sub("//","//cache.")}.png"
+      end
     end
   }
 end
