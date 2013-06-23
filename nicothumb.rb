@@ -36,8 +36,8 @@ post '/nicothumb' do
       elsif %r#^http://stat\.ameba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ m
         file = Time.now.to_i
         agent.get(m, nil, "http://ameblo.jp/", nil).save("ameba_#{file}.#{$1}")
-        url = `./gyazo ameba_#{file}.png`.gsub("\n","")
-        File.delete("ameba_#{file}.png")
+        url = `./gyazo ameba_#{file}.#{$1}`.gsub("\n","")
+        File.delete("ameba_#{file}.#{$1}")
         "#{url.sub("//","//cache.")}.png"
       end
     end
