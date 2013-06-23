@@ -34,7 +34,8 @@ post '/nicothumb' do
         File.delete("pixiv_#{file}.png")
         "#{url.sub("//","//cache.")}.png"
       elsif %r#^http://stat\.amaba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ m
-        agent.get(m, nil, "http://ameblo.jp/#{$1}", nil).save("ameba_#{file}.#{$2}")
+        file = Time.now.to_i
+        agent.get(m, nil, "http://ameblo.jp/", nil).save("ameba_#{file}.#{$1}")
         url = `./gyazo ameba_#{file}.png`.gsub("\n","")
         File.delete("ameba_#{file}.png")
         "#{url.sub("//","//cache.")}.png"
