@@ -5,7 +5,6 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
-@query = ['version=2.0.1&longUrl=', '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
 
 get '/vim' do
   "VimAdv & :help"
@@ -33,7 +32,8 @@ def post_lingr_http(text, room)
 end
 
 def post_bitly(url)
-  open("http://api.bit.ly/shorten?#{@query[0]}#{url}#{@query[1]}").read
+  query = ['version=2.0.1&longUrl=', '&login=raaniconama&apiKey=R_446879b310c0e904023fdda3e0b97998']
+  open("http://api.bit.ly/shorten?#{query[0]}#{url}#{query[1]}").read
 end
 
 def split_ranking(ranking)
@@ -85,8 +85,8 @@ def VimAdv(event)
       end
     }
     if user.length >= 10 
-      post_lingr_http("合計 #{user.length}件\n#{user[0..9].join("\n")}")
-      return user[10..-1].join("\n")
+      post_lingr_http("合計 #{user.length}件\n#{user[0..-9].join("\n")}",room)
+      return user[-10..-1].join("\n")
     elsif user.length > 0
       return "合計 #{user.length}件\n#{user.join("\n")}"
     else
@@ -97,7 +97,7 @@ def VimAdv(event)
         end
       }
       if search.length >= 10
-        post_lingr_http("合計 #{search.length}件\n#{search[0..9].join("\n")}")
+        post_lingr_http("合計 #{search.length}件\n#{search[0..9].join("\n")}",room)
         return search[10..-1].join("\n")
       elsif search.length > 0
         return "合計 #{search.length}件\n#{search.join("\n")}"
