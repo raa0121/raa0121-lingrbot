@@ -119,8 +119,8 @@ post '/vim' do
     case m
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e)
-    when /^:h(elp)?/i
-      Help(m,docroot,jadocroot,tags)
+#    when /^:h(elp)?/i
+#      Help(m,docroot,jadocroot,tags)
     when /^:vimhacks?$/i
       agent.get("http://vim-users.jp/category/vim-hacks/")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
