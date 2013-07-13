@@ -36,7 +36,7 @@ post '/nicothumb' do
       elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=medium&illust_id=\d+/ =~ m
         agent.get(m)
         pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
-        p get_pixiv(agent, pixiv)
+        get_pixiv(agent, pixiv)
       elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=manga&illust_id=\d+/ =~ m
         agent.get(m)
         pixiv = agent.page.parser.xpath('//img[@data-filter="manga-image"]')[0].attributes["data-src"].value
