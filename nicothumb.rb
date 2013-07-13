@@ -11,6 +11,16 @@ get '/nicothumb' do
   "thumb"
 end
 
+def get_pixiv(agent, pixiv)
+  file = Time.now.to_i
+  agent.get(pixiv, nil,
+            "http://www.pixiv.net",
+            nil).save("./pixiv_#{file}.png") 
+  url = `./gyazo pixiv_#{file}.png`.gsub("\n","")
+  File.delete("pixiv_#{file}.png")
+  "#{url.sub("//","//cache.")}.png"
+end
+
 post '/nicothumb' do
   content_type :text
   json = JSON.parse(request.body.string)
@@ -26,13 +36,16 @@ post '/nicothumb' do
       elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=medium&illust_id=\d+/ =~ m
         agent.get(m)
         pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
-        file = Time.now.to_i
-        agent.get(pixiv, nil,
-                  "http://www.pixiv.net",
-                  nil).save("./pixiv_#{file}.png") 
-        url = `./gyazo pixiv_#{file}.png`.gsub("\n","")
-        File.delete("pixiv_#{file}.png")
-        "#{url.sub("//","//cache.")}.png"
+        p get_pixiv(agent, pixiv)
+      elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=manga&illust_id=\d+/ =~ m
+        agent.get(m)
+        pixiv = agent.page.parser.xpath('//img[@data-filter="manga-image"]')[0].attributes["data-src"].value
+        get_pixiv(agent, pixiv)
+      elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=manga_big&illust_id=\d+&page=(\d+)/ =~ m
+        page_num = $1
+        agent.get(m)
+        pixiv = agent.page.parser.xpath("//img[@data-filter='manga-image' and @data-index='#{page_num}']")[0].attributes["data-src"].value
+        get_pixiv(agent, pixiv)
       elsif %r#http://stat\.ameba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ m
         file = Time.now.to_i
         type = $1.to_str
