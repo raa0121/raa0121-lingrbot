@@ -58,9 +58,8 @@ post '/nicothumb' do
         File.delete("ameba_#{file}.#{type}")
         "#{url.sub("//","//cache.")}.png"
       elsif /^http:\/\/twitpic.com\/[0-9a-z]+/ =~ m
-        agent.get("#{m}/full")
-        twitpic = agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
-        twitpic
+        agent.get("#{$&}/full")
+        agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
       end
     end
   }
