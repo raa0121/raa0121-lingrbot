@@ -61,7 +61,7 @@ post '/nicothumb' do
         agent.get("#{$&}/full")
         agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
       elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ m
-        "http://lohas.nicoseiga.jp/thumb/#{$1}i"
+        "http://lohas.nicoseiga.jp/thumb/#{$1}i#.jpg"
       end
     end
   }
