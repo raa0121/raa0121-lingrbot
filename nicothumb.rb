@@ -33,19 +33,26 @@ post '/nicothumb' do
         info = REXML::Document.new html.body
         next unless info.elements['nicovideo_thumb_response']
         "#{info.elements['nicovideo_thumb_response/thumb/thumbnail_url'].text}\#.jpg"
-      elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=medium&illust_id=\d+/ =~ m
+      elsif /^http:\/\/www.pixiv.net\/member_illust.php\?(.+)/ =~ m
+        params = {}
+        $1.split('&').each do |p|
+          key, value = p.split('=')
+          params[key] = value
+        end
         agent.get(m)
-        pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
-        get_pixiv(agent, pixiv)
-      elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=manga&illust_id=\d+/ =~ m
-        agent.get(m)
-        pixiv = agent.page.parser.xpath('//img[@data-filter="manga-image"]')[0].attributes["data-src"].value
-        get_pixiv(agent, pixiv)
-      elsif /^http:\/\/www.pixiv.net\/member_illust.php\?mode=manga_big&illust_id=\d+&page=(\d+)/ =~ m
-        page_num = $1
-        agent.get(m)
-        pixiv = agent.page.parser.xpath("//img[@data-filter='manga-image' and @data-index='#{page_num}']")[0].attributes["data-src"].value
-        get_pixiv(agent, pixiv)
+        case params['mode']
+        when 'medium', 'big'
+          pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
+        when 'manga'
+          pixiv = agent.page.parser.xpath('//img[@data-filter="manga-image"]')[0].attributes["data-src"].value
+        when 'manga_big'
+          pixiv = agent.page.parser.xpath("//img[@data-filter='manga-image' and @data-index='#{params['page']}']")[0].attributes["data-src"].value
+        end
+        if pixiv.nil?
+          "Unknown pixiv mode"
+        else
+          p get_pixiv(agent, pixiv)
+        end
       elsif %r#http://stat\.ameba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ m
         file = Time.now.to_i
         type = $1.to_str
