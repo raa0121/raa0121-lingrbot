@@ -51,7 +51,7 @@ post '/nicothumb' do
         if pixiv.nil?
           "Unknown pixiv mode"
         else
-          p get_pixiv(agent, pixiv)
+          get_pixiv(agent, pixiv)
         end
       elsif %r#http://stat\.ameba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ m
         file = Time.now.to_i
