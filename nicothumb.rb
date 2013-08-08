@@ -62,6 +62,9 @@ post '/nicothumb' do
         agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
       elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ m
         "http://lohas.nicoseiga.jp/thumb/#{$1}i#.jpg"
+      elsif /^https:\/\/twitter.com\/.+\/status\/\d+\/photo\/1/ =~ m
+        agent.get(m)
+        agent.page.parser.xpath("//img[@class='large media-slideshow-image']")[0].attributes["src"].value + "#.jpg"
       end
     end
   }
