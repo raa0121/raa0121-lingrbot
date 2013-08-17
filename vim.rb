@@ -10,23 +10,6 @@ get '/vim' do
   "VimAdv & :help"
 end
 
-def Help(m, docroot, jadocroot, tags)
-  help = m.strip.split(/[\s　]/)
-  t = tags.detect {|t| t[0] == help[1].sub(/@ja/,"").sub("+","\\+")}
-  if help[1] =~ /@ja/
-    docroot = jadocroot
-    t[1].sub! /.txt$/, '.jax'
-  end
-  return 'http://gyazo.com/f71ba83245a2f0d41031033de1c57109.png' unless t
-  text = File.read("#{docroot}/#{t[1]}")
-  text = text[/^.*(?:\s+\*[^\n\s]+\*)*\s#{Regexp.escape(t[2][1..-1])}(?:\s+\*[^\n\s]+\*)*$/.match(text).begin(0)..-1]
-  l = /\n(.*\s+\*[^\n\s]+\*|\n=+)$/.match(text)
-  text = text[0.. (l ? l.begin(0) : -1)]
-  docroot = './doc'
-  t[1].sub! /.jax$/, '.txt'
-  text
-end
-
 def post_lingr_http(text, room)
   open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape(text)}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read
 end
@@ -57,15 +40,17 @@ def VimAdv(event)
   room = event['message']['room']
   atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
   descript = atnd["events"][0]["description"].split("\r\n")
-  descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|"(.*)":(.*)\|/) {|m|
+  descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
     data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
   }}
   data = data.sort
+  data, schedule = data.partition{|d| d[1]["title"]} 
   case command[1]
   when nil
     last = data[-1][-1]
+    schedule = schedule[0..2].map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join(" ")
     result = JSON.parse(post_bitly(last["url"]))
-    "#{last["count"]} #{last["date"]} #{last["author"]} #{last["title"]} - #{result["results"][last["url"]]["shortUrl"]}"
+    "#{last["count"]} #{last["date"]} #{last["author"]} #{last["title"]} - #{result["results"][last["url"]]["shortUrl"]}\nNext:#{schedule}"
   when /^\d+/
     day = data[command[1].to_i-1][-1]
     result = JSON.parse(post_bitly(day["url"]))
@@ -75,6 +60,8 @@ def VimAdv(event)
     rank = $1.to_i if $1.to_i > 0
     rank = command[2].to_i if command[2].to_i > 0
     ranking(data, rank) 
+  when /#next/
+    "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}}.join("\n")}"
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
@@ -119,8 +106,6 @@ post '/vim' do
     case m
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e)
-#    when /^:h(elp)?/i
-#      Help(m,docroot,jadocroot,tags)
     when /^:vimhacks?$/i
       agent.get("http://vim-users.jp/category/vim-hacks/")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
