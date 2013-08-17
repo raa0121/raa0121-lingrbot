@@ -61,7 +61,7 @@ def VimAdv(event)
     rank = command[2].to_i if command[2].to_i > 0
     ranking(data, rank) 
   when /#next/
-    "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}}.join("\n")}"
+    "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}"
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
