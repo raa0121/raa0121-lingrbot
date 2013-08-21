@@ -39,19 +39,25 @@ post '/nicothumb' do
           key, value = p.split('=')
           params[key] = value
         end
-        agent.get(m)
-        case params['mode']
-        when 'medium', 'big'
-          pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
-        when 'manga'
-          pixiv = agent.page.parser.xpath('//img[@data-filter="manga-image"]')[0].attributes["data-src"].value
-        when 'manga_big'
-          pixiv = agent.page.parser.xpath("//img[@data-filter='manga-image' and @data-index='#{params['page']}']")[0].attributes["data-src"].value
-        end
-        if pixiv.nil?
-          "Unknown pixiv mode"
-        else
-          get_pixiv(agent, pixiv)
+        if not params['id'].empty?
+          agent.get("http://www.pixiv.net/member.php?id=#{params['id']}")
+          name = agent.page.at('h1.name').content
+          pixiv = agent.page.at('img.user-image').attributes["src"].value
+          image = get_pixiv(agent, pixiv)
+          "#{name}\n#{image}"
+        elsif (not params['mode'].nil?) and (not params['mode'].empty?)
+          agent.get(m)
+          case params['mode']
+          when 'medium', 'big'
+            pixiv = agent.page.at('a.medium-image').children[0].attributes["src"].value
+          when 'manga'
+            pixiv = agent.page.parser.xpath('//img[@data-filter="manga-image"]')[0].attributes["data-src"].value
+          when 'manga_big'
+            pixiv = agent.page.parser.xpath("//img[@data-filter='manga-image' and @data-index='#{params['page']}']")[0].attributes["data-src"].value
+          end
+          if not pixiv.nil?
+            get_pixiv(agent, pixiv)
+          end
         end
       elsif %r#http://stat\.ameba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ m
         file = Time.now.to_i
