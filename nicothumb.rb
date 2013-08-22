@@ -3,6 +3,7 @@
 require 'sinatra'
 require "mechanize"
 require 'rexml/document'
+require 'digest/md5'
 
 agent = Mechanize.new
 
@@ -78,6 +79,8 @@ post '/nicothumb' do
       elsif /^https:\/\/twitter.com\/.+\/status\/\d+\/photo\/1/ =~ m
         agent.get(m)
         agent.page.parser.xpath("//img[@class='large media-slideshow-image']")[0].attributes["src"].value + "#.jpg"
+      elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ m # mail address
+        "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(m)}?size=210#.jpg"
       end
     end
   }
