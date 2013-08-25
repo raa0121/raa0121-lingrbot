@@ -4,6 +4,15 @@ require 'sinatra'
 require "mechanize"
 require 'rexml/document'
 require 'digest/md5'
+require 'dm-core'
+require 'dm-migrations'
+
+class GyazoCache
+  include DataMapper::Resource
+  property :id, Serial
+  property :image_url, String
+  property :gyazo_url, String
+end
 
 class Nicothumb
   def initialize
@@ -86,11 +95,26 @@ class Nicothumb
       else
         post_text = "\n#{result[:post_text]}"
       end
-       "#{pre_text}#{create_gyazo(result[:url], result[:referer])}#{post_text}"
+      cache = GyazoCache.first(:image_url => result[:url])
+      if cache.nil?
+        cache = GyazoCache.new(:image_url => result[:url], :gyazo_url => create_gyazo(result[:url], result[:referer]))
+        cache.save
+      end
+      "#{pre_text}#{cache.gyazo_url}#{post_text}"
     elsif result.kind_of?(String)
       result
     end
   end
+end
+
+configure :production do
+  DataMapper.setup(:default, ENV["DATABASE_URL"])
+  DataMapper.auto_upgrade!
+end
+
+configure :test, :development do
+  DataMapper.setup(:default, "yaml:///tmp/thumb")
+  DataMapper.auto_upgrade!
 end
 
 get '/nicothumb' do
