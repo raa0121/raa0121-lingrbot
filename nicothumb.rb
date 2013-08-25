@@ -104,7 +104,7 @@ post '/nicothumb' do
   if not json["events"].nil?
     json["events"].map do |e|
       if e["message"]
-        thumb = Thumb.new
+        thumb = Nicothumb.new
         thumb.do_maji_sugoi(e["message"]["text"])
       end
     end
