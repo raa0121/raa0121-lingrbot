@@ -2,6 +2,8 @@ ENV['RACK_ENV'] = 'test'
 
 require_relative 'nicothumb'
 require 'rspec'
+require 'rack/test'
+require 'json'
 
 describe 'The Thumb' do
   before(:each) do
@@ -64,7 +66,7 @@ describe 'The Thumb' do
   end
 
   describe 'seiga.nicovideo' do
-    subject { @thumb.get_image_url('http://seiga.nicovideo.jp/seiga/im1667353?track=ranking') }
+    subject { @thumb.get_image_url('http://seiga.nicovideo.jp/seiga/im1667353') }
     it { should be_a_kind_of(String) }
   end
 
@@ -113,6 +115,34 @@ describe 'The Thumb' do
       subject { @thumb.do_maji_sugoi('http://www.pixiv.net/member_illust.php?mode=medium&illust_id=37361700') }
       it { should be_a_kind_of(String) }
       it { should match(/http:\/\/cache\.[^\/]+\/.+\.png$/) }
+    end
+  end
+end
+
+describe 'The Thumb Rack test' do
+  include Rack::Test::Methods
+
+  def app
+    Sinatra::Application
+  end
+
+  context 'seiga.nicovideo' do
+    it do
+      body = { "events" => [ { "message" => { "text" => 'http://seiga.nicovideo.jp/seiga/im1667353' } } ] }
+      post '/nicothumb', body.to_json.to_s
+      last_response.should be_ok
+      last_response.body.should match(/^http:\/\/lohas.nicoseiga.jp\/.*$/)
+    end
+  end
+
+  describe 'pixiv' do
+    context 'user illust list' do
+      it do
+        body = { "events" => [ { "message" => { "text" => 'http://www.pixiv.net/member_illust.php?id=747452' } } ] }
+        post '/nicothumb', body.to_json.to_s
+        last_response.should be_ok
+        last_response.body.should match(/^.*\nhttp:\/\/cache\.[^\/]+\/.+\.png$/)
+      end
     end
   end
 end
