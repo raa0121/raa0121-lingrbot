@@ -4,7 +4,6 @@ require 'sinatra'
 require "mechanize"
 require 'rexml/document'
 require 'digest/md5'
-require 'net/http'
 
 class Nicothumb
   def initialize
