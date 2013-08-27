@@ -124,7 +124,7 @@ end
 
 post '/nicothumb' do
   content_type :text
-  json = JSON.parse(request.body.string)
+  json = JSON.parse(request.body.read)
   if not json["events"].nil?
     json["events"].map do |e|
       if e["message"]

@@ -9,7 +9,7 @@ end
 
 post '/dice' do
   content_type :text
-  json = JSON.parse(request.body.string)
+  json = JSON.parse(request.body.read)
   game_type = '""'
 
   json["events"].select {|e|

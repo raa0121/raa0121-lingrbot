@@ -7,7 +7,7 @@ end
 
 post '/ruby' do
   content_type :text
-  json = JSON.parse(request.body.string)
+  json = JSON.parse(request.body.read)
   json["events"].map do |e|
     @m = e["message"]
     if @m
