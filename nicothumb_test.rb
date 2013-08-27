@@ -1,6 +1,6 @@
 ENV['RACK_ENV'] = 'test'
 
-require_relative 'nicothumb'
+require './nicothumb'
 require 'rspec'
 require 'rack/test'
 require 'json'
@@ -142,6 +142,31 @@ describe 'The Thumb Rack test' do
         post '/nicothumb', body.to_json.to_s
         last_response.should be_ok
         last_response.body.should match(/^.*\nhttp:\/\/cache\.[^\/]+\/.+\.png$/)
+      end
+    end
+
+    context 'illust medium' do
+      it do
+        body = { "events" => [ { "message" => { "text" => 'http://www.pixiv.net/member_illust.php?mode=medium&illust_id=35524272' } } ] }
+        post '/nicothumb', body.to_json.to_s
+        last_response.should be_ok
+        last_response.body.should be_a_kind_of(String)
+      end
+    end
+
+    context 'illust medium cache' do
+      it do
+        body = { "events" => [ { "message" => { "text" => 'http://www.pixiv.net/member_illust.php?mode=medium&illust_id=188556' } } ] }
+        post '/nicothumb', body.to_json.to_s
+        last_response.should be_ok
+        first_body = last_response.body
+        first_body.should be_a_kind_of(String)
+        body = { "events" => [ { "message" => { "text" => 'http://www.pixiv.net/member_illust.php?illust_id=188556&mode=medium' } } ] }
+        post '/nicothumb', body.to_json.to_s
+        last_response.should be_ok
+        second_body = last_response.body
+        second_body.should be_a_kind_of(String)
+        first_body.should == second_body
       end
     end
   end
