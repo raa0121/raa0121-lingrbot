@@ -97,7 +97,7 @@ class Nicothumb
       end
       cache = GyazoCache.first(:image_url => result[:url])
       if cache.nil?
-        cache = GyazoCache.new(:image_url => result[:url], :gyazo_url => create_gyazo(result[:url], result[:referer]))
+        cache = GyazoCache.create(:image_url => result[:url], :gyazo_url => create_gyazo(result[:url], result[:referer]))
         cache.save
       end
       "#{pre_text}#{cache.gyazo_url}#{post_text}"
