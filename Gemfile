@@ -9,6 +9,18 @@ gem 'sinatra','1.3.2'
 gem 'thin','1.3.1'
 gem 'bundler','1.3.5'
 gem 'mechanize','2.5.1'
-gem 'rspec'
-gem 'rack-test'
 ruby '2.0.0'
+
+gem 'dm-core'
+gem 'dm-migrations'
+
+group :development, :test do
+  gem 'rspec'
+  gem 'rack-test'
+  gem 'dm-yaml-adapter'
+end
+
+group :production do
+  gem 'dm-postgres-adapter'
+end
+
