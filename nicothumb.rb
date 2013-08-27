@@ -108,7 +108,7 @@ class Nicothumb
 end
 
 configure :production do
-  DataMapper.setup(:default, ENV["DATABASE_URL"])
+  DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_PURPLE_URL"])
   DataMapper.auto_upgrade!
 end
 
