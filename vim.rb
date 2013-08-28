@@ -34,6 +34,7 @@ def ranking(data, rank)
 end
 
 def VimAdv(event)
+  atnd_url = "http://atnd.org/events/33746"
   data = Hash.new
   user = [];search=[]
   command = event['message']["text"].strip.split(/[\s　]/)
@@ -52,7 +53,7 @@ def VimAdv(event)
     last = data[-1][-1]
     schedule = schedule[0..2].map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join(" ")
     result = JSON.parse(post_bitly(last["url"]))
-    "#{last["count"]} #{last["date"]} #{last["author"]} #{last["title"]} - #{result["results"][last["url"]]["shortUrl"]}\nNext:#{schedule}"
+    "#{last["count"]} #{last["date"]} #{last["author"]} #{last["title"]} - #{result["results"][last["url"]]["shortUrl"]}\nNext:#{schedule}\n#{atnd_url}"
   when /^\d+/
     day = data[command[1].to_i-1][-1]
     result = JSON.parse(post_bitly(day["url"]))
@@ -63,7 +64,7 @@ def VimAdv(event)
     rank = command[2].to_i if command[2].to_i > 0
     ranking(data, rank) 
   when /#next/
-    "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}"
+    "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}\n#{atnd_url}"
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
