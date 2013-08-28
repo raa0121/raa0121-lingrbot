@@ -45,6 +45,8 @@ def VimAdv(event)
   }}
   data = data.sort
   data, schedule = data.partition{|d| d[1]["title"]} 
+  reserved =  schedule.map{|m|m.select{|n|n["author"]=="@"}}.count([])
+  schedule = schedue[0..(reserved + 4)]
   case command[1]
   when nil
     last = data[-1][-1]
