@@ -7,12 +7,16 @@ require 'digest/md5'
 require 'dm-core'
 require 'dm-migrations'
 
+DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_PURPLE_URL"])
+
 class GyazoCache
   include DataMapper::Resource
   property :id, Serial
   property :image_url, String
   property :gyazo_url, String
 end
+
+DataMapper.finalize
 
 class Nicothumb
   def initialize
@@ -108,8 +112,6 @@ class Nicothumb
 end
 
 configure :production do
-  DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_PURPLE_URL"])
-  DataMapper.finalize
   DataMapper.auto_upgrade!
 end
 
