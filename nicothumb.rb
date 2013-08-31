@@ -24,6 +24,13 @@ end
 
 DataMapper.finalize
 
+configure :production do
+  GyazoCache.auto_upgrade!
+end
+
+configure :test, :development do
+  GyazoCache.auto_upgrade!
+end
 class Nicothumb
   def initialize
     @agent = Mechanize.new
@@ -115,14 +122,6 @@ class Nicothumb
       result
     end
   end
-end
-
-configure :production do
-  DataMapper.auto_upgrade!
-end
-
-configure :test, :development do
-  DataMapper.auto_upgrade!
 end
 
 get '/nicothumb' do
