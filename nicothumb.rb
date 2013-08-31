@@ -109,11 +109,13 @@ end
 
 configure :production do
   DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_PURPLE_URL"])
+  DataMapper.finalize
   DataMapper.auto_upgrade!
 end
 
 configure :test, :development do
   DataMapper.setup(:default, "yaml:///tmp/thumb")
+  DataMapper.finalize
   DataMapper.auto_upgrade!
 end
 
