@@ -19,7 +19,7 @@ end
 DataMapper.finalize
 
 configure :production do
-  DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_OLIVE_URL"])
+  DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_PURPLE_URL"])
   GyazoCache.auto_upgrade!
 end
 
