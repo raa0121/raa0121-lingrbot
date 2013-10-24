@@ -7,30 +7,27 @@ require 'digest/md5'
 require 'dm-core'
 require 'dm-migrations'
 
-configure :production do
-  DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_PURPLE_URL"])
-end
 
-configure :test, :development do
-  DataMapper.setup(:default, "yaml:///tmp/thumb")
-end
 
 class GyazoCache
   include DataMapper::Resource
   property :id, Serial
-  property :image_url, String
-  property :gyazo_url, String
+  property :image_url, String, :length => 256
+  property :gyazo_url, String, :length => 256
 end
 
 DataMapper.finalize
 
 configure :production do
+  DataMapper.setup(:default, ENV["HEROKU_POSTGRESQL_OLIVE_URL"])
   GyazoCache.auto_upgrade!
 end
 
 configure :test, :development do
+  DataMapper.setup(:default, "yaml:///tmp/thumb")
   GyazoCache.auto_upgrade!
 end
+
 class Nicothumb
   def initialize
     @agent = Mechanize.new
@@ -112,10 +109,10 @@ class Nicothumb
       else
         post_text = "\n#{result[:post_text]}"
       end
-      cache = GyazoCache.first(:image_url => result[:url])
+      cache = GyazoCache.first({:image_url => result[:url]})
       if cache.nil?
-        cache = GyazoCache.create(:image_url => result[:url], :gyazo_url => create_gyazo(result[:url], result[:referer]))
-        cache.save
+        gyazo_url = create_gyazo(result[:url], result[:referer])
+        cache = GyazoCache.create(:image_url => result[:url], :gyazo_url => gyazo_url)
       end
       "#{pre_text}#{cache.gyazo_url}#{post_text}"
     elsif result.kind_of?(String)
