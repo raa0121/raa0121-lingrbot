@@ -133,7 +133,8 @@ post '/nicothumb' do
     json["events"].map do |e|
       if e["message"]
         thumb = Nicothumb.new
-        thumb.do_maji_sugoi(e["message"]["text"])
+        res = thumb.do_maji_sugoi(e["message"]["text"])
+        (res.nil? or res.empty?) ? "\n" : res
       end
     end
   end
