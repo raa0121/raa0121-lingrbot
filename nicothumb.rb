@@ -7,6 +7,7 @@ require 'digest/md5'
 require 'dm-core'
 require 'dm-migrations'
 
+load './gyazo.rb'
 
 
 class GyazoCache
@@ -39,7 +40,8 @@ class Nicothumb
     temp_file = "tmpimage_#{Time.now.to_i}.#{ext}"
     referer ||= greatest_url.gsub(/(http:\/\/[^\/]+\/).*$/, '\1')
     @agent.get(greatest_url, nil, referer, nil).save("./#{temp_file}")
-    url = `./gyazo #{temp_file}`.gsub("\n","")
+    gyazo = Gyazo.new ""
+    url = gyazo.upload "#{temp_file}"
     File.delete(temp_file)
     "#{url.sub("//","//cache.")}.png"
   end
