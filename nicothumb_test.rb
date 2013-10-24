@@ -126,6 +126,15 @@ describe 'The Thumb Rack test' do
     Sinatra::Application
   end
 
+  context 'FC2' do
+    it do
+      body = { "events" => [ { "message" => { "text" => 'http://blog-imgs-36-origin.fc2.com/n/o/n/nonor/congenitalesotropia.jpg' } } ] }
+      post '/nicothumb', body.to_json.to_s
+      last_response.should be_ok
+      last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
+    end
+  end
+
   context 'seiga.nicovideo' do
     it do
       body = { "events" => [ { "message" => { "text" => 'http://seiga.nicovideo.jp/seiga/im1667353' } } ] }
