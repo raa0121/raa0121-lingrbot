@@ -43,7 +43,7 @@ class Nicothumb
     gyazo = Gyazo.new ""
     url = gyazo.upload "#{temp_file}"
     File.delete(temp_file)
-    "#{url.sub("//","//cache.")}.png"
+    "#{url.sub("//","//cache.")}"
   end
 
   def get_pixiv_image_url(message, params)
