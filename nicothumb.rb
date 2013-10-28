@@ -74,7 +74,7 @@ class Nicothumb
       return unless html
       info = REXML::Document.new html.body
       return unless info.elements['nicovideo_thumb_response']
-      "#{info.elements['nicovideo_thumb_response/thumb/thumbnail_url'].text}\#.jpg"
+      "#{info.elements['nicovideo_thumb_response/thumb/thumbnail_url'].text}"
     elsif /^http:\/\/www.pixiv.net\/member_illust.php\?(.+)/ =~ message
       params = {}
       $1.split('&').each do |p|
@@ -90,13 +90,21 @@ class Nicothumb
       @agent.get("#{$&}/full")
       @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
     elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ message
-      "http://lohas.nicoseiga.jp/thumb/#{$1}i#.jpg"
+      "http://lohas.nicoseiga.jp/thumb/#{$1}i"
     elsif /^https:\/\/twitter.com\/.+\/status\/\d+\/photo\/1/ =~ message
       @agent.get(message)
-      @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]/img").first.attributes["src"].value + "#.jpg"
+      @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]/img").first.attributes["src"].value
     elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ message # mail address
       # Gravatar returns a default icon if not found
-      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(message)}?size=210#.jpg"
+      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(message)}?size=210"
+    end
+  end
+
+  def append_image_extension(url)
+    if url =~ /\.(png|gif|jpg|jpeg)$/
+      url
+    else
+      "#{url}#.jpg"
     end
   end
 
@@ -118,9 +126,9 @@ class Nicothumb
         gyazo_url = create_gyazo(result[:url], result[:referer])
         cache = GyazoCache.create(:image_url => result[:url], :gyazo_url => gyazo_url)
       end
-      "#{pre_text}#{cache.gyazo_url}#{post_text}"
+      "#{pre_text}#{append_image_extension(cache.gyazo_url)}#{post_text}"
     elsif result.kind_of?(String)
-      result
+      append_image_extension(result)
     end
   end
 end
