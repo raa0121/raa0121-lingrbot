@@ -10,6 +10,8 @@ get '/vim' do
   "VimAdv"
 end
 
+agent = Mechanize.new
+
 def post_lingr_http(text, room)
   open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape(text)}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read
 end
@@ -35,6 +37,7 @@ end
 
 def VimConf2013(event)
   connpass_url = "http://connpass.com/event/3978/"
+  agent = Mechanize.new
   agent.get(connpass_url)
   user = agent.page.search("div.participant_list_article a").map{|a| a.inner_text}.select{|m|m =~ /^\w+$/}
   "参加者一覧:#{user}"
@@ -103,7 +106,6 @@ def VimAdv(event)
   end
 end
 
-agent = Mechanize.new
 
 post '/vim' do
   content_type :text
