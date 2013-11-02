@@ -40,7 +40,7 @@ def VimConf2013(event)
   agent = Mechanize.new
   agent.get(connpass_url)
   user = agent.page.search("div.participant_list_article a").map{|a| a.inner_text}.select{|m|m =~ /^\w+$/}
-  "参加者一覧:#{user}"
+  "参加者一覧:#{user}\n#{connpass_url}"
 end
 
 def VimAdv(event)
