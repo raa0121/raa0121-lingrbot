@@ -94,7 +94,7 @@ class Nicothumb
       @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
     elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ message
       "http://lohas.nicoseiga.jp/thumb/#{$1}i"
-    elsif /^https:\/\/twitter.com\/.+\/status\/\d+\/photo\/1/ =~ message
+    elsif /^https:\/\/twitter.com\/.+\/status\/\d+/ =~ message
       @agent.get(message)
       @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]/img").first.attributes["src"].value
     elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ message # mail address
