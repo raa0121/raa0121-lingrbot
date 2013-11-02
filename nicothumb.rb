@@ -40,8 +40,9 @@ class Nicothumb
     temp_file = "tmpimage_#{Time.now.to_i}.#{ext}"
     referer ||= greatest_url.gsub(/(http:\/\/[^\/]+\/).*$/, '\1')
     @agent.get(greatest_url, nil, referer, nil).save("./#{temp_file}")
-    gyazo = Gyazo.new ""
-    url = gyazo.upload "#{temp_file}"
+    # gyazo = Gyazo.new ""
+    # url = gyazo.upload "#{temp_file}"
+    url = `./gyazo #{temp_file}`
     File.delete(temp_file)
     "#{url.sub("//","//cache.")}"
   end

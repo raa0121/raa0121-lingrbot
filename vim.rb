@@ -33,6 +33,13 @@ def ranking(data, rank)
   end
 end
 
+def VimConf2013(event)
+  connpass_url = "http://connpass.com/event/3978/"
+  connpass = JSON.parse(open("http://connpass.com/api/v1/event/?event_id=3978").read)
+  user = connpass['events'][0]['accepted']
+  "参加者一覧:#{user}"
+end
+
 def VimAdv(event)
   atnd_url = "http://atnd.org/events/33746"
   data = Hash.new
@@ -109,6 +116,8 @@ post '/vim' do
     case m
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e)
+    when /^(!VimConf)/i
+      VimConf2013(e)
     when /^:vimhacks?$/i
       agent.get("http://vim-users.jp/category/vim-hacks/")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
