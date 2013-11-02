@@ -39,7 +39,7 @@ def VimConf2013(event)
   connpass_url = "http://connpass.com/event/3978/"
   agent = Mechanize.new
   agent.get("http://connpass.com/event/3978/participation/")
-  user = agent.page.search("div.main_sec_box a").map{|a|a.inner_text}.select{|m|m =~ /^\w+$/}
+  user = agent.page.search("div.main_sec_box a").map{|a|a.inner_text}.select{|m|m =~ /^\w+$/}.uniq
   "参加者一覧:#{user}\n#{connpass_url}"
 end
 
