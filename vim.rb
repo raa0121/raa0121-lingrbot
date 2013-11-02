@@ -7,7 +7,7 @@ require 'cgi'
 
 
 get '/vim' do
-  "VimAdv & :help"
+  "VimAdv"
 end
 
 def post_lingr_http(text, room)
@@ -35,8 +35,8 @@ end
 
 def VimConf2013(event)
   connpass_url = "http://connpass.com/event/3978/"
-  connpass = JSON.parse(open("http://connpass.com/api/v1/event/?event_id=3978").read)
-  user = connpass['events'][0]['accepted']
+  agent.get(connpass_url)
+  user = agent.page.search("div.participant_list_article a").map{|a| a.inner_text}.select{|m|m =~ /^\w+$/}
   "参加者一覧:#{user}"
 end
 
@@ -103,9 +103,6 @@ def VimAdv(event)
   end
 end
 
-docroot = "./doc"
-jadocroot = "./ja-doc"
-tags = File.read("#{docroot}/tags").lines.map {|l| l.chomp.split("\t", 3) }
 agent = Mechanize.new
 
 post '/vim' do
