@@ -39,9 +39,9 @@ def VimConf2013(event)
   conf = JSON.parse(open("http://vimconf.vim-jp.org/2013/data/schedules.json").read)
   schedule = conf['schedules'].map{|c|
     if c['speakers']
-      "#{Time.at(c['scheduled_at']).strftime("%H:%M:%S")} - #{c['title']} / #{c['speakers'][0]['name']}"
+      "#{Time.at(c['scheduled_at']).strftime("%H:%M")} - #{c['title']} / #{c['speakers'][0]['name']}"
     else
-      "#{Time.at(c['scheduled_at']).strftime("%H:%M:%S")} - #{c['title']}"
+      "#{Time.at(c['scheduled_at']).strftime("%H:%M")} - #{c['title']}"
     end
   }.join("\n")
   connpass_url = "http://connpass.com/event/3978/"
