@@ -37,14 +37,19 @@ end
 
 def VimConf2013(event)
   conf = JSON.parse(open("http://vimconf.vim-jp.org/2013/data/schedules.json").read)
-  schedule = conf['schedules'].map{|c|"#{Time.at(c['scheduled_at']).strftime("%H:%M:%S")} - #{c['title']}"}.join("\n")
+  schedule = conf['schedules'].map{|c|
+    unless c['speakers']
+      "#{Time.at(c['scheduled_at']).strftime("%H:%M:%S")} - #{c['title']}"
+    end
+    "#{Time.at(c['scheduled_at']).strftime("%H:%M:%S")} - #{c['title']} / #{c['speakers'][0]['name']}"
+  }.join("\n")
   connpass_url = "http://connpass.com/event/3978/"
   command = event['message']["text"].strip.split(/[\s　]/)
-  agent = Mechanize.new
-  agent.get("http://connpass.com/event/3978/participation/")
-  user = agent.page.search("div.main_sec_box a").map{|a|a.inner_text}.select{|m|m =~ /^\w+$/}.uniq.sort_by{|s|s.downcase}
   case command[1] 
   when nil
+    agent = Mechanize.new
+    agent.get("http://connpass.com/event/3978/participation/")
+    user = agent.page.search("div.main_sec_box a").map{|a|a.inner_text}.select{|m|m =~ /^\w+$/}.uniq.sort_by{|s|s.downcase}
     "参加者一覧:#{user.join(", ")}\n#{connpass_url}"
   when "schedule"
     "#{schedule}"
