@@ -37,7 +37,7 @@ end
 
 def VimConf2013(event)
   conf = JSON.parse(open("http://vimconf.vim-jp.org/2013/data/schedules.json").read)
-  schedule = conf['schedules'].map{|c|"#{Time.at(c['scheduled_at']).strftime("%H:%M:%S")} - #{c['title']}"}.join("\n")
+  schedule = conf['schedules'].map{|c|"#{Time.at(c['scheduled_at']).jst.strftime("%H:%M:%S")} - #{c['title']}"}.join("\n")
   connpass_url = "http://connpass.com/event/3978/"
   command = event['message']["text"].strip.split(/[\s　]/)
   agent = Mechanize.new
