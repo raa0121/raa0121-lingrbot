@@ -63,8 +63,9 @@ def VimAdv(event)
   user = [];search=[]
   command = event['message']["text"].strip.split(/[\s　]/)
   room = event['message']['room']
-  atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-  descript = atnd["events"][0]["description"].split("\r\n")
+  #atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
+  #descript = atnd["events"][0]["description"].split("\r\n")
+  descript = open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").split("\n")
   descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
     data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
   }}
