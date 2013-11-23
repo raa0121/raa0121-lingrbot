@@ -60,7 +60,7 @@ def VimAdv(event, year)
   case command[1]
   when nil
     if data.none?
-      "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}\n#{atnd_url}"
+      return "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}\n#{atnd_url}"
     end
     last = data[-1][-1]
     schedule = schedule[0..2].map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join(" ")
