@@ -5,6 +5,8 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
+VAC12="https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md"
+VAC13="https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md"
 
 get '/vim' do
   "VimAdv"
@@ -57,7 +59,7 @@ def VimConf2013(event)
   end
 end
 
-def VimAdv(event)
+def VimAdv(event, year)
   atnd_url = "http://atnd.org/events/33746"
   data = Hash.new
   user = [];search=[]
@@ -65,7 +67,7 @@ def VimAdv(event)
   room = event['message']['room']
   #atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
   #descript = atnd["events"][0]["description"].split("\r\n")
-  descript = open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read.split("\n")
+  descript = open(year).read.split("\n")
   descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
     data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
   }}
@@ -128,8 +130,10 @@ post '/vim' do
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     case m
+    when /^(!VimAdv13|:vimadv13|!VAC13)/i
+      VimAdv(e,VAC13)
     when /^(!VimAdv|:vimadv|!VAC)/i
-      VimAdv(e)
+      VimAdv(e,VAC12)
     when /^(!VimConf)/i
       VimConf2013(e)
     when /^:vimhacks?$/i
