@@ -59,6 +59,9 @@ def VimAdv(event, year)
   schedule = schedule[0..(reserved + 4)]
   case command[1]
   when nil
+    if data.none?
+      "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}\n#{atnd_url}"
+    end
     last = data[-1][-1]
     schedule = schedule[0..2].map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join(" ")
     result = JSON.parse(post_bitly(last["url"]))
