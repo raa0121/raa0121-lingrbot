@@ -37,30 +37,12 @@ def ranking(data, rank)
   end
 end
 
-def VimConf2013(event)
-  conf = JSON.parse(open("http://vimconf.vim-jp.org/2013/data/schedules.json").read)
-  schedule = conf['schedules'].map{|c|
-    if c['speakers']
-      "#{Time.at(c['scheduled_at']).strftime("%H:%M")} - #{c['title']} / #{c['speakers'][0]['name']}"
-    else
-      "#{Time.at(c['scheduled_at']).strftime("%H:%M")} - #{c['title']}"
-    end
-  }.join("\n")
-  connpass_url = "http://connpass.com/event/3978/"
-  command = event['message']["text"].strip.split(/[\s　]/)
-  case command[1] 
-  when nil
-    agent = Mechanize.new
-    agent.get("http://connpass.com/event/3978/participation/")
-    user = agent.page.search("div.main_sec_box a").map{|a|a.inner_text}.select{|m|m =~ /^\w+$/}.uniq.sort_by{|s|s.downcase}
-    "参加者一覧:#{user.join(", ")}\n#{connpass_url}"
-  when "schedule"
-    "#{schedule}"
-  end
-end
-
 def VimAdv(event, year)
-  atnd_url = "http://atnd.org/events/33746"
+  if /13/ =~ year
+    atnd_url = "http://atnd.org/events/45072"
+  else
+    atnd_url = "http://atnd.org/events/33746"
+  end
   data = Hash.new
   user = [];search=[]
   command = event['message']["text"].strip.split(/[\s　]/)
@@ -134,8 +116,6 @@ post '/vim' do
       VimAdv(e,VAC13)
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e,VAC12)
-    when /^(!VimConf)/i
-      VimConf2013(e)
     when /^:vimhacks?$/i
       agent.get("http://vim-users.jp/category/vim-hacks/")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
