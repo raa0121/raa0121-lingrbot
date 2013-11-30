@@ -115,10 +115,10 @@ post '/vim' do
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     case m
-    when /^(!VimAdv13|:vimadv13|!VAC13)/i
-      VimAdv(e,VAC13)
-    when /^(!VimAdv|:vimadv|!VAC)/i
+    when /^(!VimAdv12|:vimadv12|!VAC12)/i
       VimAdv(e,VAC12)
+    when /^(!VimAdv|:vimadv|!VAC)/i
+      VimAdv(e,VAC13)
     when /^:vimhacks?$/i
       agent.get("http://vim-users.jp/category/vim-hacks/")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
