@@ -86,9 +86,9 @@ def VimAdv(event, year)
         user << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
       end
     }
-    if user.length >= 10 
+    if user.length >= 8
       post_lingr_http("合計 #{user.length}件",room)
-      user.map{|m|post_lingr_http(m,room)}
+      user.each_slice(8){|m|post_lingr_http(m.join("\n"),room)}
       return ''
     elsif user.length > 0
       return "合計 #{user.length}件\n#{user.join("\n")}"
@@ -99,9 +99,9 @@ def VimAdv(event, year)
           search << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
         end
       }
-      if search.length >= 10
+      if search.length >= 8
         post_lingr_http("合計 #{search.length}件",room)
-        search.map{|m|post_lingr_http(m,room)}
+        search.each_slice(8){|m|post_lingr_http(m.join("\n"),room)}
         return ''
       elsif search.length > 0
         return "合計 #{search.length}件\n#{search.join("\n")}"
