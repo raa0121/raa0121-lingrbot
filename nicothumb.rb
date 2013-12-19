@@ -79,11 +79,8 @@ class Nicothumb
         @agent.get(thumb_url +".L")
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
-        when '404' then
+        when '404'
           "#{thumb_url}"
-          break
-        else
-          break
         end
       else
         thumb_url += ".L"
