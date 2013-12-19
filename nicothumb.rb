@@ -80,7 +80,8 @@ class Nicothumb
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
         when '404' then
-          next
+          "#{thumb_url}"
+          break
         else
           break
         end
