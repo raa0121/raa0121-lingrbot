@@ -74,7 +74,20 @@ class Nicothumb
       return unless html
       info = REXML::Document.new html.body
       return unless info.elements['nicovideo_thumb_response']
-      "#{info.elements['nicovideo_thumb_response/thumb/thumbnail_url'].text}"
+      thumb_url = info.elements['nicovideo_thumb_response/thumb/thumbnail_url'].text
+      begin
+        @agent.get(thumb_url +".L")
+      rescue Mechanize::ResponseCodeError => ex
+        case ex.response_code
+        when '404' then
+          next
+        else
+          break
+        end
+      else
+        thumb_url += ".L"
+      end
+      "#{thumb_url}"
     elsif /^http:\/\/www.pixiv.net\/member_illust.php\?(.+)/ =~ message
       params = {}
       $1.split('&').each do |p|
