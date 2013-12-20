@@ -15,7 +15,8 @@ end
 agent = Mechanize.new
 
 def post_lingr_http(text, room)
-  open("http://lingr.com/api/room/say?room=#{room}&bot=VimAdv&text=#{CGI.escape(text)}&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a").read
+  query = ['&bot=VimAdv&text=','&bot_verifier=f970a5aec3cbd149343aa5a4fec3a43e68d01e4a']
+  open("http://lingr.com/api/room/say?room=#{room}#{query[0]}#{CGI.escape(text)}#{query[1]}").read
 end
 
 def post_bitly(url)
@@ -24,7 +25,7 @@ def post_bitly(url)
 end
 
 def split_ranking(ranking)
-  ranking.group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d@/,", @")}.join("\n")
+  ranking.group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").match(/^(\d+)/){|m|i="%02d"%(m[1].to_i);"#{i}回:"}.gsub(/\d@/,", @")}.join("\n")
 end
 
 def ranking(data, rank)
@@ -40,6 +41,8 @@ end
 def VimAdv(event, year)
   command = event['message']["text"].strip.split(/[\s　]/)
   room = event['message']['room']
+  atnd_url = "http://atnd.org/events/45072"
+  descript = []
   if "13" == year
     atnd_url = "http://atnd.org/events/45072"
     descript = $VAC13.split("\n")
@@ -56,14 +59,26 @@ def VimAdv(event, year)
   #descript = atnd["events"][0]["description"].split("\r\n")
   if year == "12+13"
     descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
-      data["12-#{m[1]}"] = {"count" => "12-#{m[1]}", "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
+      data["12-#{m[1]}"] = {"count" => "12-#{m[1]}",
+                            "date" => m[2],
+                            "author" => m[3],
+                            "title" => m[4],
+                            "url" => m[5]}
     }}
     $VAC13.split("\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
-      data["13-#{m[1]}"] = {"count" => "13-#{m[1]}", "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
+      data["13-#{m[1]}"] = {"count" => "13-#{m[1]}",
+                            "date" => m[2],
+                            "author" => m[3],
+                            "title" => m[4],
+                            "url" => m[5]}
     }}
   else
     descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
-      data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
+      data[m[1]] = {"count" => m[1],
+                    "date" => m[2],
+                    "author" => m[3],
+                    "title" => m[4],
+                    "url" => m[5]}
     }}
   end
   data = data.sort
@@ -135,7 +150,6 @@ post '/vim' do
     when /^(!VimAdv13|:vimadv13|!VAC13)/i
       VimAdv(e,"13")
     when /^(!VimAdv-reload|:vimadv-reload|!VAC-reload)/i
-      $VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
       $VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read     
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e,"12+13")
