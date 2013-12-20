@@ -5,8 +5,8 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
-VAC12="https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md"
-VAC13="https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md"
+$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
+$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
 
 get '/vim' do
   "VimAdv"
@@ -38,21 +38,34 @@ def ranking(data, rank)
 end
 
 def VimAdv(event, year)
-  if /13/ =~ year
+  command = event['message']["text"].strip.split(/[\s　]/)
+  room = event['message']['room']
+  if "13" == year
     atnd_url = "http://atnd.org/events/45072"
-  else
+    descript = $VAC13.split("\n")
+  elsif "12"
     atnd_url = "http://atnd.org/events/33746"
+    descript = $VAC12.split("\n")
+  else
+    atnd_url = "http://atnd.org/events/45072 & http://atnd.org/events/33746"
+    descript = $VAC12.split("\n")
   end
   data = Hash.new
   user = [];search=[]
-  command = event['message']["text"].strip.split(/[\s　]/)
-  room = event['message']['room']
   #atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
   #descript = atnd["events"][0]["description"].split("\r\n")
-  descript = open(year).read.split("\n")
-  descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
-    data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
-  }}
+  if year == "12+13"
+    descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
+      data["12-#{m[1]}"] = {"count" => "12-#{m[1]}", "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
+    }}
+    $VAC13.split("\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
+      data["13-#{m[1]}"] = {"count" => "13-#{m[1]}", "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
+    }}
+  else
+    descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
+      data[m[1]] = {"count" => m[1], "date" => m[2], "author" => m[3], "title" => m[4], "url" => m[5]}
+    }}
+  end
   data = data.sort
   data, schedule = data.partition{|d| d[1]["title"]} 
   reserved =  schedule.map{|m|m.select{|n|n["author"]=="@"}}.count([])
@@ -118,9 +131,14 @@ post '/vim' do
     m = e["message"]["text"]
     case m
     when /^(!VimAdv12|:vimadv12|!VAC12)/i
-      VimAdv(e,VAC12)
+      VimAdv(e,"12")
+    when /^(!VimAdv13|:vimadv13|!VAC13)/i
+      VimAdv(e,"13")
+    when /^(!VimAdv-reload|:vimadv-reload|!VAC-reload)/i
+      $VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
+      $VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read     
     when /^(!VimAdv|:vimadv|!VAC)/i
-      VimAdv(e,VAC13)
+      VimAdv(e,"12+13")
     when /^:vimhacks?$/i
       agent.get("http://vim-users.jp/category/vim-hacks/")
       return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
