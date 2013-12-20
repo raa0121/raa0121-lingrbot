@@ -25,7 +25,7 @@ def post_bitly(url)
 end
 
 def split_ranking(ranking)
-  ranking.group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").match(/^(\d+)/){|m|i="%02d"%(m[1].to_i);"#{i}回:"}.gsub(/\d@/,", @")}.join("\n")
+  ranking.group_by{|i,j|j}.map{|a|a[1]}.map{|a|a.map{|a|a.reverse}.join("").sub(/^(\d+)/){i="%02d"%($1.to_i);"#{i}回:"}.gsub(/\d@/,", @")}.join("\n")
 end
 
 def ranking(data, rank)
