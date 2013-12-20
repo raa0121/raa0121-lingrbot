@@ -133,6 +133,8 @@ def VimAdv(event, year)
         return ''
       elsif search.length > 0
         return "合計 #{search.length}件\n#{search.join("\n")}"
+      else
+        "#{command[1]} is NotFound."
       end
     end
   end
@@ -151,6 +153,7 @@ post '/vim' do
       VimAdv(e,"13")
     when /^(!VimAdv-reload|:vimadv-reload|!VAC-reload)/i
       $VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read     
+      "data was reloaded."
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e,"12+13")
     when /^:vimhacks?$/i
