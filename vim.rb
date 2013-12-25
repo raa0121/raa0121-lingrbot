@@ -93,7 +93,7 @@ def VimAdv(event, year)
     last = data[-1][-1]
     schedule = schedule[0..2].map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join(" ")
     result = JSON.parse(post_bitly(last["url"]))['results']
-    "%s %s %s %s - %s" % (%w[count date author title].map{|k| last[k]} << result[day['url']]['shortUrl'])
+    "%s %s %s %s - %s" % (%w[count date author title].map{|k| last[k]} << result[last['url']]['shortUrl'])
   when /^\d+/
     day = data[command[1].to_i-1][-1]
     result = JSON.parse(post_bitly(day["url"]))['results']
