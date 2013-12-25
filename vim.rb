@@ -88,30 +88,30 @@ def VimAdv(event, year)
   case command[1]
   when nil
     if data.none?
-      return "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}\n#{atnd_url}"
+      return "#{schedule.map{|s| "%s %s %s" % %w[count date author].map{|m|s[1][m]}}.join("\n")}\n#{atnd_url}"
     end
     last = data[-1][-1]
     schedule = schedule[0..2].map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join(" ")
-    result = JSON.parse(post_bitly(last["url"]))
-    "#{last["count"]} #{last["date"]} #{last["author"]} #{last["title"]} - #{result["results"][last["url"]]["shortUrl"]}\nNext:#{schedule}\n#{atnd_url}"
+    result = JSON.parse(post_bitly(last["url"]))['results']
+    "%s %s %s %s - %s" % (%w[count date author title].map{|k| last[k]} << result[day['url']]['shortUrl'])
   when /^\d+/
     day = data[command[1].to_i-1][-1]
-    result = JSON.parse(post_bitly(day["url"]))
-    "#{day["count"]} #{day["date"]} #{day["author"]} #{day["title"]} - #{result["results"][day["url"]]["shortUrl"]}"
+    result = JSON.parse(post_bitly(day["url"]))['results']
+    "%s %s %s %s - %s" % (%w[count date author title].map{|k| day[k]} << result[day['url']]['shortUrl'])
   when /#ranking(\d+)?/ 
     rank = 10 if $1 == nil && command[2] == nil 
     rank = $1.to_i if $1.to_i > 0
     rank = command[2].to_i if command[2].to_i > 0
     ranking(data, rank) 
   when /#next/
-    "#{schedule.map{|s| "#{s[1]["count"]} #{s[1]["date"]} #{s[1]["author"]}"}.join("\n")}\n#{atnd_url}"
+    "#{schedule.map{|s| "%s %s %s" % %w[count date author].map{|m|s[1][m]}}.join("\n")}\n#{atnd_url}"
   when /^(.*)/
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
     data.map {|v|
       if /#{command[1]}/ =~ v[-1]["author"]
-        result = JSON.parse(post_bitly(v[-1]["url"]))
-        user << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
+        result = JSON.parse(post_bitly(v[-1]["url"]))['results']
+        user << "%s %s %s %s - %s" % (%w[count date author title].map{|k| v[-1][k]} << result[v[-1]['url']]['shortUrl'])
       end
     }
     if user.length >= 8
@@ -123,8 +123,8 @@ def VimAdv(event, year)
     else
       data.map {|v|
         if /#{command[1]}/ =~ v[-1]["title"]
-          result = JSON.parse(post_bitly(v[-1]["url"]))
-          search << "#{v[-1]["count"]} #{v[-1]["date"]} #{v[-1]["author"]} #{v[-1]["title"]} - #{result["results"][v[-1]["url"]]["shortUrl"]}"
+          result = JSON.parse(post_bitly(v[-1]["url"]))['results']
+          search << "%s %s %s %s - %s" % (%w[count date author title].map{|k| v[-1][k]} << result[v[-1]['url']]['shortUrl'])
         end
       }
       if search.length >= 8
