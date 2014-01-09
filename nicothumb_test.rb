@@ -70,6 +70,11 @@ describe 'The Thumb' do
     it { should be_a_kind_of(String) }
   end
 
+  describe 'seiga.nicovideo.manga' do
+    subject { @thumb.get_image_url('http://seiga.nicovideo.jp/watch/mg46919') }
+    it { should be_a_kind_of(String) }
+  end
+
   describe 'pic.twitter.com' do
     subject { @thumb.get_image_url('https://twitter.com/sora_h/status/317900657661194240/photo/1') }
     it { should be_a_kind_of(String) }

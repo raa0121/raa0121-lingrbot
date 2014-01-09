@@ -104,6 +104,14 @@ class Nicothumb
       @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
     elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ message
       "http://lohas.nicoseiga.jp/thumb/#{$1}i"
+    elsif /^http:\/\/seiga.nicovideo.jp\/watch\/mg(\d+)/ =~ message
+      @agent.ssl_version = 'SSLv3'
+      secure_url = 'https://secure.nicovideo.jp/secure/login?site=niconico'
+      @agent.post(secure_url, 'mail' => ENV['NICO_ID'], 'password' => ENV['NICO_PASS'])
+      html = @agent.get("http://seiga.nicovideo.jp/api/theme/data?theme_id=#{$1}")
+      info = REXML::Document.new html.body
+      info.root
+      "#{info.elements['response/image_list/image/source_url'].text}#.jpg"
     elsif /^https:\/\/twitter.com\/.+\/status\/\d+/ =~ message
       @agent.get(message)
       @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]/img").first.attributes["src"].value
