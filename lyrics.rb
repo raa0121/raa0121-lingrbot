@@ -12,7 +12,7 @@ def searchMusic(word)
   return "http://www.utamap.com/phpflash/flashfalsephp.php?unum=#{id}"
 end
 def getLyric(mes)
-  command = event['message']["text"].strip.split(/[\s　]/)
+  command = mes.strip.split(/[\s　]/)
   lyric_url = searchMusic(command[1])
   lyric = open(lyric_url).read.force_encoding("utf-8").sub(/test1=\d+&test2=/,"")
 end
