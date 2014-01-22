@@ -1,3 +1,4 @@
+# coding : utf-8
 require 'mechanize'
 require 'open-uri'
 require 'cgi'
@@ -13,7 +14,7 @@ def searchMusic(word)
 end
 def getLyric(mes)
   command = mes.sub("!lyrics","").strip
-  lyric_url = searchMusic(command[1])
+  lyric_url = searchMusic(command)
   lyric = open(lyric_url).read.force_encoding("utf-8").sub(/test1=\d+&test2=/,"")
 end
 
