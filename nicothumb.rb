@@ -106,7 +106,7 @@ class Nicothumb
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
         when '404'
-          next
+          return ""
         end
       end
     elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ message
@@ -127,7 +127,7 @@ class Nicothumb
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
         when '404'
-          next
+          return ""
         end
       end
     elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ message # mail address
