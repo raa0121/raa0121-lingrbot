@@ -105,7 +105,7 @@ class Nicothumb
         @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
-        when "404"
+        when '404'
           next
         end
       end
@@ -126,7 +126,7 @@ class Nicothumb
         @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img").first[1]
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
-        when "404"
+        when '404'
           next
         end
       end
