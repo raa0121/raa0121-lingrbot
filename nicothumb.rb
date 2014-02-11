@@ -120,8 +120,15 @@ class Nicothumb
       info.root
       "#{info.elements['response/image_list/image/source_url'].text}#.jpg"
     elsif /^https:\/\/twitter.com\/.+\/status\/\d+/ =~ message
-      @agent.get(message)
-      @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]/img").first.attributes["src"].value
+      begin
+        @agent.get(message)
+        @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]/img").first.attributes["src"].value
+      rescue Mechanize::ResponseCodeError => ex
+        case ex.response_code
+        when "404"
+          next
+        end
+      end
     elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ message # mail address
       # Gravatar returns a default icon if not found
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(message)}?size=210"
