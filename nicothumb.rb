@@ -99,9 +99,16 @@ class Nicothumb
 #      { :mode => :gyazo, :url => message }
     elsif %r#http://stat\.ameba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ message
       { :mode => :gyazo, :url => message, :referer => 'http://ameblo.jp/' }
-    elsif /^http:\/\/twitpic.com\/[0-9a-z]+/ =~ message
-      @agent.get("#{$&}/full")
-      @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
+    elsif /^https:\/\/twitpic.com\/[0-9a-z]+/ =~ message
+      begin
+        @agent.get("#{$&}/full")
+        @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
+      rescue Mechanize::ResponseCodeError => ex
+        case ex.response_code
+        when "404"
+          next
+        end
+      end
     elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ message
       "http://lohas.nicoseiga.jp/thumb/#{$1}i"
     elsif /^http:\/\/seiga.nicovideo.jp\/watch\/mg(\d+)/ =~ message
