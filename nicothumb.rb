@@ -122,7 +122,8 @@ class Nicothumb
     elsif /^https:\/\/twitter.com\/.+\/status\/\d+/ =~ message
       begin
         @agent.get(message)
-        @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]/img").first.attributes["src"].value
+        @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
+        @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img").first[1]
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
         when "404"
