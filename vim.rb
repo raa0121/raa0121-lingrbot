@@ -109,7 +109,7 @@ def VimAdv(event, year)
     command[1] = event["message"]["speaker_id"] if command[1] == "#me"
     command[1] = "ujihisa" if command[1] == "u"
     data.map {|v|
-      if /#{command[1]}/ =~ v[-1]["author"]
+      if command[1] == v[-1]["author"]
         result = JSON.parse(post_bitly(v[-1]["url"]))['results']
         user << "%s %s %s %s - %s" % (%w[count date author title].map{|k| v[-1][k]} << result[v[-1]['url']]['shortUrl'])
       end
@@ -122,7 +122,7 @@ def VimAdv(event, year)
       return "合計 #{user.length}件\n#{user.join("\n")}"
     else
       data.map {|v|
-        if /#{command[1]}/ =~ v[-1]["title"]
+        if v[-1]["title"].include(command[1])
           result = JSON.parse(post_bitly(v[-1]["url"]))['results']
           search << "%s %s %s %s - %s" % (%w[count date author title].map{|k| v[-1][k]} << result[v[-1]['url']]['shortUrl'])
         end
