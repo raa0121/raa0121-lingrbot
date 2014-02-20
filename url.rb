@@ -2,7 +2,7 @@ require 'mechanize'
 require 'json'
 
 $agent = Mechanize.new
-@agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
+$agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
 
 post '/url' do
   content_type :text
