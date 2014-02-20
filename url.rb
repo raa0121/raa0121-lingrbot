@@ -15,11 +15,11 @@ post '/url' do
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
         when '404'
-          ""
+          return ""
         when '503'
-          ""
+          return ""
         when '500'
-          ""
+          return ""
         end
       end
     end
