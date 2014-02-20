@@ -1,7 +1,7 @@
 require 'mechanize'
 require 'json'
 
-@agent = Mechanize.new
+$agent = Mechanize.new
 
 post '/url' do
   content_type :text
@@ -9,8 +9,8 @@ post '/url' do
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     if /^https?:\/\/.*/ =~ m
-      @agent.get(m)
-      @agent.page.at('title').inner_text
+      $agent.get(m)
+      $agent.page.at('title').inner_text
     end
   }
 end
