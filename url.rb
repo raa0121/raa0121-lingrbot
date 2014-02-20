@@ -2,7 +2,7 @@ require 'mechanize'
 
 @agent = Mechanize.new
 
-get '/url' do
+post '/url' do
   content_type :text
   json = JSON.parse(request.body.read)
   json["events"].select {|e| e['message'] }.map {|e|
