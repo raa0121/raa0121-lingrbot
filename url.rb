@@ -8,9 +8,20 @@ post '/url' do
   json = JSON.parse(request.body.read)
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
-    if /^https?:\/\/.*/ =~ m
-      $agent.get(m)
-      $agent.page.at('title').inner_text
+    if /^https?:\/\/.*[\.jpg]/ =~ m
+      begin
+        $agent.get(m)
+        $agent.page.at('title').inner_text
+      rescue Mechanize::ResponseCodeError => ex
+        case ex.response_code
+        when '404'
+          ""
+        when '503'
+          ""
+        when '500'
+          ""
+        end
+      end
     end
   }
 end
