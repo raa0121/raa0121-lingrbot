@@ -9,6 +9,9 @@ post '/url' do
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     if /^https?:\/\/.*/ =~ m
+      if /.(jpg|png|gif)$/ =~ m
+        return ""
+      end
       begin
         $agent.get(m)
         $agent.page.at('title').inner_text
