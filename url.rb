@@ -2,6 +2,7 @@ require 'mechanize'
 require 'json'
 
 $agent = Mechanize.new
+@agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
 
 post '/url' do
   content_type :text
@@ -11,6 +12,9 @@ post '/url' do
     if /^https?:\/\/.*/ =~ m
       if /.(jpg|png|gif)$/ =~ m
         return ""
+      end
+      if /https?:\/\/twitter\.com\/.*/ =~ m
+        return "#{$agent.page.at('strong.fullname').inner_text} / #{$agent.page.at('span.js-action-profile-name').inner_text}\n#{$agent.page.at('p.tweet-text').inner_text}"
       end
       begin
         $agent.get(m)
