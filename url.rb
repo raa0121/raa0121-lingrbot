@@ -13,11 +13,11 @@ post '/url' do
       if /.(jpg|png|gif)$/ =~ m
         return ""
       end
-      if /https?:\/\/twitter\.com\/.*/ =~ m
-        return "#{$agent.page.at('strong.fullname').inner_text} / #{$agent.page.at('span.js-action-profile-name').inner_text}\n#{$agent.page.at('p.tweet-text').inner_text}"
-      end
-      begin
+     begin
         $agent.get(m)
+        if /https?:\/\/twitter\.com\/.*/ =~ m
+          return "#{$agent.page.at('strong.fullname').inner_text} / #{$agent.page.at('span.js-action-profile-name').inner_text}\n#{$agent.page.at('p.tweet-text').inner_text}"
+        end
         $agent.page.at('title').inner_text
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
