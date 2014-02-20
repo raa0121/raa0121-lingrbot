@@ -1,4 +1,5 @@
 require 'mechanize'
+require 'json'
 
 @agent = Mechanize.new
 
