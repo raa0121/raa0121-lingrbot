@@ -15,7 +15,9 @@ post '/url' do
         return ""
       end
      begin
-        $agent.get(m)
+        unless Mechanize::Page == $agent.get(m).class
+          return ""
+        end
         if /https?:\/\/twitter\.com\/.*/ =~ m
           return "#{$agent.page.at('strong.fullname').inner_text} / #{$agent.page.at('span.js-action-profile-name').inner_text}\n#{$agent.page.at('p.tweet-text').inner_text}"
         end
