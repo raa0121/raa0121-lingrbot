@@ -140,7 +140,9 @@ class Nicothumb
   end
 
   def append_image_extension(url)
-    if url =~ /\.(png|gif|jpg|jpeg)$/
+    if url == ""  
+      return ""
+    elsif url =~ /\.(png|gif|jpg|jpeg)$/
       url
     else
       "#{url}#.jpg"
