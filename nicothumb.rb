@@ -123,9 +123,10 @@ class Nicothumb
       begin
         @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
         @agent.get(message)
-        unless @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img").first[1]
+        unless @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img")
           return ""
         end
+        @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img").first[1]
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
         when '404'
