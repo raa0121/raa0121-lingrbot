@@ -86,7 +86,10 @@ class Nicothumb
         thumb_url += ".L"
       end
       "#{thumb_url}"
-    elsif /^http:\/\/www.pixiv.net\/member_illust.php\?(.+)/ =~ message
+    elsif %r|^http://live\.nicovideo\.jp/gate/.*| =~ message
+      @agent.get(message)
+      "http://live.nicovideo.jp/#{@agent.page.at('div.bn/img')['src']}"
+    elsif /^http:\/\/www\.pixiv\.net\/member_illust.php\?(.+)/ =~ message
       params = {}
       $1.split('&').each do |p|
         key, value = p.split('=')
