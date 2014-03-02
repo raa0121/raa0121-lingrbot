@@ -10,15 +10,12 @@ post '/url' do
   json = JSON.parse(request.body.read)
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
-    if /^https?:\/\/.*/ =~ m
-      if /.(jpg|png|gif)$/ =~ m
-        return ""
-      end
-     begin
-        unless Mechanize::Page == $agent.get(m).class
+    if /(https?:\/\/\S+)/ =~ m
+      begin
+        unless Mechanize::Page == $agent.get($1).class
           return ""
         end
-        if /https?:\/\/twitter\.com\/.*/ =~ m
+        if /^https?:\/\/twitter\.com\/.*/ =~ m
           return "#{$agent.page.at('strong.fullname').inner_text} / #{$agent.page.at('span.js-action-profile-name').inner_text}\n#{$agent.page.at('p.tweet-text').inner_text}"
         end
         CGI.unescapeHTML($agent.page.at('title').inner_text)
