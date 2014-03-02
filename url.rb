@@ -21,6 +21,8 @@ post '/url' do
         CGI.unescapeHTML($agent.page.at('title').inner_text)
       rescue Mechanize::ResponseCodeError => ex
         case ex.response_code
+        when '403'
+          return ""
         when '404'
           return ""
         when '503'
