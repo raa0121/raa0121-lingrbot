@@ -18,7 +18,7 @@ def searchMusic(word)
     unless Mechanize::Page == $agent.get("#{base_url}#{word}&act=search&search_by_keyword=#{keyword}&sortname=1&pattern=1").class
       return ""
     end
-    unless [] == $agent.page.search('td.ct160 a')
+    unless [] == $agent.page.search('td.ct160 a').to_a
       id = $agent.page.search('td.ct160 a')[0]['href'].sub("./showkasi.php?surl=","")
       return "http://www.utamap.com/phpflash/flashfalsephp.php?unum=#{id}"
     end
