@@ -34,6 +34,7 @@ def searchMusic(word)
       return ""
     end
   end
+  return ""
 end
 
 def getLyric(mes,room)
