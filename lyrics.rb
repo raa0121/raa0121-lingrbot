@@ -15,7 +15,9 @@ def searchMusic(word)
   word = CGI.escape(word)
   keyword = CGI.escape("検   索")
   begin
-    search = @agent.get("#{base_url}#{word}&act=search&search_by_keyword=#{keyword}&sortname=1&pattern=1")
+    unless Mechanize::Page == @agent.get("#{base_url}#{word}&act=search&search_by_keyword=#{keyword}&sortname=1&pattern=1").class
+      return ""
+    end
     id = @agent.page.search('td.ct160 a')[0]['href'].sub("./showkasi.php?surl=","")
     return "http://www.utamap.com/phpflash/flashfalsephp.php?unum=#{id}"
   rescue Mechanize::ResponseCodeError => ex
