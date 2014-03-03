@@ -3,7 +3,7 @@ require 'mechanize'
 require 'open-uri'
 require 'cgi'
 
-@agent = Mechanize.new
+$agent = Mechanize.new
 
 def post_lingr_http(text, room)
   query = ['&bot=lyrics&text=','&bot_verifier=03a96b624a652e568038c61f336bbb0ba8bd7ed5']
@@ -15,10 +15,10 @@ def searchMusic(word)
   word = CGI.escape(word)
   keyword = CGI.escape("検   索")
   begin
-    unless Mechanize::Page == @agent.get("#{base_url}#{word}&act=search&search_by_keyword=#{keyword}&sortname=1&pattern=1").class
+    unless Mechanize::Page == $agent.get("#{base_url}#{word}&act=search&search_by_keyword=#{keyword}&sortname=1&pattern=1").class
       return ""
     end
-    id = @agent.page.search('td.ct160 a')[0]['href'].sub("./showkasi.php?surl=","")
+    id = $agent.page.search('td.ct160 a')[0]['href'].sub("./showkasi.php?surl=","")
     return "http://www.utamap.com/phpflash/flashfalsephp.php?unum=#{id}"
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
@@ -38,8 +38,8 @@ def getLyric(mes,room)
   command = mes.sub("!lyrics","").strip
   lyric_url = searchMusic(command)
   begin
-    lyric_page = @agent.get(lyric_url)
-    lyric = @agent.page('p').text.sub(/test1=\d+&test2=/,"")
+    lyric_page = $agent.get(lyric_url)
+    lyric = $agent.page('p').text.sub(/test1=\d+&test2=/,"")
     if lyric.bytesize > 1000
       lyric.split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
       return ""
