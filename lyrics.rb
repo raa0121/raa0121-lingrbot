@@ -28,3 +28,8 @@ post '/lyrics' do
     end
   }
 end
+
+get '/lyrics' do
+  content_type :text
+  "lyrics"
+end
