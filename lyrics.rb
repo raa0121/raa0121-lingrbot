@@ -23,8 +23,8 @@ def getLyric(mes,room)
   lyric_url = searchMusic(command)
   lyric = open(lyric_url).read.force_encoding("utf-8").sub(/test1=\d+&test2=/,"")
   if lyric.bytesize > 1000
-    post_lingr_http(lyric.split(/\n/)[0..15].join("\n"), room)
-    "#{lyric.split(/\n/)[16..-1].join("\n")}"
+    lyric.split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
+    return ""
   else
     lyric
   end
