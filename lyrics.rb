@@ -40,6 +40,9 @@ end
 def getLyric(mes,room)
   command = mes.sub("!lyrics","").strip
   lyric_url = searchMusic(command)
+  if "" == lyric_url
+    return ""
+  end
   begin
     lyric_page = $agent.get(lyric_url)
     lyric = $agent.page('p').text.sub(/test1=\d+&test2=/,"")
