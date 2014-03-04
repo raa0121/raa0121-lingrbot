@@ -47,7 +47,7 @@ def getLyric(mes,room)
     lyric_page = $agent.get(lyric_url)
     lyric = $agent.page.at('p').text.sub(/test1=\d+&test2=/,"")
     if lyric.bytesize > 1000
-      lyric.split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
+      lyric.gsub("\n\n","　\n\n").split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
       return ""
     else
       lyric
