@@ -102,7 +102,7 @@ class Nicothumb
 #      { :mode => :gyazo, :url => message }
     elsif %r#http://stat\.ameba\.jp/user_images/.+\.(jpe?g|gif|png)$# =~ message
       { :mode => :gyazo, :url => message, :referer => 'http://ameblo.jp/' }
-    elsif /^https:\/\/twitpic.com\/[0-9a-z]+/ =~ message
+    elsif /^http:\/\/twitpic\.com\/[0-9a-z]+/ =~ message
       begin
         @agent.get("#{$&}/full")
         @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
