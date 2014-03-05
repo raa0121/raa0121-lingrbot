@@ -77,12 +77,12 @@ def getLyric(mes,room)
   #  end
   end
   begin
-    lyric_page = open(lyric_url).read
-    if lyric_url.include?("utamap")
-      lyric = CGI.unescape(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
-    else
-      lyric = CGI.unescape(lyric_page).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
-    end
+  #  lyric_page = open(lyric_url).read
+  #  if lyric_url.include?("utamap")
+  #    lyric = CGI.unescape(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
+  #  else
+  #    lyric = CGI.unescape(lyric_page).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
+  #  end
     #if lyric.bytesize > 1000
     # lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
     #  return ""
