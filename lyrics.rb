@@ -75,7 +75,7 @@ def getLyric(mes,room)
   end
   begin
     lyric_page = $agent.get(lyric_url)
-    if lyric_url.includei?("utamap")
+    if lyric_url.include?("utamap")
       lyric = $agent.page.at('p').text.sub(/test1=\d+&test2=/,"")
     else
       lyric = $agent.page.at('p').text.sub("document.write('","").sub("');","")
