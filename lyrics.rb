@@ -4,6 +4,7 @@ require 'open-uri'
 require 'cgi'
 
 $agent = Mechanize.new
+$agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
 
 def post_lingr_http(text, room)
   query = ['&bot=lyrics&text=','&bot_verifier=03a96b624a652e568038c61f336bbb0ba8bd7ed5']
