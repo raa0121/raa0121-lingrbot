@@ -77,11 +77,11 @@ def getLyric(mes,room)
     end
   end
   begin
-    lyric_page = $agent.get(lyric_url)
+    lyric_page = open(lyric_url).read
     if lyric_url.include?("utamap")
-      lyric = $agent.page.at('p').text.sub(/test1=\d+&test2=/,"")
+      lyric = CGI.unescape(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
     else
-      lyric = $agent.page.at('p').text.sub("document.write('","").sub("');","")
+      lyric = CGI.unescape(lyric_page).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
     end
     if lyric.bytesize > 1000
       lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
