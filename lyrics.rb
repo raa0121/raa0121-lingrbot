@@ -71,6 +71,7 @@ def getLyric(mes,room)
     lyric_url = searchMusicKasitime(command)
     if "" == lyric_url
       return "#{command} is Not found."
+    end
   end
   begin
     lyric_page = $agent.get(lyric_url)
