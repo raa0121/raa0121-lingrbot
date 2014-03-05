@@ -47,7 +47,7 @@ def searchMusicKasitime(word)
       return ""
     end
     unless [] == $agent.page.search('li.g/h3').to_a
-      id = $agent.page.at('li.g/h3/a')['href'].sub("/url?q=http://www.kasi-time.com/item-","").sub(/\.html&.*/,"")
+      id = $agent.page.search('li.g/h3/a')[0]['href'].sub("/url?q=http://www.kasi-time.com/item-","").sub(/\.html&.*/,"")
       return "http://www.kasi-time.com/item_js.php?no=#{id}"
     end
   rescue Mechanize::ResponseCodeError => ex
