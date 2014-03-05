@@ -10,7 +10,7 @@ def post_lingr_http(text, room)
   open("http://lingr.com/api/room/say?room=#{room}#{query[0]}#{CGI.escape(text)}#{query[1]}").read
 end
 
-def searchMusic(word)
+def searchMusicUtamap(word)
   base_url = "http://www.utamap.com/searchkasi.php?searchname=title&word="
   word = CGI.escape(word)
   keyword = CGI.escape("検   索")
@@ -37,15 +37,48 @@ def searchMusic(word)
   return ""
 end
 
+def searchMusicKasitime(word)
+  base_url = "https://www.google.co.jp/search?q="
+  site = CGI.escape("+site:www.kasi-time.com")
+  word = CGI.escape(word)
+  begin
+    unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
+      return ""
+    end
+    unless [] == $agent.page.search('li.g/h3').to_a
+      id = $agent.page.at('li.g/h3/a')['href'].sub("/url?q=http://www.kasi-time.com/item-","").sub(/\.html&.*/,"")
+      return "http://www.kasi-time.com/item_js.php?no=#{id}"
+    end
+  rescue Mechanize::ResponseCodeError => ex
+    case ex.response_code
+    when '403'
+      return ""
+    when '404'
+      return ""
+    when '503'
+      return ""
+    when '500'
+      return ""
+    end
+  end
+  return ""
+end
+
 def getLyric(mes,room)
   command = mes.sub("!lyrics","").strip
-  lyric_url = searchMusic(command)
+  lyric_url = searchMusicUtamap(command)
   if "" == lyric_url
-    return "Not found."
+    lyric_url = searchMusicKasitime(command)
+    if "" == lyric_url
+      return "#{command} is Not found."
   end
   begin
     lyric_page = $agent.get(lyric_url)
-    lyric = $agent.page.at('p').text.sub(/test1=\d+&test2=/,"")
+    if lyric_url.includei?("utamap")
+      lyric = $agent.page.at('p').text.sub(/test1=\d+&test2=/,"")
+    else
+      lyric = $agent.page.at('p').text.sub("document.write('","").sub("');","")
+    end
     if lyric.bytesize > 1000
       lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
       return ""
