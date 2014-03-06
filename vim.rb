@@ -5,8 +5,10 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
-$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
-$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
+#$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
+$VAC12=JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
+#$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
+$VAC13=JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)
 
 get '/vim' do
   "VimAdv"
