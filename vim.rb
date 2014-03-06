@@ -155,7 +155,7 @@ post '/vim' do
     when /^(!VimAdv13|:vimadv13|!VAC13)/i
       VimAdv(e,"13")
     when /^(!VimAdv-reload|:vimadv-reload|!VAC-reload)/i
-      $VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read     
+      $VAC13=JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)
       "data was reloaded."
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e,"12+13")
