@@ -16,8 +16,10 @@ post '/url' do
         unless Mechanize::Page == $agent.get(url).class
           return ""
         end
-        if /^https?:\/\/twitter\.com\/.*/ =~ url
-          return "#{$agent.page.at('strong.fullname').inner_text} / #{$agent.page.at('span.js-action-profile-name').inner_text}\n#{$agent.page.at('p.tweet-text').inner_text}"
+        if %r`\Ahttps?://(www\.)?twitter.com/[^/]+/status/(\d+)` =~ url
+          tweet = $agent.page.at("[data-tweet-id='#{$2}']")
+          return 'Something wrong with twitter url.' unless tweet
+          return "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
         end
         CGI.unescapeHTML($agent.page.at('title').inner_text)
       rescue Mechanize::ResponseCodeError => ex
