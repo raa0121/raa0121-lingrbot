@@ -40,13 +40,13 @@ end
 
 def searchMusicKasitime(word)
   base_url = "https://www.google.co.jp/search?q="
-  site = CGI.escape("+site:www.kasi-time.com")
+  site = CGI.escape(" site:www.kasi-time.com")
   word = CGI.escape(word)
   puts "#{base_url}#{word}#{site}"
   begin
     $agent.get("#{base_url}#{word}#{site}")
-    p $agent.page
-    id = $agent.page.at('li.g/h3.r/a')['href'].sub("/url?q=http://www.kasi-time.com/item-","").sub(/\.html&.*/,"")
+    p $agent.page.at('li.g')
+    id = $agent.page.at('li.g h3.r a')['href'].sub("/url?q=http://www.kasi-time.com/item-","").sub(/\.html&.*/,"")
     puts id
     return "http://www.kasi-time.com/item_js.php?no=#{id}"
   rescue Mechanize::ResponseCodeError => ex
