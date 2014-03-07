@@ -6,7 +6,7 @@ require 'cgi'
 $agent = Mechanize.new
 $agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
 
-def post_lingr_http(text, room)
+def post_lingr_http_lyrics(text, room)
   query = ['&bot=lyrics&text=','&bot_verifier=03a96b624a652e568038c61f336bbb0ba8bd7ed5']
   open("http://lingr.com/api/room/say?room=#{room}#{query[0]}#{CGI.escape(text)}#{query[1]}").read
 end
@@ -84,7 +84,7 @@ def getLyric(mes,room)
   #    lyric = CGI.unescape(lyric_page).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
   #  end
     #if lyric.bytesize > 1000
-    # lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http(l.join("\n"), room)}
+    # lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
     #  return ""
     #else
       lyric_url
