@@ -44,13 +44,15 @@ def searchMusicKasitime(word)
   word = CGI.escape(word)
   puts "#{base_url}#{word}#{site}"
   begin
-    $agent.get("#{base_url}#{word}#{site}")
-    p $agent.page.at('li.g')
-    if /www\.kasi-time\.com\/item-(\d+)/ =~ $agent.page.at('li.g h3.r a')['href']
-      id = $1
+    unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
+      return ""
     end
-    puts id
-    return "http://www.kasi-time.com/item_js.php?no=#{id}"
+    unless [] == $agent.page.search('li.g h3.r a').to_a
+      if /www\.kasi-time\.com\/item-(\d+)/ =~ $agent.page.at('li.g h3.r a')['href']
+        id = $1
+      end
+      return "http://www.kasi-time.com/item_js.php?no=#{id}"
+    end
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
     when '403'
