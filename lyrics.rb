@@ -73,23 +73,23 @@ def getLyric(mes,room)
   if "" == lyric_url
     #lyric_url = searchMusicKasitime(command)
     lyric_url = searchMusicUtamap(command)
-  #  if "" == lyric_url
-  #    return "#{command} is Not found."
-  #  end
+    if "" == lyric_url
+      return "#{command} is Not found."
+    end
   end
   begin
-  #  lyric_page = open(lyric_url).read
-  #  if lyric_url.include?("utamap")
-  #    lyric = CGI.unescape(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
-  #  else
-  #    lyric = CGI.unescape(lyric_page).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
-  #  end
-    #if lyric.bytesize > 1000
-    # lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
-    #  return ""
-    #else
-      lyric_url
-    #end
+    lyric_page = open(lyric_url).read
+    if lyric_url.include?("utamap")
+      lyric = CGI.unescape(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
+    else
+      lyric = CGI.unescape(lyric_page).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
+    end
+    if lyric.bytesize > 1000
+      lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
+      return ""
+    else
+      lyric
+    end
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
     when '403'
