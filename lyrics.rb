@@ -44,10 +44,8 @@ def searchMusicKasitime(word)
   word = CGI.escape(word)
   puts "#{base_url}#{word}#{site}"
   begin
-    unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
-      return ""
-    end
-    puts $agen.page
+    $agent.get("#{base_url}#{word}#{site}")
+    p $agent.page
     id = $agent.page.at('li.g/h3.r/a')['href'].sub("/url?q=http://www.kasi-time.com/item-","").sub(/\.html&.*/,"")
     puts id
     return "http://www.kasi-time.com/item_js.php?no=#{id}"
