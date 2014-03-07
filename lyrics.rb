@@ -42,12 +42,14 @@ def searchMusicKasitime(word)
   base_url = "https://www.google.co.jp/search?q="
   site = CGI.escape("+site:www.kasi-time.com")
   word = CGI.escape(word)
+  puts "#{base_url}#{word}#{site}"
   begin
     unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
       return ""
     end
     unless [] == $agent.page.search('li.g/h3').to_a
       id = $agent.page.search('li.g/h3/a')[0]['href'].sub("/url?q=http://www.kasi-time.com/item-","").sub(/\.html&.*/,"")
+      puts id
       return "http://www.kasi-time.com/item_js.php?no=#{id}"
     end
   rescue Mechanize::ResponseCodeError => ex
