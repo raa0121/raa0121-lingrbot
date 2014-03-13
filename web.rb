@@ -7,9 +7,9 @@ get '/' do
 end
 
 #load 'dice.rb'
-load 'bot.rb'
+#load 'bot.rb'
 load 'vim.rb'
-load 'nicothumb.rb'
+#load 'nicothumb.rb'
 load 'nicodic.rb'
-load 'lyrics.rb'
+#load 'lyrics.rb'
 load 'url.rb'
