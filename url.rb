@@ -24,7 +24,7 @@ post '/url' do
             titles << "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
           end
           titles << CGI.unescapeHTML($agent.page.at('title').inner_text)
-          titles.join("\n")
+          return titles.join("\n")
         rescue Mechanize::ResponseCodeError => ex
           case ex.response_code
           when '403'
