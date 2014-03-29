@@ -70,7 +70,7 @@ def VimAdv(event, year)
                             "url" => m[5]}
     }}
     #$VAC13["events"][0]["description"].split("\r\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
-    $VAC13.split("\r\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
+    $VAC13.split("\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
       data["13-#{m[1]}"] = {"count" => "13-#{m[1]}",
                             "date" => m[2],
                             "author" => m[3],
