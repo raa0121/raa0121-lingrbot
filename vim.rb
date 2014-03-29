@@ -48,11 +48,11 @@ def VimAdv(event, year)
   if "13" == year
     atnd_url = "http://atnd.org/events/45072"
     #descript = $VAC13["events"][0]["description"].split("\r\n")
-    descript = $VAC13.split("\r\n")
+    descript = $VAC13.split("\n")
   elsif "12" == year
     atnd_url = "http://atnd.org/events/33746"
     #descript = $VAC12["events"][0]["description"].split("\r\n")
-    descript = $VAC12.split("\r\n")
+    descript = $VAC12.split("\n")
   else
     atnd_url = "http://atnd.org/events/45072 & http://atnd.org/events/33746"
     descript = $VAC12.split("\r\n")
