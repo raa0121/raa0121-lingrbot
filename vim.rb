@@ -5,10 +5,10 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
-#$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
-$VAC12 = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-#$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
-$VAC13 = JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)
+$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
+#$VAC12 = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
+$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
+#$VAC13 = JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)
 
 get '/vim' do
   "VimAdv"
@@ -47,13 +47,15 @@ def VimAdv(event, year)
   descript = []
   if "13" == year
     atnd_url = "http://atnd.org/events/45072"
-    descript = $VAC13["events"][0]["description"].split("\r\n")
+    #descript = $VAC13["events"][0]["description"].split("\r\n")
+    descript = $VAC13.split("\r\n")
   elsif "12" == year
     atnd_url = "http://atnd.org/events/33746"
-    descript = $VAC12["events"][0]["description"].split("\r\n")
+    #descript = $VAC12["events"][0]["description"].split("\r\n")
+    descript = $VAC12.split("\r\n")
   else
     atnd_url = "http://atnd.org/events/45072 & http://atnd.org/events/33746"
-    descript = $VAC12["events"][0]["description"].split("\r\n")
+    descript = $VAC12.split("\r\n")
   end
   data = Hash.new
   user = [];search=[]
@@ -67,7 +69,8 @@ def VimAdv(event, year)
                             "title" => m[4],
                             "url" => m[5]}
     }}
-    $VAC13["events"][0]["description"].split("\r\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
+    #$VAC13["events"][0]["description"].split("\r\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
+    $VAC13.split("\r\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
       data["13-#{m[1]}"] = {"count" => "13-#{m[1]}",
                             "date" => m[2],
                             "author" => m[3],
