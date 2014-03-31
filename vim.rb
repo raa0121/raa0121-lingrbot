@@ -5,10 +5,10 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
-$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
-#$VAC12 = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
-#$VAC13 = JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)
+#$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
+$VAC12 = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)["events"][0]["description"]
+#$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
+$VAC13 = JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)["events"][0]["description"]
 
 get '/vim' do
   "VimAdv"
@@ -47,20 +47,16 @@ def VimAdv(event, year)
   descript = []
   if "13" == year
     atnd_url = "http://atnd.org/events/45072"
-    #descript = $VAC13["events"][0]["description"].split("\r\n")
     descript = $VAC13.split("\n")
   elsif "12" == year
     atnd_url = "http://atnd.org/events/33746"
-    #descript = $VAC12["events"][0]["description"].split("\r\n")
     descript = $VAC12.split("\n")
   else
     atnd_url = "http://atnd.org/events/45072 & http://atnd.org/events/33746"
-    descript = $VAC12.split("\r\n")
+    descript = $VAC12.split("\n")
   end
   data = Hash.new
   user = [];search=[]
-  #atnd = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)
-  #descript = atnd["events"][0]["description"].split("\r\n")
   if year == "12+13"
     descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
       data["12-#{m[1]}"] = {"count" => "12-#{m[1]}",
@@ -69,7 +65,6 @@ def VimAdv(event, year)
                             "title" => m[4],
                             "url" => m[5]}
     }}
-    #$VAC13["events"][0]["description"].split("\r\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
     $VAC13.split("\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
       data["13-#{m[1]}"] = {"count" => "13-#{m[1]}",
                             "date" => m[2],
@@ -157,8 +152,8 @@ post '/vim' do
     when /^(!VimAdv13|:vimadv13|!VAC13)/i
       VimAdv(e,"13")
     when /^(!VimAdv-reload|:vimadv-reload|!VAC-reload)/i
-      #$VAC13=JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)
-      $VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
+      $VAC13=JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)["events"][0]["description"]
+      #$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
       "data was reloaded."
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e,"12+13")
