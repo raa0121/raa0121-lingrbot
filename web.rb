@@ -10,6 +10,6 @@ end
 #load 'bot.rb'
 load 'vim.rb'
 #load 'nicothumb.rb'
-load 'nicodic.rb'
+#load 'nicodic.rb'
 #load 'lyrics.rb'
 load 'url.rb'
