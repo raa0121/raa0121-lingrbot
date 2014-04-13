@@ -5,7 +5,7 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
-$VAC11 = open("https://gist.githubusercontent.com/osyo-manga/10577789/raw/f74b8c0a62559df4c76621705949b3237cfa079/gistfile1.txt").read
+$VAC11 = open("https://gist.githubusercontent.com/osyo-manga/10577789/raw/f74b8c0a62559df4c76621705949b3237cfa0798/gistfile1.txt").read
 #$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
 $VAC12 = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)["events"][0]["description"]
 #$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
