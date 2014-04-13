@@ -79,6 +79,7 @@ def VimAdv(event, year)
                             "author" => m[3],
                             "title" => m[4],
                             "url" => m[5]}
+    }}
   else
     descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
       data[m[1]] = {"count" => m[1],
