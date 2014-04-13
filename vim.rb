@@ -5,7 +5,7 @@ require "open-uri"
 require "mechanize"
 require 'cgi'
 
-$VAC11 = open("https://gist.githubusercontent.com/osyo-manga/10577789/raw/212571fd95df0e5b68164a9d36aa3c9372d7d2aa/gistfile1.txt").read
+$VAC11 = open("https://gist.githubusercontent.com/osyo-manga/10577789/raw/f74b8c0a62559df4c76621705949b3237cfa079/gistfile1.txt").read
 #$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
 $VAC12 = JSON.parse(open("http://api.atnd.org/events/?event_id=33746&format=json").read)["events"][0]["description"]
 #$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
@@ -52,6 +52,9 @@ def VimAdv(event, year)
   elsif "12" == year
     atnd_url = "http://atnd.org/events/33746"
     descript = $VAC12.split("\n")
+  elsif "11" == year
+    atnd_url = "http://atnd.org/events/21925"
+    descript = $VAC11.split("\n")
   else
     atnd_url = "http://atnd.org/events/45072 & http://atnd.org/events/33746"
     descript = $VAC12.split("\n")
@@ -155,6 +158,8 @@ post '/vim' do
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     case m
+    when /^(!VimAdv11|:vimadv11|!VAC11)/i
+      VimAdv(e,"11")
     when /^(!VimAdv12|:vimadv12|!VAC12)/i
       VimAdv(e,"12")
     when /^(!VimAdv13|:vimadv13|!VAC13)/i
