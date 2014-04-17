@@ -26,6 +26,8 @@ post '/url' do
           else
             if $agent.page.at('title')
               response_lines << CGI.unescapeHTML($agent.page.at('title').inner_text)
+            elsif $agent.page.at('h1')
+              response_lines << CGI.unescapeHTML($agent.page.at('h1').inner_text)
             end
           end
         rescue Mechanize::ResponseCodeError => ex
