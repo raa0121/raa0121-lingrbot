@@ -9,7 +9,7 @@ $agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101
 post '/url' do
   content_type :text
   json = JSON.parse(request.body.read)
-  titles = []
+  response_lines = []
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     unless [] == urls = URI.extract(m, ["http", "https"])
@@ -21,11 +21,11 @@ post '/url' do
           end
           if %r`\Ahttps?://(www\.)?twitter.com/[^/]+/status/(\d+)` =~ url
             tweet = $agent.page.at("[data-tweet-id='#{$2}']")
-            titles << 'Something wrong with twitter url.' unless tweet
-            titles << "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
+            response_lines << 'Something wrong with twitter url.' unless tweet
+            response_lines << "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
           else
             unless nil == $agent.page.at('title')
-              titles << CGI.unescapeHTML($agent.page.at('title').inner_text)
+              response_lines << CGI.unescapeHTML($agent.page.at('title').inner_text)
             end
           end
         rescue Mechanize::ResponseCodeError => ex
@@ -41,7 +41,7 @@ post '/url' do
           end
         end
       end
-      return titles.join("\n")
+      return response_lines.join("\n")
     end
   }
 end
