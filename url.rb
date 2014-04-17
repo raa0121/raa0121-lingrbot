@@ -14,6 +14,7 @@ post '/url' do
     m = e["message"]["text"]
     unless [] == urls = URI.extract(m, ["http", "https"])
       urls.each do |url|
+        return "" if url.end_with? '://'
         begin
           unless Mechanize::Page == $agent.get(url).class
             return ""
