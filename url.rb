@@ -24,7 +24,9 @@ post '/url' do
             titles << 'Something wrong with twitter url.' unless tweet
             titles << "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
           else
-            titles << CGI.unescapeHTML($agent.page.at('title').inner_text)
+            unless nil == $agent.page.at('title')
+              titles << CGI.unescapeHTML($agent.page.at('title').inner_text)
+            end
           end
         rescue Mechanize::ResponseCodeError => ex
           case ex.response_code
