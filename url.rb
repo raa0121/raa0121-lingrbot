@@ -12,7 +12,7 @@ post '/url' do
   json["events"].select {|e| e['message'] }.map {|e|
     m = e["message"]["text"]
     unless [] == urls = URI.extract(m, ["http", "https"]).reject{|url| url.end_with? '://' }
-      urls.map do |url|
+      urls.each do |url|
         begin
           unless Mechanize::Page == $agent.get(url).class
             return ""
