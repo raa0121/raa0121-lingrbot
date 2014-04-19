@@ -23,6 +23,7 @@ post '/url' do
             response_lines << 'Something wrong with twitter url.' unless tweet
             response_lines << "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
           else
+            $agent.user_agent = ""
             if $agent.page.at('title')
               response_lines << CGI.unescapeHTML($agent.page.at('title').inner_text)
             elsif $agent.page.at('h1')
