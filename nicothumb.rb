@@ -116,11 +116,11 @@ class Nicothumb
       begin
         @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
         @agent.get(message)
-        unless @agent.page.parser.xpath("//meta[contains(@property, 'og:image')]").first.attributes["content"]
+        unless @agent.page.parser.xpath("//meta[@property='og:image']").first.attributes["content"]
           return ""
         end
-        image_url = @agent.page.parser.xpath("//meta[contains(@property, 'og:image')]").first.attributes["content"].value
-        if not @agent.page.parser.xpath("//meta[contains(@property, 'og:video')]").empty?
+        image_url = @agent.page.parser.xpath("//meta[@property='og:image']").first.attributes["content"].value
+        if not @agent.page.parser.xpath("//meta[@property='og:video']").empty?
           "#{image_url}\nwith video"
         else
           image_url
