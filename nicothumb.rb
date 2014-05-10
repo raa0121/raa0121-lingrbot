@@ -134,13 +134,16 @@ class Nicothumb
     elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ message
       "http://lohas.nicoseiga.jp/thumb/#{$1}i"
     elsif /^http:\/\/seiga.nicovideo.jp\/watch\/mg(\d+)/ =~ message
-      @agent.ssl_version = 'SSLv3'
-      secure_url = 'https://secure.nicovideo.jp/secure/login?site=niconico'
-      @agent.post(secure_url, 'mail' => ENV['NICO_ID'], 'password' => ENV['NICO_PASS'])
-      html = @agent.get("http://seiga.nicovideo.jp/api/theme/data?theme_id=#{$1}")
-      info = REXML::Document.new html.body
-      info.root
-      "#{info.elements['response/image_list/image/source_url'].text}#.jpg"
+      begin
+        @agent.get(message)
+        image_url = @agent.page.parser.xpath("//img[@class='thumb']").first.attributes["src"].value
+        "#{image_url}#.jpg"
+      rescue Mechanize::ResponseCodeError => ex
+        case ex.response_code
+        when '404'
+          return ""
+        end
+      end
     elsif /^https:\/\/twitter.com\/.+\/status\/\d+/ =~ message
       begin
         @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
