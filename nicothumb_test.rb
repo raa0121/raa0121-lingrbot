@@ -140,6 +140,7 @@ describe 'The Thumb Rack test' do
     end
   end
 
+=begin
   context 'FC2' do
     it do
       body = { "events" => [ { "message" => { "text" => 'http://blog-imgs-36-origin.fc2.com/n/o/n/nonor/congenitalesotropia.jpg' } } ] }
@@ -148,6 +149,7 @@ describe 'The Thumb Rack test' do
       last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
     end
   end
+=end
 
   context 'seiga.nicovideo' do
     it do
