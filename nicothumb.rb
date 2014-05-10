@@ -112,6 +112,25 @@ class Nicothumb
           return ""
         end
       end
+    elsif %r#http://instagram\.com/p/[\w-]+/$# =~ message
+      begin
+        @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
+        @agent.get(message)
+        unless @agent.page.parser.xpath("//meta[contains(@property, 'og:image')]").first.attributes["content"]
+          return ""
+        end
+        image_url = @agent.page.parser.xpath("//meta[contains(@property, 'og:image')]").first.attributes["content"].value
+        if not @agent.page.parser.xpath("//meta[contains(@property, 'og:video')]").empty?
+          "#{image_url}\nwith video"
+        else
+          image_url
+        end
+      rescue Mechanize::ResponseCodeError => ex
+        case ex.response_code
+        when '404'
+          return ""
+        end
+      end
     elsif /^http:\/\/seiga.nicovideo.jp\/seiga\/im(\d+)/ =~ message
       "http://lohas.nicoseiga.jp/thumb/#{$1}i"
     elsif /^http:\/\/seiga.nicovideo.jp\/watch\/mg(\d+)/ =~ message

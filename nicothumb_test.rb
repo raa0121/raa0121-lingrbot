@@ -80,6 +80,19 @@ describe 'The Thumb' do
     it { should be_a_kind_of(String) }
   end
 
+  describe 'instagram.com' do
+    subject { @thumb.get_image_url('http://instagram.com/p/Qu0-boxInJ/') }
+    it { should be_a_kind_of(String) }
+    it { should match(/^http:\/\/[^\/]+instagram\.com\/.+$/) }
+    it { should_not match(/^http:\/\/[^\/]+instagram\.com\/.+$\n^with video$/m) }
+  end
+
+  describe 'instagram.com with video' do
+    subject { @thumb.get_image_url('http://instagram.com/p/muadXDxIiq/') }
+    it { should be_a_kind_of(String) }
+    it { should match(/^http:\/\/[^\/]+instagram\.com\/.+$\n^with video$/m) }
+  end
+
   describe 'Gravatar' do
     context 'exist' do
       subject { @thumb.get_image_url('unmoremaster@gmail.com') }
@@ -157,6 +170,25 @@ describe 'The Thumb Rack test' do
       post '/nicothumb', body.to_json.to_s
       last_response.should be_ok
       last_response.body.should match(/^http:\/\/lohas.nicoseiga.jp\/.*$/)
+    end
+  end
+
+  context 'instagram.com' do
+    it do
+      body = { "events" => [ { "message" => { "text" => 'http://instagram.com/p/Qu0-boxInJ/' } } ] }
+      post '/nicothumb', body.to_json.to_s
+      last_response.should be_ok
+      last_response.body.should match(/^http:\/\/[^\/]+instagram\.com\/.+$/)
+      last_response.body.should_not match(/^http:\/\/[^\/]+instagram\.com\/.+$\n^with video$/m)
+    end
+  end
+
+  context 'instagram.com with video' do
+    it do
+      body = { "events" => [ { "message" => { "text" => 'http://instagram.com/p/muadXDxIiq/' } } ] }
+      post '/nicothumb', body.to_json.to_s
+      last_response.should be_ok
+      last_response.body.should match(/^http:\/\/[^\/]+instagram\.com\/.+$\n^with video$/m)
     end
   end
 
