@@ -173,6 +173,14 @@ describe 'The Thumb Rack test' do
     end
   end
 
+  context 'seiga.nicovideo.manga' do
+    it do
+      body = { "events" => [ { "message" => { "text" => 'http://seiga.nicovideo.jp/watch/mg46919' } } ] }
+      post '/nicothumb', body.to_json.to_s
+      last_response.should be_ok
+    end
+  end
+
   context 'instagram.com' do
     it do
       body = { "events" => [ { "message" => { "text" => 'http://instagram.com/p/Qu0-boxInJ/' } } ] }
