@@ -94,7 +94,8 @@ def VimAdv(event, year)
   end
   data = data.sort
   data, schedule = data.partition{|d| d[1]["title"]} 
-  reserved =  schedule.map{|m|m.select{|n|n["author"]=="@"}}.count([])
+  schedule = schedule.select{|m|Date.parse(m[1]["date"]) > Date.today}
+  reserved = schedule.map{|m|m.select{|n|n["author"]=="@"}}.count([])
   schedule = schedule[0..(reserved + 4)]
   case command[1]
   when nil
