@@ -18,7 +18,7 @@ post '/url' do
             return ""
           end
           case url
-          when %r`\Ahttp://gyazo.com/(\w+)`
+          when %r`\Ahttp://gyazo\.com/(\w+)`
             gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
             response_lines << gyazo_raw_url
           when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/status/(\d+)`
