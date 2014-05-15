@@ -147,7 +147,7 @@ class Nicothumb
     elsif /^(https?:\/\/t\.co\/.+)?/ =~ message
       begin
         original_user_agent = @agent.user_agent
-        original_uri = @agent.get(message).page.uri 
+        original_uri = @agent.get(message).uri.to_s 
         @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
         @agent.get(original_uri)
         @agent.user_agent = original_user_agent
