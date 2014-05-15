@@ -144,10 +144,29 @@ class Nicothumb
           return ""
         end
       end
-    elsif /^https:\/\/twitter.com\/.+\/status\/\d+/ =~ message
+    elsif /^(https?:\/\/t\.co\/.+)?/ =~ message
       begin
+        original_user_agent = @agent.user_agent
+        original_uri = @agent.get(message).page.uri 
+        @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
+        @agent.get(original_uri)
+        @agent.user_agent = original_user_agent
+        unless @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img")
+          return ""
+        end
+        @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img").first[1]
+      rescue Mechanize::ResponseCodeError => ex
+        case ex.response_code
+        when '404'
+          return ""
+        end
+      end
+    elsif /^https:\/\/twitter\.com\/.+\/status\/\d+/ =~ message
+      begin
+        original_user_agent = @agent.user_agent
         @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
         @agent.get(message)
+        @agent.user_agent = original_user_agent
         unless @agent.page.parser.xpath("//a[contains(@class, 'media-thumbnail')]").at("img")
           return ""
         end
