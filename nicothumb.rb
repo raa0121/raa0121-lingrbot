@@ -144,7 +144,7 @@ class Nicothumb
           return ""
         end
       end
-    elsif /^(https?:\/\/t\.co\/.+)?/ =~ message
+    elsif /^https?:\/\/t\.co\/.+/ =~ message
       begin
         original_user_agent = @agent.user_agent
         original_uri = @agent.get(message).uri.to_s 
