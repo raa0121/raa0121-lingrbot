@@ -7,7 +7,7 @@ gem 'rack-protection','1.2.0'
 gem 'tilt','1.3.3'
 gem 'sinatra','1.3.2'
 gem 'thin','1.3.1'
-gem 'bundler','1.3.5'
+gem 'bundler','1.6.2'
 gem 'mechanize','2.7.3'
 ruby '2.1.0'
 
