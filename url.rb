@@ -6,6 +6,7 @@ require 'uri'
 $agent = Mechanize.new
 
 post '/url' do
+  include Mechanize
   content_type :text
   json = JSON.parse(request.body.read)
   response_lines = []
