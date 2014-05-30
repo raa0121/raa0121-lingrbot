@@ -15,7 +15,7 @@ post '/url' do
       urls.each do |url|
         begin
           case $agent.get(url)
-          when Mechanize::Page, Mechanize::XmlFile
+          when Mechanize::Page, Mechanize::File
             case url
             when %r`\Ahttp://gyazo\.com/(\w+)`
               gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
