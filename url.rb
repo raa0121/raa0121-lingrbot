@@ -14,7 +14,7 @@ post '/url' do
     unless [] == urls = URI.extract(m, ["http", "https"]).reject{|url| url.end_with? '://' }
       urls.each do |url|
         begin
-          unless Mechanize::Page == $agent.get(url).class
+          unless [Mechanize::Page, Mechanize::XmlFile].include?($agent.get(url).class)
             return ""
           end
           case url
@@ -31,6 +31,8 @@ post '/url' do
               response_lines << CGI.unescapeHTML($agent.page.at('title').inner_text)
             elsif $agent.page.at('h1')
               response_lines << CGI.unescapeHTML($agent.page.at('h1').inner_text)
+            elsif $agent.page.at('GUIDE')['title']
+              response_lines << CGI.unescapeHTML($agent.page.at('GUIDE')['title'])
             end
           end
         rescue Mechanize::ResponseCodeError => ex
