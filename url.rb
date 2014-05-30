@@ -6,7 +6,6 @@ require 'uri'
 $agent = Mechanize.new
 
 post '/url' do
-  include Mechanize
   content_type :text
   json = JSON.parse(request.body.read)
   response_lines = []
@@ -15,7 +14,7 @@ post '/url' do
     unless [] == urls = URI.extract(m, ["http", "https"]).reject{|url| url.end_with? '://' }
       urls.each do |url|
         begin
-          unless [Mechanize::Page, Mechanize::XmlFile].include?($agent.get(url).class)
+          unless [Mechanize::Page].include?($agent.get(url).class)
             return ""
           end
           case url
