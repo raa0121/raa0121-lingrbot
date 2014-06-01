@@ -96,6 +96,8 @@ class Nicothumb
         params[key] = value
       end
       get_pixiv_image_url(message, params)
+    elsif %r#^http://[.a-z]+\.c\.yimg\.jp# =~ message
+      { :mode => :gyazo, :url => message }
     elsif %r#http://img\d+\.blogs\.yahoo\.co\.jp/.+/folder/\d+/img_\d+_\d+_\d+# =~ message
       { :mode => :gyazo, :url => message }
 #    elsif %r#http://(.+\.fc2\.com)/.+\.(jpe?g|gif|png)$# =~ message
