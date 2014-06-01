@@ -151,8 +151,8 @@ describe 'The Thumb' do
         @url = 'http://blogs.c.yimg.jp/res/blog-1f-99/ywmjr369/folder/624206/87/55199187/img_0'
       end
       subject { @thumb.get_image_url(@url) }
-      it { should be_a_kind_of(Hash) }
-      it { should include(:mode => :gyazo, :url => @url) }
+      it { should be_a_kind_of(String) }
+      it { should ==('http://blogs.c.yimg.jp/res/blog-1f-99/ywmjr369/folder/624206/87/55199187/img_0#.png') }
     end
 
     context 'ks' do
@@ -160,26 +160,8 @@ describe 'The Thumb' do
         @url = 'http://ks.c.yimg.jp/res/chie-ans-327/327/846/890/i320'
       end
       subject { @thumb.get_image_url(@url) }
-      it { should be_a_kind_of(Hash) }
-      it { should include(:mode => :gyazo, :url => @url) }
-    end
-
-    context 'chie' do
-      before do
-        @url = 'http://chie.c.yimg.jp/v1/resource/chie-0/223/789/i7/uiki_east_1.png'
-      end
-      subject { @thumb.get_image_url(@url) }
-      it { should be_a_kind_of(Hash) }
-      it { should include(:mode => :gyazo, :url => @url) }
-    end
-
-    context 'bookstore' do
-      before do
-        @url = 'http://img.bookstore.c.yimg.jp/im_siggLaHY0MgBrEQfWis_yRouEw---x200/ebook/e0/b7/e0b73b78e697905030f8972193d996a80000_cover.jpg?e0b73b78e697905030f8972193d996a8'
-      end
-      subject { @thumb.get_image_url(@url) }
-      it { should be_a_kind_of(Hash) }
-      it { should include(:mode => :gyazo, :url => @url) }
+      it { should be_a_kind_of(String) }
+      it { should ==('http://ks.c.yimg.jp/res/chie-ans-327/327/846/890/i320#.png') }
     end
   end
 end
@@ -206,7 +188,7 @@ describe 'The Thumb Rack test' do
         body = { "events" => [ { "message" => { "text" => 'http://blogs.c.yimg.jp/res/blog-1f-99/ywmjr369/folder/624206/87/55199187/img_0' } } ] }
         post '/nicothumb', body.to_json.to_s
         last_response.should be_ok
-        last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
+        last_response.body.should ==('http://blogs.c.yimg.jp/res/blog-1f-99/ywmjr369/folder/624206/87/55199187/img_0#.png')
       end
     end
 
@@ -215,25 +197,7 @@ describe 'The Thumb Rack test' do
         body = { "events" => [ { "message" => { "text" => 'http://ks.c.yimg.jp/res/chie-ans-327/327/846/890/i320' } } ] }
         post '/nicothumb', body.to_json.to_s
         last_response.should be_ok
-        last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
-      end
-    end
-
-    context 'chie' do
-      it do
-        body = { "events" => [ { "message" => { "text" => 'http://chie.c.yimg.jp/v1/resource/chie-0/223/789/i7/uiki_east_1.png' } } ] }
-        post '/nicothumb', body.to_json.to_s
-        last_response.should be_ok
-        last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
-      end
-    end
-
-    context 'bookstore' do
-      it do
-        body = { "events" => [ { "message" => { "text" => 'http://img.bookstore.c.yimg.jp/im_siggLaHY0MgBrEQfWis_yRouEw---x200/ebook/e0/b7/e0b73b78e697905030f8972193d996a80000_cover.jpg?e0b73b78e697905030f8972193d996a8' } } ] }
-        post '/nicothumb', body.to_json.to_s
-        last_response.should be_ok
-        last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
+        last_response.body.should ==('http://ks.c.yimg.jp/res/chie-ans-327/327/846/890/i320#.png')
       end
     end
   end
