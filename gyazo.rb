@@ -1,7 +1,6 @@
 require 'net/http'
 
 class Gyazo
-
   attr_reader :id
 
   def initialize(id = '',
@@ -13,11 +12,10 @@ class Gyazo
     @boundary = boundary
     @host = host
     @cgi = cgi
-    @ua   = ua
+    @ua = ua
   end
 
   def upload(img_path)
-
     if !File.exists? img_path
       exit
     end
@@ -51,14 +49,14 @@ EOF
     end
 
     url = ''
-    Net::HTTP::Proxy(proxy_host, proxy_port).start(@host,80) {|http|
-      res = http.post(@cgi,data,header)
+    Net::HTTP::Proxy(proxy_host, proxy_port).start(@host, 80) { |http|
+      res = http.post(@cgi, data, header)
       url = res.response.body
       newid = res.response['X-Gyazo-Id']
       @id = newid if @id == '' and newid and newid != ''
     }
 
-    "#{ url }.png"
+    "#{ url }"
   end
-  
 end
+

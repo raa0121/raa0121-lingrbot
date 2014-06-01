@@ -120,19 +120,19 @@ describe 'The Thumb' do
     context 'ameba blog with Gyazo' do
       subject { @thumb.do_maji_sugoi('http://stat.ameba.jp/user_images/20130816/13/nakagawa-shoko/9e/46/j/o0321042712649574460.jpg') }
       it { should be_a_kind_of(String) }
-      it { should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/) }
+      it { should match(/^http:\/\/i\.[^\/]+\/.+\.jpg$/) }
     end
 
     context 'user illust list with Gyazo' do
       subject { @thumb.do_maji_sugoi('http://www.pixiv.net/member_illust.php?id=747452') }
       it { should be_a_kind_of(String) }
-      it { should match(/^.*\nhttp:\/\/cache\.[^\/]+\/.+\.png$/) }
+      it { should match(/^.*\nhttp:\/\/i\.[^\/]+\/.+\.jpg$/) }
     end
 
     context 'illust medium with Gyazo' do
       subject { @thumb.do_maji_sugoi('http://www.pixiv.net/member_illust.php?mode=medium&illust_id=37361700') }
       it { should be_a_kind_of(String) }
-      it { should match(/http:\/\/cache\.[^\/]+\/.+\.png$/) }
+      it { should match(/http:\/\/i\.[^\/]+\/.+\.png$/) }
     end
   end
 
@@ -179,7 +179,7 @@ describe 'The Thumb Rack test' do
         body = { "events" => [ { "message" => { "text" => 'http://img2.blogs.yahoo.co.jp/ybi/1/1f/99/ywmjr369/folder/624206/img_624206_55199187_0' } } ] }
         post '/nicothumb', body.to_json.to_s
         last_response.should be_ok
-        last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
+        last_response.body.should match(/^http:\/\/i\.[^\/]+\/.+\.jpg$/)
       end
     end
 
@@ -208,7 +208,7 @@ describe 'The Thumb Rack test' do
       body = { "events" => [ { "message" => { "text" => 'http://blog-imgs-36-origin.fc2.com/n/o/n/nonor/congenitalesotropia.jpg' } } ] }
       post '/nicothumb', body.to_json.to_s
       last_response.should be_ok
-      last_response.body.should match(/^http:\/\/cache\.[^\/]+\/.+\.png$/)
+      last_response.body.should match(/^http:\/\/i\.[^\/]+\/.+\.png$/)
     end
   end
 =end
@@ -255,7 +255,7 @@ describe 'The Thumb Rack test' do
         body = { "events" => [ { "message" => { "text" => 'http://www.pixiv.net/member_illust.php?id=747452' } } ] }
         post '/nicothumb', body.to_json.to_s
         last_response.should be_ok
-        last_response.body.should match(/^.*\nhttp:\/\/cache\.[^\/]+\/.+\.png$/)
+        last_response.body.should match(/^.*\nhttp:\/\/i\.[^\/]+\/.+\.jpg$/)
       end
     end
 

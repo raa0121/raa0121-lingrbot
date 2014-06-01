@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 # -*- coding utf-8 -*-
 require 'sinatra'
-require "mechanize"
+require 'mechanize'
 require 'rexml/document'
 require 'digest/md5'
 require 'dm-core'
@@ -34,6 +34,17 @@ class Nicothumb
     @agent = Mechanize.new
   end
 
+  def get_gyazo_image_direct_link(gyazo_url)
+    @agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
+    @agent.get(gyazo_url)
+    image_node = @agent.page.parser.xpath("//meta[@name='twitter:image']").first.attributes["content"]
+    unless image_node
+      return nil
+    else
+      image_node.value
+    end
+  end
+
   def create_gyazo(greatest_url, referer = nil)
     greatest_url =~ /(jpe?g|gif|png)$/
     ext = $1
@@ -43,7 +54,7 @@ class Nicothumb
     gyazo = Gyazo.new ""
     url = gyazo.upload "#{temp_file}"
     File.delete(temp_file)
-    "#{url.sub("//","//cache.")}"
+    get_gyazo_image_direct_link(url)
   end
 
   def get_pixiv_image_url(message, params)
