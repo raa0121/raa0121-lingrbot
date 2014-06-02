@@ -164,6 +164,12 @@ describe 'The Thumb' do
       it { should ==('http://ks.c.yimg.jp/res/chie-ans-327/327/846/890/i320#.png') }
     end
   end
+
+  describe 'Gyazo direct link' do
+    subject { @thumb.get_image_url('http://gyazo.com/cdb44db0ac247b3c01137d93ce297392') }
+    it { should be_a_kind_of(String) }
+    it { should ==('http://i.gyazo.com/cdb44db0ac247b3c01137d93ce297392.jpg') }
+  end
 end
 
 describe 'The Thumb Rack test' do
@@ -282,6 +288,15 @@ describe 'The Thumb Rack test' do
         second_body.should be_a_kind_of(String)
         first_body.should == second_body
       end
+    end
+  end
+
+  context 'Gyazo direct link' do
+    it do
+      body = { "events" => [ { "message" => { "text" => 'http://gyazo.com/cdb44db0ac247b3c01137d93ce297392' } } ] }
+      post '/nicothumb', body.to_json.to_s
+      last_response.should be_ok
+      last_response.body.should == 'http://i.gyazo.com/cdb44db0ac247b3c01137d93ce297392.jpg'
     end
   end
 end
