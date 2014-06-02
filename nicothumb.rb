@@ -193,7 +193,7 @@ class Nicothumb
     elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ message # mail address
       # Gravatar returns a default icon if not found
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(message)}?size=210"
-    elsif %r`^http://gyazo\.com/(\w+)$` =~ message
+    elsif %r`\Ahttp://gyazo\.com/(\w+)` =~ message
       get_gyazo_image_direct_link(message)
     end
   end
