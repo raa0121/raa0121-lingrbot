@@ -17,6 +17,9 @@ post '/url' do
           case $agent.get(url)
           when Mechanize::Page, Mechanize::XmlFile
             case url
+            when %r`\Ahttp://gyazo\.com/(\w+)`
+              gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
+              response_lines << gyazo_raw_url
             when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/status/(\d+)`
               tweet = $agent.page.at("[data-tweet-id='#{$2}']")
               response_lines << 'Something wrong with twitter url.' unless tweet
