@@ -51,6 +51,9 @@ post '/url' do
           end
         end
       end
+      if [] == response_lines
+        return ""
+      end
       return response_lines.join("\n")
     end
   }
