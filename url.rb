@@ -4,6 +4,7 @@ require 'json'
 require 'uri'
 
 $agent = Mechanize.new
+$agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 post '/url' do
   content_type :text

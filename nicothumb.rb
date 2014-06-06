@@ -32,6 +32,7 @@ end
 class Nicothumb
   def initialize
     @agent = Mechanize.new
+    @agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
 
   def get_gyazo_image_direct_link(gyazo_url)
