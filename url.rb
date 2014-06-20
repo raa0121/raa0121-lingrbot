@@ -21,7 +21,7 @@ post '/url' do
             when %r`\Ahttp://gyazo\.com/(\w+)`
               gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
               response_lines << gyazo_raw_url
-            when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/status/(\d+)`
+            when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/(?:status|statuses)/(\d+)`
               tweet = $agent.page.at("[data-tweet-id='#{$2}']")
               response_lines << 'Something wrong with twitter url.' unless tweet
               response_lines << "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
