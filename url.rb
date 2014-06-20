@@ -22,6 +22,8 @@ post '/url' do
               gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
               response_lines << gyazo_raw_url
             when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/(?:status|statuses)/(\d+)`
+              $agent.user_agent = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
+              $agent.get(url)
               tweet = $agent.page.at("[data-tweet-id='#{$2}']")
               response_lines << 'Something wrong with twitter url.' unless tweet
               response_lines << "#{tweet.at('strong.fullname').inner_text} / #{tweet.at('span.js-action-profile-name').inner_text}\n#{tweet.at('p.tweet-text').inner_text}"
