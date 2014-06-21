@@ -15,6 +15,7 @@ post '/url' do
     unless [] == urls = URI.extract(m, ["http", "https"]).reject{|url| url.end_with? '://' }
       urls.each do |url|
         begin
+          $agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
           case $agent.get(url)
           when Mechanize::Page, Mechanize::XmlFile
             case url
