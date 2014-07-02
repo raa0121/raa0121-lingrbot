@@ -93,6 +93,13 @@ describe 'The Thumb' do
     it { should match(/^http:\/\/[^\/]+instagram\.com\/.+$\n^with video$/m) }
   end
 
+  describe 'Droplr' do
+    subject { @thumb.get_image_url('http://d.pr/i/EZbn') }
+    it { should be_a_kind_of(Hash) }
+    it { should include(:mode => :gyazo) }
+    it { should have_key(:url) }
+  end
+
   describe 'Gravatar' do
     context 'exist' do
       subject { @thumb.get_image_url('unmoremaster@gmail.com') }
@@ -246,6 +253,15 @@ describe 'The Thumb Rack test' do
       post '/nicothumb', body.to_json.to_s
       last_response.should be_ok
       last_response.body.should match(/^http:\/\/[^\/]+instagram\.com\/.+$\n^with video$/m)
+    end
+  end
+
+  context 'Droplr' do
+    it do
+      body = { "events" => [ { "message" => { "text" => 'http://d.pr/i/EZbn' } } ] }
+      post '/nicothumb', body.to_json.to_s
+      last_response.should be_ok
+      last_response.body.should match(/^http:\/\/[^\/]+gyazo\.com\/.+$/)
     end
   end
 

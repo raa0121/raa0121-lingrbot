@@ -191,6 +191,8 @@ class Nicothumb
           return ""
         end
       end
+    elsif /^http:\/\/d\.pr\/i\/[a-zA-Z0-9]+/ =~ message
+      { :mode => :gyazo, :url => "#{message}+" }
     elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ message # mail address
       # Gravatar returns a default icon if not found
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(message)}?size=210"
