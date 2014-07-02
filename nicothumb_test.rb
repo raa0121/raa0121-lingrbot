@@ -209,16 +209,14 @@ describe 'The Thumb Rack test' do
     end
   end
 
-=begin
   context 'FC2' do
     it do
       body = { "events" => [ { "message" => { "text" => 'http://blog-imgs-36-origin.fc2.com/n/o/n/nonor/congenitalesotropia.jpg' } } ] }
       post '/nicothumb', body.to_json.to_s
       last_response.should be_ok
-      last_response.body.should match(/^http:\/\/i\.[^\/]+\/.+\.png$/)
+      last_response.body.should match(/^http:\/\/i\.[^\/]+\/.+\.jpg$/)
     end
   end
-=end
 
   context 'seiga.nicovideo' do
     it do
