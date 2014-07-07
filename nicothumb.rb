@@ -241,14 +241,21 @@ end
 
 post '/nicothumb' do
   content_type :text
+  response_lines = []
   json = JSON.parse(request.body.read)
   if not json["events"].nil?
-    json["events"].map do |e|
-      if e["message"]
+    json["events"].select {|e| e['message'] }.map {|e|
+      m = e["message"]["text"]
+      unless [] == urls = URI.extract(m, ["http", "https"]).reject{|url| url.end_with? '://' }
         thumb = Nicothumb.new
-        res = thumb.do_maji_sugoi(e["message"]["text"])
-        (res.nil? or res.empty?) ? "\n" : res
+        urls.each do |url|
+          response_lines << thumb.do_maji_sugoi(url)
+        end
+        if [] == response_lines
+          return ""
+        end
+        return response_lines.join("\n")
       end
-    end
+    }
   end
 end
