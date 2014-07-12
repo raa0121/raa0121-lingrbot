@@ -81,6 +81,7 @@ class Nicothumb
   end
 
   def get_image_url(message)
+    @agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
     if /^http:\/\/(?:www.)?nico(?:.ms\/|video.jp\/watch\/)((?:nm|sm)?\d+)/ =~ message
       html = @agent.get("http://ext.nicovideo.jp/api/getthumbinfo/#{$1}")
       return unless html
