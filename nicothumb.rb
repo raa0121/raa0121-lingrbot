@@ -119,6 +119,7 @@ class Nicothumb
       { :mode => :gyazo, :url => message, :referer => 'http://ameblo.jp/' }
     elsif /^http:\/\/twitpic\.com\/[0-9a-z]+/ =~ message
       begin
+        @agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
         @agent.get("#{$&}/full")
         @agent.page.parser.xpath("//div[@id='media-full']/img").first.attributes["src"].value
       rescue Mechanize::ResponseCodeError => ex
