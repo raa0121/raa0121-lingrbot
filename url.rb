@@ -37,6 +37,9 @@ post '/url' do
               elsif $agent.page.at('GUIDE')['title']
                 response_lines << CGI.unescapeHTML($agent.page.at('GUIDE')['title'])
               end
+              if [] == response_lines
+                return "" 
+              end
             end
           else
             return ""
