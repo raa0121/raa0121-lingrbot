@@ -34,7 +34,7 @@ post '/url' do
                 response_lines << CGI.unescapeHTML($agent.page.at('title').inner_text)
               elsif $agent.page.at('h1')
                 response_lines << CGI.unescapeHTML($agent.page.at('h1').inner_text)
-              elsif $agent.page.at('GUIDE')['title']
+              elsif $agent.page.at('GUIDE')['title'] &&  Mechanize::XmlFile == $agent.page.class 
                 response_lines << CGI.unescapeHTML($agent.page.at('GUIDE')['title'])
               else
                 response_lines = []
