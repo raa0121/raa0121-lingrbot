@@ -17,7 +17,7 @@ post '/url' do
         begin
           $agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
           case $agent.get(url)
-          when Mechanize::Page, Mechanize::XmlFile
+          when Mechanize::Page
             case url
             when %r`\Ahttp://gyazo\.com/(\w+)`
               gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
@@ -34,19 +34,17 @@ post '/url' do
                 response_lines << CGI.unescapeHTML($agent.page.at('title').inner_text)
               elsif $agent.page.at('h1')
                 response_lines << CGI.unescapeHTML($agent.page.at('h1').inner_text)
-              elsif Mechanize::XmlFile == $agent.page.class
-                if $agent.page.at('GUIDE')['title'] 
-                  response_lines << CGI.unescapeHTML($agent.page.at('GUIDE')['title'])
-                end
-              else
-                response_lines = []
               end
-              if [] == response_lines
-                return "" 
-              end
+            end
+          when Mechanize::XmlFile
+            if $agent.page.at('GUIDE')['title'] 
+              response_lines << CGI.unescapeHTML($agent.page.at('GUIDE')['title'])
             end
           else
             return ""
+          end
+          if [] == response_lines
+            return "" 
           end
         rescue Mechanize::ResponseCodeError => ex
           case ex.response_code
