@@ -21,6 +21,14 @@ post '/url' do
             case url
             when %r`\Ahttp://gyazo\.com/(\w+)`
               gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
+              begin
+                $agent.get(gyazo_raw_url)
+              rescue Mechanize::ResponseCodeError => ex
+                case ex.response_code
+                when '404'
+                  gyazo_raw_url = "http://i.gyazo.com/#{$1}.jpg"
+                end
+              end
               response_lines << gyazo_raw_url
             when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/(?:status|statuses)/(\d+)`
               $agent.user_agent = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
