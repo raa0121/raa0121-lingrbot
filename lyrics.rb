@@ -17,7 +17,7 @@ def searchMusicUtamap(word)
   keyword = CGI.escape("検   索")
   begin
     unless Mechanize::Page == $agent.get("#{base_url}#{word}&act=search&search_by_keyword=#{keyword}&sortname=1&pattern=1").class
-      return ""
+      return {}
     end
     unless [] == $agent.page.search('td.ct160 a').to_a
       title = $agent.page.search('td.ct160 a')[0].text
@@ -30,64 +30,63 @@ def searchMusicUtamap(word)
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
     when '403'
-      return ""
+      return {}
     when '404'
-      return ""
+      return {}
     when '503'
-      return ""
+      return {}
     when '500'
-      return ""
+      return {}
     end
   end
-  return ""
 end
 
 def searchMusicKasitime(word)
   base_url = "https://www.google.co.jp/search?q="
   site = CGI.escape(" site:www.kasi-time.com")
   word = CGI.escape(word)
-  puts "#{base_url}#{word}#{site}"
   ids = []
+  titles = []
+  artists = []
   begin
     unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
-      return ""
+      return {}
     end
     unless [] == urls = $agent.page.search('li.g h3.r a').to_a
       urls.map{|u| 
-        if /www\.kasi-time\.com\/item-(\d+)/ =~ u['href']
-          $agent.get("u['href']")
-          title = $agent.page.search('#song_info_table h1').text
-          artist = $agent.page.search('#song_info_table a')[0].text
+        if /www\.kasi-time\.com\/item-(\d+)\.html/ =~ u['href']
           ids << $1
+          $agent.get("#{u['href'].sub("/url?q=","").sub(/\.html.*/,".html")}")
+          titles << $agent.page.search('#song_info_table h1').text
+          artists << $agent.page.search('#song_info_table a')[0].text
         end
       } 
       result = {url: "http://www.kasi-time.com/item_js.php?no=#{ids[0]}",
-                title: title, artist: artist}
+                title: titles[0], artist: artists[0]}
       return result
     end
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
     when '403'
-      return ""
+      return {}
     when '404'
-      return ""
+      return {}
     when '503'
-      return ""
+      return {}
     when '500'
-      return ""
+      return {}
     end
   end
-  return ""
 end
 
 def getLyric(mes,room)
   command = mes.sub("!lyrics","").strip
   #lyric_url = searchMusicUtamap(command)
   lyric_info = searchMusicKasitime(command)
-  if "" == lyric_info[:url]
+  if {} == lyric_info
     #lyric_url = searchMusicKasitime(command)
     lyric_info = searchMusicUtamap(command)
-    if "" == lyric_info[:url]
+    if {} == lyric_info
       return "#{command} is Not found."
     end
   end
