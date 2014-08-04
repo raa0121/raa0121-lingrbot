@@ -177,7 +177,7 @@ class Nicothumb
           return ""
         end
       end
-    elsif /^https:\/\/twitter\.com\/.+\/status\/\d+/ =~ message
+    elsif /^https:\/\/twitter\.com\/.+\/status(es)?\/\d+/ =~ message
       begin
         @agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
         original_user_agent = @agent.user_agent
@@ -195,7 +195,7 @@ class Nicothumb
         end
       end
     elsif /^http:\/\/d\.pr\/i\/[a-zA-Z0-9]+/ =~ message
-      { :mode => :gyazo, :url => "#{message}+" }
+      "#{message}.png"
     elsif /^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]+$/ =~ message # mail address
       # Gravatar returns a default icon if not found
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(message)}?size=210"
