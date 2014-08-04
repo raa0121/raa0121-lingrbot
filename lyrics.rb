@@ -20,8 +20,12 @@ def searchMusicUtamap(word)
       return ""
     end
     unless [] == $agent.page.search('td.ct160 a').to_a
+      title = $agent.page.search('td.ct160 a')[0].text
+      artist = $agent.page.search('td.ct120')[0].text
       id = $agent.page.search('td.ct160 a')[0]['href'].sub("./showkasi.php?surl=","")
-      return "http://www.utamap.com/phpflash/flashfalsephp.php?unum=#{id}"
+      result = {url: "http://www.utamap.com/phpflash/flashfalsephp.php?unum=#{id}",
+                title: title, artist: artist}
+      return result
     end
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
@@ -51,10 +55,15 @@ def searchMusicKasitime(word)
     unless [] == urls = $agent.page.search('li.g h3.r a').to_a
       urls.map{|u| 
         if /www\.kasi-time\.com\/item-(\d+)/ =~ u['href']
+          $agent.get("u['href']")
+          title = $agent.page.search('#song_info_table h1').text
+          artist = $agent.page.search('#song_info_table a')[0].text
           ids << $1
         end
       } 
-      return "http://www.kasi-time.com/item_js.php?no=#{ids[0]}"
+      result = {url: "http://www.kasi-time.com/item_js.php?no=#{ids[0]}",
+                title: title, artist: artist}
+      return result
     end
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
@@ -74,20 +83,20 @@ end
 def getLyric(mes,room)
   command = mes.sub("!lyrics","").strip
   #lyric_url = searchMusicUtamap(command)
-  lyric_url = searchMusicKasitime(command)
-  if "" == lyric_url
+  lyric_info = searchMusicKasitime(command)
+  if "" == lyric_info[:url]
     #lyric_url = searchMusicKasitime(command)
-    lyric_url = searchMusicUtamap(command)
-    if "" == lyric_url
+    lyric_info = searchMusicUtamap(command)
+    if "" == lyric_info[:url]
       return "#{command} is Not found."
     end
   end
   begin
-    lyric_page = open(lyric_url).read
-    if lyric_url.include?("utamap")
-      lyric = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
+    lyric_page = open(lyric_info[:url]).read
+    if lyric_info[:url].include?("utamap")
+      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n" + CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
     else
-      lyric = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
+      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n" + CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
     end
     if lyric.bytesize > 1000
       lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
