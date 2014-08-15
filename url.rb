@@ -20,16 +20,13 @@ post '/url' do
           when Mechanize::Page
             case url
             when %r`\Ahttp://gyazo\.com/(\w+)`
-              gyazo_raw_url = "http://i.gyazo.com/#{$1}.png"
-              begin
-                $agent.get(gyazo_raw_url)
-              rescue Mechanize::ResponseCodeError => ex
-                case ex.response_code
-                when '404'
-                  gyazo_raw_url = "http://i.gyazo.com/#{$1}.jpg"
+              gyazo_hash = $1
+              gyazo_ext =
+                case Net::HTTP.start('i.gyazo.com', 80) {|http| http.head("/#{gyazo_hash}.png").code }
+                when '200' then :png
+                else :jpg
                 end
-              end
-              response_lines << gyazo_raw_url
+              response_lines << "http://i.gyazo.com/#{gyazo_hash}.#{gyazo_ext}"
             when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/(?:status|statuses)/(\d+)`
               $agent.user_agent = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
               $agent.get(url)
