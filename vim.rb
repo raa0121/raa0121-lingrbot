@@ -6,10 +6,10 @@ require "mechanize"
 require 'cgi'
 
 $VAC11 = open("https://gist.githubusercontent.com/osyo-manga/10577789/raw/gistfile1.txt", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read
-#$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
-$VAC12 = JSON.parse(open("https://api.atnd.org/events/?event_id=33746&format=json", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)["events"][0]["event"]["description"]
-#$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
-$VAC13 = JSON.parse(open("https://api.atnd.org/events/?event_id=45072&format=json", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)["events"][0]["event"]["description"]
+$VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/README.md").read
+#$VAC12 = JSON.parse(open("https://api.atnd.org/events/?event_id=33746&format=json", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)["events"][0]["event"]["description"]
+$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
+#$VAC13 = JSON.parse(open("https://api.atnd.org/events/?event_id=45072&format=json", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)["events"][0]["event"]["description"]
 
 get '/vim' do
   "VimAdv"
