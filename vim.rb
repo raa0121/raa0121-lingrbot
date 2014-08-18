@@ -171,15 +171,6 @@ post '/vim' do
       "data was reloaded."
     when /^(!VimAdv|:vimadv|!VAC)/i
       VimAdv(e,"12+13")
-    when /^:vimhacks?$/i
-      agent.get("http://vim-users.jp/category/vim-hacks/")
-      return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}[0,3].join("\n")
-    when /^:vimhacks\s+?(\d+)\b/i
-      agent.get("http://vim-users.jp/hack#{$1}")
-      return "#{agent.page.search('h1').inner_text} - #{agent.page.uri}"
-    when /^:vimhacks\s+?(.*)\b/i
-      agent.get("http://vim-users.jp/?s=#{CGI.escape($1)}&cat=19")
-      return agent.page.search('h2 a').map{|e| "#{e.inner_text} - #{e['href']}"}.select{|s| /hack/ =~ s}.join("\n")
     when /^またMacVimか$/
       return 'http://bit.ly/f2fjvZ#.png'
     when /SEGV/i
