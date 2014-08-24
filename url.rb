@@ -5,7 +5,7 @@ require 'uri'
 
 $agent = Mechanize.new
 $agent.verify_mode = OpenSSL::SSL::VERIFY_NONE
-@agent.request_headers = {
+$agent.request_headers = {
   'Accept-Language' => 'ja,en-US;q=0.8,en;q=0.6'
 }
 
