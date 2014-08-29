@@ -93,9 +93,11 @@ def getLyric(mes,room)
   begin
     lyric_page = open(lyric_info[:url]).read
     if lyric_info[:url].include?("utamap")
-      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n" + CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
+      lyric_body = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
+      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n#{lyric_body}"
     else
-      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n" + CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("\r\n\r\ndocument.write('","").sub("');","")
+      lyric_body = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").chop
+      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n#{lyric_body}"
     end
     if lyric.bytesize > 1000
       lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
