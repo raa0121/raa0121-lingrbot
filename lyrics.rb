@@ -96,7 +96,7 @@ def getLyric(mes,room)
       lyric_body = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
       lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n#{lyric_body}"
     else
-      lyric_body = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").chop
+      lyric_body = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
       lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n#{lyric_body}"
     end
     if lyric.bytesize > 1000
