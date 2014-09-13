@@ -9,7 +9,7 @@ gem 'sinatra','1.3.2'
 gem 'thin','1.3.1'
 gem 'bundler','1.6.2'
 gem 'mechanize','2.7.3'
-ruby '2.1.0'
+ruby '2.1.2'
 
 gem 'dm-core'
 gem 'dm-migrations'
