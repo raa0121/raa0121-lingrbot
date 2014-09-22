@@ -22,14 +22,14 @@ post '/url' do
           case $agent.get(url)
           when Mechanize::Page
             case url
-            when %r`\Ahttp://gyazo\.com/(\w+)`
-              gyazo_hash = $1
-              gyazo_ext =
-                case Net::HTTP.start('i.gyazo.com', 80) {|http| http.head("/#{gyazo_hash}.png").code }
-                when '200' then :png
-                else :jpg
-                end
-              response_lines << "http://i.gyazo.com/#{gyazo_hash}.#{gyazo_ext}"
+            #when %r`\Ahttp://gyazo\.com/(\w+)`
+            #  gyazo_hash = $1
+            #  gyazo_ext =
+            #    case Net::HTTP.start('i.gyazo.com', 80) {|http| http.head("/#{gyazo_hash}.png").code }
+            #    when '200' then :png
+            #    else :jpg
+            #    end
+            #  response_lines << "http://i.gyazo.com/#{gyazo_hash}.#{gyazo_ext}"
             when %r`\Ahttps?://(www\.)?twitter.com/[^/]+/(?:status|statuses)/(\d+)`
               $agent.user_agent = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
               $agent.get(url)
