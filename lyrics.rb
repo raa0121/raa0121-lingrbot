@@ -47,6 +47,9 @@ def searchMusicUtamap(word)
     lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
     result = {lyrics: lyrics, url: url,
               title: title, artist: artist}
+    if result[:url] == nil
+      return {}
+    end
   end
   return result
 end
@@ -171,7 +174,7 @@ def getLyric(mes,room)
       end
     end
   end
-  lyrics = "title:#{lyrics_info[:title]}\nartist:#{lyrics_info[:artist]}\nurl#{lyrics_info[:url]}\n\n#{lyrics_info[:lyrics]}"
+  lyrics = "title:#{lyrics_info[:title]}\nartist:#{lyrics_info[:artist]}\nurl:#{lyrics_info[:url]}\n\n#{lyrics_info[:lyrics]}"
   if lyrics.bytesize > 1000
     lyrics.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
     return ""
