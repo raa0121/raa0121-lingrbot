@@ -121,7 +121,7 @@ def searchMusicPetitLyrics(word)
         $agent.get("#{base_url}#{u}")
         info = $agent.page.at('.title-bar').text.split('/')
         titles << info.first.chop
-        artists << info.second.chop
+        artists << info.last.chop
       }
     end
   rescue Mechanize::ResponseCodeError => ex
