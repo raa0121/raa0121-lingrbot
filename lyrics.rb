@@ -141,11 +141,12 @@ def searchMusicPetitLyrics(word)
     res = $agent.post("#{base_url}com/get_lyrics.ajax",
                       { lyrics_id: ids.first },
                       { 'X-Requested-With' => 'XMLHttpRequest'})
-    lyrics = JSON.parse(res.body).inject('') {|acc, line|
+    data = JSON.parse(res.body)
+    lyrics = data.inject('') {|acc, line|
         acc += Base64.decode64(line['lyrics'])
         acc + "\n"
     }
-    result = {lyrics: lyrics,
+    result = {lyrics: lyrics, url: urls.first,
               title: titles.first, artist: artists.first}
     return result
   rescue Mechanize::ResponseCodeError => ex
