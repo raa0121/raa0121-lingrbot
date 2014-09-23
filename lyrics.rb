@@ -166,8 +166,9 @@ def getLyric(mes,room)
     lyrics_info = searchMusicUtamap(command)
     if {} == lyrics_info
       lyrics_info = searchMusicPetitLyrics(command)
-    else
-      return "#{command} is Not found."
+      if {} == lyrics_info
+        return "#{command} is Not found."
+      end
     end
   end
   lyrics = "title:#{lyrics_info[:title]}\nartist:#{lyrics_info[:artist]}\nurl#{lyrics_info[:url]}\n\n#{lyrics_info[:lyrics]}"
