@@ -146,7 +146,7 @@ def searchMusicPetitLyrics(word)
         acc + "\n"
     }
     result = {lyrics: lyrics,
-              title: title.first, artist: artists.first}
+              title: titles.first, artist: artists.first}
     return result
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
