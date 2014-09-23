@@ -95,16 +95,7 @@ def searchMusicKasitime(word)
     result = {lyrics: lyrics, url: urls.first,
               title: titles.first, artist: artists.first}
   rescue OpenURI::HTTPError => ex
-    case ex.response_code
-    when '403'
-      return {}
-    when '404'
-      return {}
-    when '503'
-      return {}
-    when '500'
-      return {}
-    end
+    return {}
   end
   return result
 end
