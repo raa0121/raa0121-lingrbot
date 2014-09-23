@@ -68,8 +68,8 @@ def searchMusicKasitime(word)
     unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
       return {}
     end
-    unless [] == urls = $agent.page.search('li.g h3.r a').to_a
-      urls.map{|u| 
+    unless [] == search_urls = $agent.page.search('li.g h3.r a').to_a
+      search_urls.map{|u| 
         if /www\.kasi-time\.com\/item-(\d+)\.html/ =~ u['href']
           ids << $1
           url = "#{u['href'].sub("/url?q=","").sub(/\.html.*/,".html")}"
