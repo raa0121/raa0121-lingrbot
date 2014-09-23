@@ -94,6 +94,17 @@ def searchMusicKasitime(word)
     lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
     result = {lyrics: lyrics, url: urls.first,
               title: titles.first, artist: artists.first}
+  rescue OpenURI::HTTPError => ex
+    case ex.response_code
+    when '403'
+      return {}
+    when '404'
+      return {}
+    when '503'
+      return {}
+    when '500'
+      return {}
+    end
   end
   return result
 end
