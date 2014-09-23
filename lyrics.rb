@@ -2,6 +2,8 @@
 require 'mechanize'
 require 'open-uri'
 require 'cgi'
+require 'json'
+require 'base64'
 
 $agent = Mechanize.new
 $agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
@@ -13,8 +15,11 @@ end
 
 def searchMusicUtamap(word)
   base_url = "http://www.utamap.com/searchkasi.php?searchname=title&word="
+  lyrics_base_url = "http://www.utamap.com/phpflash/flashfalsephp.php?unum="
   word = CGI.escape(word)
   keyword = CGI.escape("検   索")
+  error_word = "エラー120：管理人にご連絡ください。"
+  result = {}
   begin
     unless Mechanize::Page == $agent.get("#{base_url}#{word}&act=search&search_by_keyword=#{keyword}&sortname=1&pattern=1").class
       return {}
@@ -23,9 +28,7 @@ def searchMusicUtamap(word)
       title = $agent.page.search('td.ct160 a')[0].text
       artist = $agent.page.search('td.ct120')[0].text
       id = $agent.page.search('td.ct160 a')[0]['href'].sub("./showkasi.php?surl=","")
-      result = {url: "http://www.utamap.com/phpflash/flashfalsephp.php?unum=#{id}",
-                title: title, artist: artist}
-      return result
+      url = $agent.page.search('td.ct160 a')[0]['href'].sub(".","http://www.utamap.com/")
     end
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
@@ -39,15 +42,25 @@ def searchMusicUtamap(word)
       return {}
     end
   end
+  lyrics_page = open("#{lyrics_base_url}#{id}").read
+  unless error_word == lyrics_page.encode("UTF-8", "Shift_JIS")
+    lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
+    result = {lyrics: lyrics, url: url,
+              title: title, artist: artist}
+  end
+  return result
 end
 
 def searchMusicKasitime(word)
   base_url = "https://www.google.co.jp/search?q="
+  lyrics_base_url = "http://www.kasi-time.com/item_js.php?no="
   site = CGI.escape(" site:www.kasi-time.com")
   word = CGI.escape(word)
   ids = []
   titles = []
   artists = []
+  urls = []
+  result = {}
   begin
     unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
       return {}
@@ -56,15 +69,80 @@ def searchMusicKasitime(word)
       urls.map{|u| 
         if /www\.kasi-time\.com\/item-(\d+)\.html/ =~ u['href']
           ids << $1
-          $agent.get("#{u['href'].sub("/url?q=","").sub(/\.html.*/,".html")}")
+          url = "#{u['href'].sub("/url?q=","").sub(/\.html.*/,".html")}"
+          $agent.get(url)
           titles << $agent.page.search('#song_info_table h1').text
           artists << $agent.page.search('#song_info_table a')[0].text
+          urls << url
         end
       } 
-      result = {url: "http://www.kasi-time.com/item_js.php?no=#{ids[0]}",
-                title: titles[0], artist: artists[0]}
-      return result
     end
+  rescue Mechanize::ResponseCodeError => ex
+    case ex.response_code
+    when '403'
+      return {}
+    when '404'
+      return {}
+    when '503'
+      return {}
+    when '500'
+      return {}
+    end
+  end
+  begin
+    lyrics_page = open("#{lyrics_base_url}#{ids.first}").read
+    lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
+    result = {lyrics: lyrics, url: urls.first,
+              title: titles.first, artist: artists.first}
+  end
+  return result
+end
+
+def searchMusicPetitLyrics(word)
+  base_url = "http://petitlyrics.com/"
+  search_url = "#{base_url}search_lyrics?title="
+  word = CGI.escape(word)
+  ids = []
+  titles = []
+  artists = []
+  result = {}
+  begin
+    unless Mechanize::Page == $agent.get("#{search_url}#{word}").class
+      return {}
+    end
+    unless [] == urls = $agent.page.search('span.lyrics-list-title').to_a.map{|u|u.parent["href"]}
+      urls.map{|u|
+        ids << u.sub("/lyrics/","")
+        $agent.get("#{base_url}#{u}")
+        info = $agent.page.at('.title-bar').text.split('/')
+        titles << info.first.chop
+        artists << info.second.chop
+      }
+    end
+  rescue Mechanize::ResponseCodeError => ex
+    case ex.response_code
+    when '403'
+      return {}
+    when '404'
+      return {}
+    when '503'
+      return {}
+    when '500'
+      return {}
+    end
+  end
+
+  begin
+    res = $agent.post("#{base_url}com/get_lyrics.ajax",
+                      { lyrics_id: ids.first },
+                      { 'X-Requested-With' => 'XMLHttpRequest'})
+    lyrics = JSON.parse(res.body).inject('') {|acc, line|
+        acc += Base64.decode64(line['lyrics'])
+        acc + "\n"
+    }
+    result = {lyrics: lyrics,
+              title: title.first, artist: artists.first}
+    return result
   rescue Mechanize::ResponseCodeError => ex
     case ex.response_code
     when '403'
@@ -81,41 +159,21 @@ end
 
 def getLyric(mes,room)
   command = mes.sub("!lyrics","").strip
-  #lyric_url = searchMusicUtamap(command)
-  lyric_info = searchMusicKasitime(command)
-  if {} == lyric_info
-    #lyric_url = searchMusicKasitime(command)
-    lyric_info = searchMusicUtamap(command)
-    if {} == lyric_info
+  lyrics_info = searchMusicKasitime(command)
+  if {} == lyrics_info
+    lyrics_info = searchMusicUtamap(command)
+    if {} == lyrics_info
+      lyrics_info = searchMusicPetitLyrics(command)
+    else
       return "#{command} is Not found."
     end
   end
-  begin
-    lyric_page = open(lyric_info[:url]).read
-    if lyric_info[:url].include?("utamap")
-      lyric_body = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
-      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n#{lyric_body}"
-    else
-      lyric_body = CGI.unescapeHTML(lyric_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
-      lyric = "title:#{lyric_info[:title]}\nartist:#{lyric_info[:artist]}\n\n#{lyric_body}"
-    end
-    if lyric.bytesize > 1000
-      lyric.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
-      return ""
-    else
-      lyric
-    end
-  rescue Mechanize::ResponseCodeError => ex
-    case ex.response_code
-    when '403'
-      return ""
-    when '404'
-      return ""
-    when '503'
-      return ""
-    when '500'
-      return ""
-    end
+  lyrics = "title:#{lyrics_info[:title]}\nartist:#{lyrics_info[:artist]}\nurl#{lyrics_info[:url]}\n\n#{lyrics_info[:lyrics]}"
+  if lyrics.bytesize > 1000
+    lyrics.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
+    return ""
+  else
+    lyrics
   end
 end
 
