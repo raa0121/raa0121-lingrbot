@@ -49,7 +49,7 @@ def searchMusicKasitime(word)
   base_url = "https://www.google.co.jp/search?q="
   lyrics_base_url = "http://www.kasi-time.com/item_js.php?no="
   site = CGI.escape(" site:www.kasi-time.com")
-  word = CGI.escape("\"""#{word}\"")
+  word = CGI.escape(word.strip.split.map{|it| %`"#{it}"`}.join(" "))
   ids = []
   titles = []
   artists = []
@@ -132,7 +132,7 @@ def searchMusicPetitLyrics(word)
 end
 
 def getLyric(mes,room)
-  command = mes.sub("!lyrics","").strip.split.map{|it| %`"#{it}"`}.join(" ")
+  command = mes.sub("!lyrics","")
   lyrics_info = searchMusicKasitime(command)
   if {} == lyrics_info
     lyrics_info = searchMusicUtamap(command)
