@@ -31,16 +31,7 @@ def searchMusicUtamap(word)
       url = $agent.page.search('td.ct160 a')[0]['href'].sub(".","http://www.utamap.com/")
     end
   rescue Mechanize::ResponseCodeError => ex
-    case ex.response_code
-    when '403'
-      return {}
-    when '404'
-      return {}
-    when '503'
-      return {}
-    when '500'
-      return {}
-    end
+    return {}
   end
   lyrics_page = open("#{lyrics_base_url}#{id}").read
   unless error_word == lyrics_page.encode("UTF-8", "Shift_JIS")
@@ -81,16 +72,7 @@ def searchMusicKasitime(word)
       } 
     end
   rescue Mechanize::ResponseCodeError => ex
-    case ex.response_code
-    when '403'
-      return {}
-    when '404'
-      return {}
-    when '503'
-      return {}
-    when '500'
-      return {}
-    end
+    return {}
   end
   begin
     lyrics_page = open("#{lyrics_base_url}#{ids.first}").read
@@ -104,62 +86,48 @@ def searchMusicKasitime(word)
 end
 
 def searchMusicPetitLyrics(word)
-  base_url = "http://petitlyrics.com/"
-  search_url = "#{base_url}search_lyrics?title="
+  base_url = "http://petitlyrics.com"
+  search_url = "#{base_url}/search_lyrics?title="
   word = CGI.escape(word)
   ids = []
   titles = []
   artists = []
+  urls = []
   result = {}
   begin
     unless Mechanize::Page == $agent.get("#{search_url}#{word}").class
       return {}
     end
-    unless [] == urls = $agent.page.search('span.lyrics-list-title').to_a.map{|u|u.parent["href"]}
-      urls.map{|u|
+    unless [] == search_urls = $agent.page.search('span.lyrics-list-title').to_a.map{|u|u.parent["href"]}
+      search_urls.map{|u|
         ids << u.sub("/lyrics/","")
-        $agent.get("#{base_url}#{u}")
+        url = "#{base_url}#{u}"
+        $agent.get(url)
         info = $agent.page.at('.title-bar').text.split('/')
+        urls << url
         titles << info.first.chop
         artists << info.last.chop
       }
     end
   rescue Mechanize::ResponseCodeError => ex
-    case ex.response_code
-    when '403'
-      return {}
-    when '404'
-      return {}
-    when '503'
-      return {}
-    when '500'
-      return {}
-    end
+    return {}
   end
 
   begin
-    res = $agent.post("#{base_url}com/get_lyrics.ajax",
+    res = $agent.post("#{base_url}/com/get_lyrics.ajax",
                       { lyrics_id: ids.first },
                       { 'X-Requested-With' => 'XMLHttpRequest'})
     data = JSON.parse(res.body)
     lyrics = data.inject('') {|acc, line|
         acc += Base64.decode64(line['lyrics'])
         acc + "\n"
-    }
+    }.force_encoding("UTF-8")
+
     result = {lyrics: lyrics, url: urls.first,
               title: titles.first, artist: artists.first}
     return result
   rescue Mechanize::ResponseCodeError => ex
-    case ex.response_code
-    when '403'
-      return {}
-    when '404'
-      return {}
-    when '503'
-      return {}
-    when '500'
-      return {}
-    end
+    return {}
   end
 end
 
