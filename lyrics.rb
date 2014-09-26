@@ -66,7 +66,7 @@ def searchMusicKasitime(word)
           url = "#{u['href'].sub("/url?q=","").sub(/\.html.*/,".html")}"
           $agent.get(url)
           titles << $agent.page.search('#song_info_table h1').text
-          artists << $agent.page.search('#song_info_table a')[0].text
+          artists << $agent.page.at('#song_info_table td.td1 + td').text
           urls << url
         end
       } 
