@@ -77,6 +77,11 @@ def searchMusicKasitime(word)
   begin
     lyrics_page = open("#{lyrics_base_url}#{ids.first}").read
     lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
+    if lyrics.include? "<table>"
+      lyrics = Nokogiri::HTML.parse(lyric).search('tr td').map(&:text).each_slice(2).map{|vocal,lyric|
+        "#{vocal} : #{lyric}"
+      }.join ''
+    end
     result = {lyrics: lyrics, url: urls.first,
               title: titles.first, artist: artists.first}
   rescue OpenURI::HTTPError => ex
