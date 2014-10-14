@@ -126,7 +126,7 @@ def searchMusicPetitLyrics(word)
     lyrics = data.inject('') {|acc, line|
         acc += Base64.decode64(line['lyrics'])
         acc + "\n"
-    }.force_encoding("UTF-8")
+    }.force_encoding("UTF-8").chop
 
     result = {lyrics: lyrics, url: urls.first,
               title: titles.first, artist: artists.first}
