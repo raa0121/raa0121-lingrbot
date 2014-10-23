@@ -34,7 +34,11 @@ def searchMusicUtamap(word)
     return {}
   end
   lyrics_page = open("#{lyrics_base_url}#{id}").read
-  unless error_word == lyrics_page.encode("UTF-8", "Shift_JIS")
+  begin
+    if lyrics_page.encode("UTF-8", "Shift_JIS") == error_word
+      return {}
+    end
+  rescue 
     lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
     result = {lyrics: lyrics, url: url,
               title: title, artist: artist}
