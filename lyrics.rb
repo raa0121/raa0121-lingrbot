@@ -63,7 +63,7 @@ def searchMusicKasitime(word)
     unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
       return {}
     end
-    unless [] == $agent.page.at('#topstuff').to_a
+    unless [] == $agent.page.at(".med .card-section/ul").to_a
       return {}
     end
     unless [] == search_urls = $agent.page.search('li.g h3.r a').to_a
