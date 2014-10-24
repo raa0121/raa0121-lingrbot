@@ -52,7 +52,8 @@ end
 def searchMusicKasitime(word)
   base_url = "https://www.google.co.jp/search?q="
   lyrics_base_url = "http://www.kasi-time.com/item_js.php?no="
-  site = CGI.escape(" site:www.kasi-time.com")
+  site = CGI.escape("site:www.kasi-time.com")
+  intitle = CGI.escape(" intitle:")
   word = CGI.escape(word.strip.split.map{|it| %`"#{it}"`}.join(" "))
   ids = []
   titles = []
@@ -60,7 +61,7 @@ def searchMusicKasitime(word)
   urls = []
   result = {}
   begin
-    unless Mechanize::Page == $agent.get("#{base_url}#{word}#{site}").class
+    unless Mechanize::Page == $agent.get("#{base_url}#{site}#{intitle}#{word}").class
       return {}
     end
     unless [] == $agent.page.at(".med .card-section/ul").to_a
