@@ -134,7 +134,7 @@ def VimAdv(event, year)
       return "合計 #{user.length}件\n#{user.join("\n")}"
     else
       data.map {|v|
-        if /#{command[1]}/i =~ v[-1]["title"]
+        if /#{command[1]}/i =~ v[-1]["title"].force_encoding("UTF-8")
           result = JSON.parse(post_bitly(v[-1]["url"]))['results']
           search << "%s %s %s %s - %s" % (%w[count date author title].map{|k| v[-1][k]} << result[v[-1]['url']]['shortUrl'])
         end
@@ -157,7 +157,7 @@ post '/vim' do
   content_type :text
   json = JSON.parse(request.body.read)
   json["events"].select {|e| e['message'] }.map {|e|
-    m = e["message"]["text"].force_encoding("UTF-8")
+    m = e["message"]["text"]
     case m
     when /^(!VimAdv11|:vimadv11|!VAC11)/i
       VimAdv(e,"11")
