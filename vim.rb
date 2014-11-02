@@ -157,7 +157,7 @@ post '/vim' do
   content_type :text
   json = JSON.parse(request.body.read)
   json["events"].select {|e| e['message'] }.map {|e|
-    m = e["message"]["text"]
+    m = e["message"]["text"].force_encoding("UTF-8")
     case m
     when /^(!VimAdv11|:vimadv11|!VAC11)/i
       VimAdv(e,"11")
