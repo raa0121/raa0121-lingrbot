@@ -118,9 +118,13 @@ def VimAdv(event, year)
     puts result = JSON.parse(post_bitly(last["url"]))['results']
     "%s %s %s %s - %s\nNext:#{schedule}\n#{atnd_url}" % (%w[count date author title].map{|k| last[k]} << result[last['url']]['shortUrl'])
   when /^\d+/
-    day = data[command[1].to_i-1][-1]
-    result = JSON.parse(post_bitly(day["url"]))['results']
-    "%s %s %s %s - %s" % (%w[count date author title].map{|k| day[k]} << result[day['url']]['shortUrl'])
+    begin
+      day = data[command[1].to_i-1][-1]
+      result = JSON.parse(post_bitly(day["url"]))['results']
+      "%s %s %s %s - %s" % (%w[count date author title].map{|k| day[k]} << result[day['url']]['shortUrl'])
+    rescue
+      "#{command[1]} is NotFound."
+    end
   when /#ranking(\d+)?/ 
     rank = 10 if $1 == nil && command[2] == nil 
     rank = $1.to_i if $1.to_i > 0
@@ -157,7 +161,7 @@ def VimAdv(event, year)
       elsif search.length > 0
         return "合計 #{search.length}件\n#{search.join("\n")}"
       else
-        "#{command[1]} is NotFound."
+        "#{command[1]} is notFound."
       end
     end
   end
