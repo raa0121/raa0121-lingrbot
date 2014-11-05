@@ -10,6 +10,7 @@ $VAC12=open("https://raw.github.com/osyo-manga/vim_advent_calendar2012/master/RE
 #$VAC12 = JSON.parse(open("https://api.atnd.org/events/?event_id=33746&format=json", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)["events"][0]["event"]["description"]
 $VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
 #$VAC13 = JSON.parse(open("https://api.atnd.org/events/?event_id=45072&format=json", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)["events"][0]["event"]["description"]
+$VAC14 = JSON.parse(open("https://api.atnd.org/events/?event_id=58768&format=json", :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)["events"][0]["event"]["description"]
 
 get '/vim' do
   "VimAdv"
@@ -46,7 +47,10 @@ def VimAdv(event, year)
   room = event['message']['room']
   atnd_url = "http://atnd.org/events/45072"
   descript = []
-  if "13" == year
+  if "14" == year
+    atnd_url = "http://atnd.org/events/58768"
+    descript = $VAC14.split("\n")
+  elsif "13" == year
     atnd_url = "http://atnd.org/events/45072"
     descript = $VAC13.split("\n")
   elsif "12" == year
@@ -56,7 +60,7 @@ def VimAdv(event, year)
     atnd_url = "http://atnd.org/events/21925"
     descript = $VAC11.split("\n")
   else
-    atnd_url = "http://atnd.org/events/45072 & http://atnd.org/events/33746"
+    atnd_url = "http://atnd.org/events/58768 & http://atnd.org/events/45072 & http://atnd.org/events/33746"
     descript = $VAC12.split("\n")
   end
   data = Hash.new
@@ -64,6 +68,13 @@ def VimAdv(event, year)
   if year == "12+13"
     descript.map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
       data["12-#{m[1]}"] = {"count" => "12-#{m[1]}",
+                            "date" => m[2],
+                            "author" => m[3],
+                            "title" => m[4],
+                            "url" => m[5]}
+    }}
+    $VAC14.split("\n").map{|m| m.match(/\|(.*)\|(.*)\|(.*)\|(?:"(.*)":(.*))?\|/) {|m|
+      data["14-#{m[1]}"] = {"count" => "14-#{m[1]}",
                             "date" => m[2],
                             "author" => m[3],
                             "title" => m[4],
@@ -165,8 +176,10 @@ post '/vim' do
       VimAdv(e,"12")
     when /^(!VimAdv13|:vimadv13|!VAC13)/i
       VimAdv(e,"13")
+    when /^(!VimAdv14|:vimadv14|!VAC14)/i
+      VimAdv(e,"14")
     when /^(!VimAdv-reload|:vimadv-reload|!VAC-reload)/i
-      $VAC13=JSON.parse(open("http://api.atnd.org/events/?event_id=45072&format=json").read)["events"][0]["description"]
+      $VAC14=JSON.parse(open("http://api.atnd.org/events/?event_id=58768&format=json").read)["events"][0]["description"]
       #$VAC13=open("https://raw.github.com/osyo-manga/vim_advent_calendar2013/master/README.md").read
       "data was reloaded."
     when /^(!VimAdv|:vimadv|!VAC)/i
