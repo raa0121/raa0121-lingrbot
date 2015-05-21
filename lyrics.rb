@@ -86,7 +86,7 @@ def searchMusicKasitime(word)
     lyrics_page = open("#{lyrics_base_url}#{ids.first}").read
     lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
     if lyrics.include? "<table>"
-      lyrics = Nokogiri::HTML.parse(lyrics).search('tr th').zip(Nokogiri::HTML.parse(lyrics).search('tr td')).map{|i|i.join(' : ').strip}
+      lyrics = Nokogiri::HTML.parse(lyrics).search('tr th').zip(Nokogiri::HTML.parse(lyrics).search('tr td')).map{|i|i.join(' : ').strip}.join("\n")
     end
     result = {lyrics: lyrics, url: urls.first,
               title: titles.first, artist: artists.first}
@@ -155,7 +155,6 @@ def getLyric(mes,room)
     end
   end
   lyrics = "title:#{lyrics_info[:title]}\nartist:#{lyrics_info[:artist]}\nurl:#{lyrics_info[:url]}\n\n#{lyrics_info[:lyrics]}"
-  puts lyrics
   if lyrics.bytesize > 1000
     lyrics.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
     return ""
