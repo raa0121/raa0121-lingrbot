@@ -155,6 +155,7 @@ def getLyric(mes,room)
     end
   end
   lyrics = "title:#{lyrics_info[:title]}\nartist:#{lyrics_info[:artist]}\nurl:#{lyrics_info[:url]}\n\n#{lyrics_info[:lyrics]}"
+  puts lyrics
   if lyrics.bytesize > 1000
     lyrics.gsub("\n\n","\n　\n").split("\n").each_slice(15){|l| post_lingr_http_lyrics(l.join("\n"), room)}
     return ""
