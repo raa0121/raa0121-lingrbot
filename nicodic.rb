@@ -12,7 +12,7 @@ post "/nicodic" do
   json["events"].select {|e| e["message"]}.map {|e|
     m = e["message"]["text"]
     case m 
-    when /nicodic:(.*)/
+    when /nicodic:(?:[\s　]+)?(.*)/
       "http://dic.nicovideo.jp/a/#{CGI.escape($1)}\n#{JSON.parse(open("http://api.nicodic.jp/page.summary/json/a/#{CGI.escape($1)}").read)["summary"]}"
     end
   }
