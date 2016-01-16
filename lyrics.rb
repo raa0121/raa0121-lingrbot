@@ -68,7 +68,7 @@ def searchMusicKasitime(word)
       search_urls.select{|u|
         if /www\.kasi-time\.com\/item-(\d+)\.html/ =~ u
           ids << $1
-          url = "#{u['href'].sub("/url?q=","").sub(/\.html.*/,".html")}"
+          url = "#{u.sub("/url?q=","").sub(/\.html.*/,".html")}"
           $agent.get(url)
           titles << $agent.page.search('//div[@class="person_list_and_other_contents"]/h1').text.strip
           artists << $agent.page.at('//div[@class="person_list"]//th[text()="歌手"]/following-sibling::td/a').text.strip
