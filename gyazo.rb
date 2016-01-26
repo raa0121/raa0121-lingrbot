@@ -1,13 +1,15 @@
 require 'net/http'
+require 'openssl'
+require 'json'
 
 class Gyazo
   attr_reader :id
 
   def initialize(id = '',
                  boundary = '----BOUNDARYBOUNDARY----',
-                 host = 'gyazo.com',
+                 host = 'upload.gyazo.com',
                  cgi = '/upload.cgi',
-                 ua = 'Gyazo/1.0')
+                 ua = 'Gyazo/1.2')
     @id = id
     @boundary = boundary
     @host = host
@@ -22,7 +24,18 @@ class Gyazo
 
     img = File.read img_path
 
+    metadata = JSON.generate({
+      app: "",
+      title: "",
+      url: "",
+      note: ""
+    })
+
     data = <<EOF
+--#{@boundary}\r
+content-disposition: form-data; name="metadata"\r
+\r
+#{metadata}\r
 --#{@boundary}\r
 content-disposition: form-data; name="id"\r
 \r
@@ -49,8 +62,12 @@ EOF
     end
 
     url = ''
-    Net::HTTP::Proxy(proxy_host, proxy_port).start(@host, 80) { |http|
-      res = http.post(@cgi, data, header)
+    https = Net::HTTP::Proxy(proxy_host, proxy_port).new(HOST, 443)
+    https.use_ssl = true
+    https.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    https.verify_depth = 5
+    https.start{
+      res = https.post(@cgi, data, header)
       url = res.response.body
       newid = res.response['X-Gyazo-Id']
       @id = newid if @id == '' and newid and newid != ''
@@ -59,4 +76,3 @@ EOF
     "#{ url }"
   end
 end
-
