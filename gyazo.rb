@@ -49,7 +49,7 @@ EOF
 
     header ={
       'Content-Length' => data.length.to_s,
-      'Content-type' => "multipart/form-data; @boundary=#{@boundary}",
+      'Content-type' => "multipart/form-data; boundary=#{@boundary}",
       'User-Agent' => @ua
     }
 
@@ -62,7 +62,7 @@ EOF
     end
 
     url = ''
-    https = Net::HTTP::Proxy(proxy_host, proxy_port).new(HOST, 443)
+    https = Net::HTTP::Proxy(proxy_host, proxy_port).new(@host, 443)
     https.use_ssl = true
     https.verify_mode = OpenSSL::SSL::VERIFY_PEER
     https.verify_depth = 5
