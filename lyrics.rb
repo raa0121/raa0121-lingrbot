@@ -61,7 +61,7 @@ def searchMusicKasitime(word)
   urls = []
   result = {}
   begin
-    unless Mechanize::Page == $agent.get("#{base_url}#{site}#{intitle}#{word}#{CGI.escape("&ie=utf-8&oe=utf-8&hl=ja")}").class
+    unless Mechanize::Page == $agent.get("#{base_url}#{site}#{intitle}#{word}&ie=utf-8&oe=utf-8&hl=ja").class
       return {}
     end
     unless [] == search_urls = $agent.page.search('cite').map(&:inner_text)
