@@ -10,7 +10,7 @@ gem 'thin'
 gem 'bundler'
 gem 'mechanize'
 gem 'rubicure'
-ruby '2.2.3'
+ruby '2.3.0'
 
 gem 'dm-core'
 gem 'dm-migrations'
