@@ -70,7 +70,7 @@ def searchMusicKasitime(word)
           url = "#{u.sub("/url?q=","").sub(/\.html.*/,".html").sub(/^(www)/, 'http://\1')}"
           $agent.get(url)
           titles << $agent.page.search('//div[@class="person_list_and_other_contents"]/h1').text.strip
-          artists << $agent.page.at('//div[@class="person_list"]//th[text()="歌手"]/following-sibling::td/a').text.strip
+          artists << $agent.page.search('//div[@class="person_list"]//th[text()="歌手"]/following-sibling::td').text.gsub(/\n\t+/,'').gsub('　', ' ').split('関連リンク:').first.strip
           urls << url
         end
       } 
