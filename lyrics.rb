@@ -51,7 +51,6 @@ end
 
 def searchMusicKasitime(word)
   base_url = "https://www.google.co.jp/search?q="
-  lyrics_base_url = "http://www.kasi-time.com/item_js.php?no="
   site = CGI.escape("site:www.kasi-time.com")
   intitle = CGI.escape(" intitle:")
   word = CGI.escape(word.strip.split.map{|it| %`"#{it}"`}.join(" "))
@@ -66,9 +65,8 @@ def searchMusicKasitime(word)
     end
     unless [] == search_urls = $agent.page.search('cite').map(&:inner_text)
       search_urls.select{|u|
-        if /www\.kasi-time\.com\/item-(\d+)\.html/ =~ u
-          ids << $1
-          url = "#{u.sub("/url?q=","").sub(/\.html.*/,".html")}"
+        if /(www\.kasi-time\.com\/item-\d+\.html)/ =~ u
+          url = "#{u.sub("/url?q=","").sub(/\.html.*/,".html").sub(/^(www)/, 'http://\1')}"
           $agent.get(url)
           titles << $agent.page.search('//div[@class="person_list_and_other_contents"]/h1').text.strip
           artists << $agent.page.at('//div[@class="person_list"]//th[text()="歌手"]/following-sibling::td/a').text.strip
@@ -80,8 +78,8 @@ def searchMusicKasitime(word)
     return {}
   end
   begin
-    lyrics_page = open("#{lyrics_base_url}#{ids.first}").read
-    lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
+    lyrics_page = open("#{urls[0]}").read
+    lyrics = CGI.unescapeHTML(lyrics_page[/var lyrics = '(.+)';/, 1]).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
     if lyrics.include? "<table>"
       lyrics = Nokogiri::HTML.parse(lyrics).search('tr th').zip(Nokogiri::HTML.parse(lyrics).search('tr td')).map{|i|i.join(' : ').strip}.join("\n")
     end
