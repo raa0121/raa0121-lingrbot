@@ -10,6 +10,7 @@ gem 'thin'
 gem 'bundler'
 gem 'mechanize'
 gem 'rubicure'
+gem 'htmlentities'
 ruby '2.3.0'
 
 gem 'dm-core'

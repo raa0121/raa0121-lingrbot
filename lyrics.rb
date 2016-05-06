@@ -79,7 +79,7 @@ def searchMusicKasitime(word)
   end
   begin
     lyrics_page = open("#{urls[0]}").read
-    lyrics = CGI.unescapeHTML(lyrics_page[/var lyrics = '(.+)';/, 1]).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
+    lyrics = HTMLEntities.new.decode(lyrics_page[/var lyrics = '(.+)';/, 1]).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
     if lyrics.include? "<table>"
       lyrics = Nokogiri::HTML.parse(lyrics).search('tr th').zip(Nokogiri::HTML.parse(lyrics).search('tr td')).map{|i|i.join(' : ').strip}.join("\n")
     end
