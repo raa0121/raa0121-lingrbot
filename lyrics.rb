@@ -4,6 +4,7 @@ require 'open-uri'
 require 'cgi'
 require 'json'
 require 'base64'
+require 'htmlentities'
 
 $agent = Mechanize.new
 $agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
@@ -79,7 +80,7 @@ def searchMusicKasitime(word)
   end
   begin
     lyrics_page = open("#{urls[0]}").read
-    lyrics = HTMLEntities.new.decode(lyrics_page[/var lyrics = '(.+)';/, 1]).gsub("<br>","\n").gsub("&nbsp;"," ").sub("document.write('","").sub("');","").lstrip
+    lyrics = HTMLEntities.new.decode(lyrics_page[/var lyrics = '(.+)';/, 1]).gsub("<br>","\n")
     if lyrics.include? "<table>"
       lyrics = Nokogiri::HTML.parse(lyrics).search('tr th').zip(Nokogiri::HTML.parse(lyrics).search('tr td')).map{|i|i.join(' : ').strip}.join("\n")
     end
