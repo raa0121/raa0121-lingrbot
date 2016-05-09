@@ -13,13 +13,8 @@ post '/ruby' do
     if @m
       t = @m["text"]
       if /^!(c)?ruby\s+(.*)/m =~ t
-        #x = Thread.start do
-        $SAFE = 2
         after = eval "#{$2}"
         return "#{after}"
-        #end
-        #  "#{x.value}"
-          #sandbox{$1}
       end
     end
   end
