@@ -7,6 +7,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.6)
+    bindot2braillegraph (0.0.4)
     coderay (1.1.0)
     daemons (1.1.6)
     data_objects (0.10.17)
@@ -99,6 +100,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bindot2braillegraph
   bundler
   daemons
   dm-core

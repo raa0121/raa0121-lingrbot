@@ -11,6 +11,7 @@ gem 'bundler'
 gem 'mechanize'
 gem 'rubicure'
 gem 'htmlentities'
+gem 'bindot2braillegraph'
 ruby '2.3.0'
 
 gem 'dm-core'
