@@ -12,7 +12,7 @@ gem 'mechanize'
 gem 'rubicure'
 gem 'htmlentities'
 gem 'bindot2braillegraph'
-ruby '2.3.0'
+ruby '2.3.1'
 
 gem 'dm-core'
 gem 'dm-migrations'
