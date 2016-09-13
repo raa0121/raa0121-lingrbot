@@ -35,7 +35,7 @@ def searchMusicUtanet(word)
         if /(www\.uta-net\.com\/song\/\d+\/)/ =~ u
           url = "#{u.sub("/url?q=", "").sub(/(\song\/\d+\/).*/,"\1").sub(/^(www)/, 'http://\1')}"
           $agent.get(url)
-          titles << $agent.page.at('#view_kashi .title .prev_pad').text
+          titles << $agent.page.at('#view_kashi .title h2').text
           artists << $agent.page.at('.kashi_artist span').text
           svg_urls << svg_base_url + $agent.page.at('#ipad_kashi img')['src']
           urls << url
