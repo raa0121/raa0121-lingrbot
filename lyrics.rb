@@ -14,6 +14,51 @@ def post_lingr_http_lyrics(text, room)
   open("http://lingr.com/api/room/say?room=#{room}#{query[0]}#{CGI.escape(text)}#{query[1]}").read
 end
 
+def searchMusicUtanet(word)
+  base_url = "https://www.google.co.jp/search?q="
+  svg_base_url = "http://www.uta-net.com"
+  site = CGI.escape("site:www.uta-net.com")
+  intitle = CGI.escape(" intitle:")
+  word = CGI.escape(word.strip.split.map{|it| %`"#{it}"`}.join(" "))
+  ids = []
+  titles = []
+  artists = []
+  urls = []
+  svg_urls = []
+  result = {}
+  begin
+    unless Mechanize::Page == $agent.get("#{base_url}#{site}#{intitle}#{word}&ie=utf-8&oe=utf-8&hl=ja").class
+      return {}
+    end
+    unless [] == search_urls = $agent.page.search('cite').map(&:inner_text)
+      search_urls.select{|u|
+        if /(www\.uta-net\.com\/song\/\d+\/)/ =~ u
+          url = "#{u.sub("/url?q=", "").sub(/(\song\/\d+\/).*/,"\1").sub(/^(www)/, 'http://\1')}"
+          $agent.get(url)
+          titles << $agent.page.at('#view_kashi .title .prev_pad').text
+          artists << $agent.page.at('.kashi_artist span').text
+          svg_urls << svg_base_url + $agent.page.at('#ipad_kashi img')['src']
+          urls << url
+        end
+      }
+    end
+  rescue Mechanize::ResponseCodeError => ex
+    return {}
+  end
+  begin
+    lyrics_page = open("#{svg_urls[0]}").read
+    lyrics = Nokogiri::XML.parse(lyrics_page).search('text').map{|w| w.text}.join("\n")
+  rescue
+    return {}
+  end
+  result = {lyrics: lyrics, url: urls.first,
+            title: titles.first, artist: artists.first}
+  if result[:url] == nil
+    return {}
+  end
+  return result
+end
+
 def searchMusicUtamap(word)
   base_url = "http://www.utamap.com/searchkasi.php?searchname=title&word="
   lyrics_base_url = "http://www.utamap.com/phpflash/flashfalsephp.php?unum="
@@ -39,7 +84,7 @@ def searchMusicUtamap(word)
     if lyrics_page.encode("UTF-8", "Shift_JIS") == error_word
       return {}
     end
-  rescue 
+  rescue
     lyrics = CGI.unescapeHTML(lyrics_page.force_encoding("UTF-8")).sub(/test1=\d+&test2=/,"")
     result = {lyrics: lyrics, url: url,
               title: title, artist: artist}
@@ -73,7 +118,7 @@ def searchMusicKasitime(word)
           artists << $agent.page.search('//div[@class="person_list"]//th[text()="歌手"]/following-sibling::td').text.gsub(/\n\t+/,'').gsub('　', ' ').split('関連リンク:').first.strip
           urls << url
         end
-      } 
+      }
     end
   rescue Mechanize::ResponseCodeError => ex
     return {}
@@ -144,7 +189,7 @@ def getLyric(mes,room)
   if {} == lyrics_info
     lyrics_info = searchMusicUtamap(command)
     if {} == lyrics_info
-      lyrics_info = searchMusicPetitLyrics(command)
+      lyrics_info = searchMusicUtamap(command)
       if {} == lyrics_info
         return "#{command} is Not found."
       end
