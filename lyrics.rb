@@ -185,11 +185,11 @@ end
 
 def getLyric(mes,room)
   command = mes.sub("!lyrics","")
-  lyrics_info = searchMusicKasitime(command)
+  lyrics_info = searchMusicUtanet(command)
   if {} == lyrics_info
     lyrics_info = searchMusicUtamap(command)
     if {} == lyrics_info
-      lyrics_info = searchMusicUtanet(command)
+      lyrics_info = searchMusicKasitime(command)
       if {} == lyrics_info
         return "#{command} is Not found."
       end
