@@ -7,7 +7,7 @@ require 'base64'
 require 'htmlentities'
 
 $agent = Mechanize.new
-$agent.user_agent = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0"
+$agent.user_agent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0"
 
 def post_lingr_http_lyrics(text, room)
   query = ['&bot=lyrics&text=','&bot_verifier=03a96b624a652e568038c61f336bbb0ba8bd7ed5']
@@ -37,7 +37,7 @@ def searchMusicUtanet(word)
           $agent.get(url)
           titles << $agent.page.at('#view_kashi .title h2').text
           artists << $agent.page.at('.kashi_artist span').text
-          svg_urls << svg_base_url + $agent.page.at('#ipad_kashi img')['src']
+          lyrics << $agent.page.at('#kashi_area').inner_html.gsub('<br>', "\n")
           urls << url
         end
       }
@@ -45,13 +45,7 @@ def searchMusicUtanet(word)
   rescue Mechanize::ResponseCodeError => ex
     return {}
   end
-  begin
-    lyrics_page = open("#{svg_urls[0]}").read
-    lyrics = Nokogiri::XML.parse(lyrics_page).search('text').map{|w| w.text}.join("\n")
-  rescue
-    return {}
-  end
-  result = {lyrics: lyrics, url: urls.first,
+  result = {lyrics: lyrics.first, url: urls.first,
             title: titles.first, artist: artists.first}
   if result[:url] == nil
     return {}
