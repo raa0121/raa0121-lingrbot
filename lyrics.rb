@@ -24,7 +24,7 @@ def searchMusicUtanet(word)
   titles = []
   artists = []
   urls = []
-  svg_urls = []
+  lyrics = []
   result = {}
   begin
     unless Mechanize::Page == $agent.get("#{base_url}#{site}#{intitle}#{word}&ie=utf-8&oe=utf-8&hl=ja").class
